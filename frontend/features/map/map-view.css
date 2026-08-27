@@ -1,0 +1,100 @@
+/* Mapbox popup + user marker — SERVIS orange/black identity */
+
+.servis-mapbox-popup .mapboxgl-popup-content {
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(14, 14, 14, 0.06);
+  box-shadow: 0 12px 36px rgba(14, 14, 14, 0.14);
+  font-family: inherit;
+}
+
+.servis-mapbox-popup .mapboxgl-popup-close-button {
+  font-size: 18px;
+  color: #5c5c5c;
+  padding: 4px 8px;
+}
+
+.servis-mapbox-popup .mapboxgl-popup-tip {
+  border-top-color: #ffffff;
+}
+
+.servis-map-popup__kind {
+  display: inline-block;
+  margin-bottom: 6px;
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: rgba(232, 66, 8, 0.1);
+  color: #e84208;
+}
+
+.servis-map-popup__kind--service {
+  background: rgba(255, 101, 52, 0.15);
+  color: #c44a1a;
+}
+
+.servis-map-popup__kind--professional {
+  background: rgba(14, 14, 14, 0.08);
+  color: #0e0e0e;
+}
+
+.servis-map-popup__title {
+  margin: 0 0 4px;
+  font-family: var(--font-display, inherit);
+  font-weight: 800;
+  font-size: 15px;
+  line-height: 1.25;
+  color: #0e0e0e;
+}
+
+.servis-map-popup__sub,
+.servis-map-popup__meta {
+  margin: 0 0 2px;
+  font-size: 12px;
+  color: #5c5c5c;
+}
+
+.servis-map-popup__cta {
+  display: inline-block;
+  margin-top: 10px;
+  color: #e84208;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.servis-map-popup__cta:hover {
+  text-decoration: underline;
+}
+
+.servis-user-marker {
+  width: 18px;
+  height: 18px;
+}
+
+.servis-user-marker__dot {
+  display: block;
+  width: 14px;
+  height: 14px;
+  margin: 2px;
+  border-radius: 999px;
+  background: #2563eb;
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.25);
+}
+
+/* Keep Mapbox zoom controls clear of bottom UI chrome on Explore */
+.servis-map-explore .mapboxgl-ctrl-bottom-right {
+  bottom: 88px;
+  right: 12px;
+}
+
+@media (min-width: 1024px) {
+  .servis-map-explore .mapboxgl-ctrl-bottom-right {
+    bottom: 24px;
+    right: 16px;
+  }
+}

@@ -1,0 +1,1 @@
+"""SERVIS Django settings package."""

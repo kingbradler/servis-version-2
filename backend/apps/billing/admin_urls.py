@@ -1,0 +1,67 @@
+from django.urls import path
+
+from apps.billing.views import (
+    AdminBoostPaymentApproveView,
+    AdminBoostPaymentListView,
+    AdminBoostPaymentRejectView,
+    AdminPlatformPaymentMethodDetailView,
+    AdminPlatformPaymentMethodListCreateView,
+    AdminSubscriptionDetailView,
+    AdminSubscriptionListView,
+    AdminSubscriptionPaymentApproveView,
+    AdminSubscriptionPaymentListView,
+    AdminSubscriptionPaymentRejectView,
+)
+
+urlpatterns = [
+    path(
+        "subscriptions/",
+        AdminSubscriptionListView.as_view(),
+        name="admin-subscriptions",
+    ),
+    path(
+        "subscriptions/<uuid:subscription_id>/",
+        AdminSubscriptionDetailView.as_view(),
+        name="admin-subscription-detail",
+    ),
+    path(
+        "subscription-payments/",
+        AdminSubscriptionPaymentListView.as_view(),
+        name="admin-subscription-payments",
+    ),
+    path(
+        "subscription-payments/<uuid:payment_id>/approve/",
+        AdminSubscriptionPaymentApproveView.as_view(),
+        name="admin-subscription-payment-approve",
+    ),
+    path(
+        "subscription-payments/<uuid:payment_id>/reject/",
+        AdminSubscriptionPaymentRejectView.as_view(),
+        name="admin-subscription-payment-reject",
+    ),
+    path(
+        "platform-payment-methods/",
+        AdminPlatformPaymentMethodListCreateView.as_view(),
+        name="admin-platform-payment-methods",
+    ),
+    path(
+        "platform-payment-methods/<uuid:method_id>/",
+        AdminPlatformPaymentMethodDetailView.as_view(),
+        name="admin-platform-payment-method-detail",
+    ),
+    path(
+        "boost-payments/",
+        AdminBoostPaymentListView.as_view(),
+        name="admin-boost-payments",
+    ),
+    path(
+        "boost-payments/<uuid:payment_id>/approve/",
+        AdminBoostPaymentApproveView.as_view(),
+        name="admin-boost-payment-approve",
+    ),
+    path(
+        "boost-payments/<uuid:payment_id>/reject/",
+        AdminBoostPaymentRejectView.as_view(),
+        name="admin-boost-payment-reject",
+    ),
+]

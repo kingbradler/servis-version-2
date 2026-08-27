@@ -1,0 +1,123 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
+import { EmptyState } from "@/components/ui/empty-state";
+import { ErrorState } from "@/components/ui/error-state";
+import { LoadingState } from "@/components/ui/loading-state";
+import {
+  getProfessionalReviewSummary,
+  listProfessionalReviews,
+  type Review,
+  type ReviewSummary,
+} from "@/features/reviews/api/reviews.api";
+import { StarRating } from "@/features/reviews/components/StarRating";
+import { isApiError } from "@/lib/api/errors";
+
+function authorLabel(review: Review): string {
+  const first = review.author.first_name?.trim() || "";
+  const last = review.author.last_name?.trim() || "";
+  const name = `${first} ${last}`.trim();
+  return name || "Client";
+}
+
+export function ProfessionalReviewsSection({ slug }: { slug: string }) {
+  const [summary, setSummary] = useState<ReviewSummary | null>(null);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const [sum, list] = await Promise.all([
+          getProfessionalReviewSummary(slug),
+          listProfessionalReviews(slug, 1),
+        ]);
+        if (cancelled) return;
+        setSummary(sum);
+        setReviews(list.results);
+      } catch (err) {
+        if (!cancelled) {
+          setError(isApiError(err) ? err.message : "Impossible de charger les avis");
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [slug]);
+
+  if (loading) {
+    return <LoadingState message="Chargement des avis…" />;
+  }
+
+  if (error) {
+    return <ErrorState message={error} />;
+  }
+
+  const count = summary?.ratings_count ?? 0;
+  const avg = summary?.average_rating;
+
+  return (
+    <section className="space-y-5">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h2 className="font-display text-[19px] font-extrabold text-text-primary">
+            Avis clients
+          </h2>
+          <p className="mt-1 text-body-sm text-text-secondary">
+            Notes après prestations terminées.
+          </p>
+        </div>
+        {count > 0 && avg != null ? (
+          <div className="flex items-center gap-2">
+            <StarRating value={avg} />
+            <span className="text-body-sm font-semibold text-text-primary">
+              {avg.toFixed(1)}
+            </span>
+            <span className="text-caption text-text-muted">
+              ({count} avis)
+            </span>
+          </div>
+        ) : null}
+      </div>
+
+      {count === 0 ? (
+        <EmptyState
+          title="Pas encore d'avis"
+          description="Les clients pourront noter ce professionnel après une prestation terminée."
+        />
+      ) : (
+        <ul className="space-y-3">
+          {reviews.map((review) => (
+            <li
+              key={review.id}
+              className="rounded-xl border border-cr2 bg-white p-4 dark:border-border dark:bg-surface"
+            >
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <p className="font-semibold text-text-primary">
+                  {authorLabel(review)}
+                </p>
+                <StarRating value={review.rating} size="sm" />
+              </div>
+              {review.comment ? (
+                <p className="mt-2 whitespace-pre-wrap text-body-sm text-text-secondary">
+                  {review.comment}
+                </p>
+              ) : null}
+              <p className="mt-2 text-caption text-text-muted">
+                {new Date(review.created_at).toLocaleDateString("fr-FR")}
+              </p>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+  );
+}

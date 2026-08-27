@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 140" fill="none" role="img" aria-label="SERVIS">
+  <title>SERVIS</title>
+  <!-- Speed lines -->
+  <path d="M8 48h28" stroke="#F7F5F1" stroke-width="7" stroke-linecap="round"/>
+  <path d="M4 62h34" stroke="#F7F5F1" stroke-width="7" stroke-linecap="round"/>
+  <path d="M12 76h24" stroke="#F7F5F1" stroke-width="7" stroke-linecap="round"/>
+
+  <!-- Cart handle -->
+  <path d="M42 88 L58 42 H74" stroke="#F7F5F1" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Cart basket frame -->
+  <path d="M58 88 H118 V52 H74" stroke="#F7F5F1" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Stylized S ribbon -->
+  <path
+    d="M118 34
+       C104 22 82 20 70 32
+       C62 40 66 52 82 56
+       C98 60 112 66 110 80
+       C108 96 88 106 70 100
+       C62 98 56 92 52 86"
+    stroke="#F7F5F1"
+    stroke-width="14"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  <path
+    d="M116 36
+       C102 24 84 22 72 34
+       C64 42 68 52 82 56
+       C98 60 110 66 108 78
+       C106 92 90 100 74 96
+       C66 94 60 90 56 86"
+    stroke="#161616"
+    stroke-width="8"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- Orange shopping bag -->
+  <path d="M78 52 L108 52 L102 84 L84 84 Z" fill="#E84208"/>
+  <path d="M88 52 C88 44 98 44 98 52" stroke="#F7F5F1" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- Wheels -->
+  <circle cx="72" cy="112" r="9" fill="#F7F5F1"/>
+  <circle cx="108" cy="112" r="9" fill="#F7F5F1"/>
+</svg>
