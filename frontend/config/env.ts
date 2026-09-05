@@ -1,5 +1,5 @@
 export const env = {
-  apiUrl:apiUrl: process.env.NEXT_PUBLIC_API_URL ?? "https://servis-version-2.onrender.com/api/v1", ,
+  apiUrl: process.env.NEXT_PUBLIC_API_URL ?? "https://servis-version-2.onrender.com/api/v1",
   appUrl: process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
   /** Public Mapbox token — never log this value. */
   mapboxToken: process.env.NEXT_PUBLIC_MAPBOX_TOKEN?.trim() || null,
