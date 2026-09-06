@@ -14,4 +14,5 @@ export const env = {
     process.env.NEXT_PUBLIC_PLATFORM_EMAIL?.trim() ||
     "servis.superrapid@gmail.com",
   appName: "SERVIS",
+
 } as const;
