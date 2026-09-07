@@ -128,26 +128,46 @@ class Command(BaseCommand):
             PlatformPaymentMethod.objects.create(
                 name="Orange Money",
                 account_name="SERVIS",
-                account_number="À CONFIGURER",
-                instructions="Envoyez le montant exact puis uploadez la capture.",
+                account_number="À renseigner dans l'espace admin",
+                instructions=(
+                    "Envoyez le montant exact de l'abonnement, puis envoyez "
+                    "une capture d'écran depuis cette page."
+                ),
                 is_active=True,
                 sort_order=10,
             )
             PlatformPaymentMethod.objects.create(
-                name="Moov Money",
+                name="Inwi Money",
                 account_name="SERVIS",
-                account_number="À CONFIGURER",
-                instructions="Envoyez le montant exact puis uploadez la capture.",
+                account_number="À renseigner dans l'espace admin",
+                instructions=(
+                    "Envoyez le montant exact, puis uploadez la capture "
+                    "de confirmation."
+                ),
                 is_active=True,
                 sort_order=20,
             )
             PlatformPaymentMethod.objects.create(
-                name="Virement bancaire",
+                name="Cash Plus",
                 account_name="SERVIS",
-                account_number="À CONFIGURER",
-                instructions="Indiquez votre email en référence du virement.",
+                account_number="À renseigner dans l'espace admin",
+                instructions=(
+                    "Déposez le montant au guichet Cash Plus, conservez le "
+                    "reçu et uploadez-le ici."
+                ),
                 is_active=True,
                 sort_order=30,
+            )
+            PlatformPaymentMethod.objects.create(
+                name="Virement bancaire",
+                account_name="SERVIS",
+                account_number="À renseigner dans l'espace admin",
+                instructions=(
+                    "Indiquez votre e-mail SERVIS en motif du virement, "
+                    "puis uploadez le reçu."
+                ),
+                is_active=True,
+                sort_order=40,
             )
             self.stdout.write("Created placeholder platform payment methods")
 

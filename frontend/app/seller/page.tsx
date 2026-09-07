@@ -31,7 +31,7 @@ import { useSellerProfessional } from "@/features/professionals/hooks/useSellerP
 import { getSellerServiceRequests } from "@/features/pro-services/api/service-requests.api";
 import { getSellerServices } from "@/features/pro-services/api/services.api";
 import type { ServiceSeller } from "@/features/pro-services/types/service.types";
-import { useSellerStore } from "@/features/stores/hooks/useSellerStore";
+import { useSellerPaymentMethods } from "@/features/payments/hooks/useSellerPaymentMethods";
 import * as storesService from "@/features/stores/services/stores.service";
 import type { SellerStats, StoreStatus } from "@/features/stores/types/store.types";
 import { isApiError } from "@/lib/api/errors";
@@ -112,6 +112,24 @@ function SubscriptionSummary() {
         </CardContent>
       </Card>
     </section>
+  );
+}
+
+function PaymentMethodsNudge() {
+  const { methods, loading } = useSellerPaymentMethods();
+  if (loading || methods.length > 0) return null;
+  return (
+    <Card className="border-primary/35 bg-primary-light/25">
+      <CardContent className="flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-body-sm text-text-primary">
+          Vos clients ne pourront pas payer tant que vous n&apos;avez pas
+          ajouté un moyen (Orange Money, Inwi, RIB ou espèces).
+        </p>
+        <Button asChild size="sm" className="shrink-0">
+          <Link href="/seller/payments/methods">Ajouter un moyen</Link>
+        </Button>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -227,6 +245,8 @@ export default function SellerDashboardPage() {
           </>
         }
       />
+
+      <PaymentMethodsNudge />
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         <DashboardQuickLink

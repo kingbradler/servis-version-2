@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { EmptyState } from "@/components/ui/empty-state";
 import { ErrorState } from "@/components/ui/error-state";
 import { FormMessage } from "@/components/ui/form-message";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -263,6 +264,14 @@ export default function SellerSubscriptionPage() {
 
       {step === "plans" && (
         <>
+          {storePlans.length === 0 && servicePlans.length === 0 && (
+            <EmptyState
+              title="Aucune offre d'abonnement"
+              description="Les formules SERVIS n'apparaissent pas encore. Réessayez dans un instant."
+              actionLabel="Réessayer"
+              onAction={() => void load()}
+            />
+          )}
           <section className="space-y-3">
             <h3 className="text-heading-s font-semibold">Boutique</h3>
             <ul className="grid gap-3 sm:hidden">

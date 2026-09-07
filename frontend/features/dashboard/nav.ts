@@ -87,6 +87,11 @@ export const adminNav: SidebarItem[] = [
   { label: "Paiements", href: "/admin/payments", icon: CreditCard },
   { label: "Abonnements", href: "/admin/subscriptions", icon: Sparkles },
   {
+    label: "Moyens SERVIS",
+    href: "/admin/platform-payments",
+    icon: Wallet,
+  },
+  {
     label: "Demandes de services",
     href: "/admin/service-requests",
     icon: ClipboardList,

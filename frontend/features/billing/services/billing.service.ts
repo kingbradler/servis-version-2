@@ -178,3 +178,34 @@ export async function getAdminPlatformPaymentMethods(): Promise<
 > {
   return apiFetch("/admin/platform-payment-methods/");
 }
+
+export async function createAdminPlatformPaymentMethod(payload: {
+  name: string;
+  account_name: string;
+  account_number: string;
+  instructions: string;
+  is_active?: boolean;
+  sort_order?: number;
+}): Promise<PlatformPaymentMethod & { is_active: boolean; sort_order: number }> {
+  return apiFetch("/admin/platform-payment-methods/", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function updateAdminPlatformPaymentMethod(
+  methodId: string,
+  payload: Partial<{
+    name: string;
+    account_name: string;
+    account_number: string;
+    instructions: string;
+    is_active: boolean;
+    sort_order: number;
+  }>
+): Promise<PlatformPaymentMethod & { is_active: boolean; sort_order: number }> {
+  return apiFetch(`/admin/platform-payment-methods/${methodId}/`, {
+    method: "PATCH",
+    body: JSON.stringify(payload),
+  });
+}

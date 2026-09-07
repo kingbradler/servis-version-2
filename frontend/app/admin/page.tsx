@@ -7,6 +7,7 @@ import {
   Image as ImageIcon,
   Package,
   ShoppingBag,
+  Sparkles,
   Store,
   Users,
 } from "lucide-react";
@@ -58,7 +59,7 @@ export default function AdminDashboardPage() {
         actions={
           <>
             <Button asChild variant="primary" size="sm" className="w-full rounded-full sm:w-auto">
-              <Link href="/admin/payments">Preuves à revoir</Link>
+              <Link href="/admin/subscriptions">Preuves d&apos;abonnement</Link>
             </Button>
             <Button
               asChild
@@ -66,7 +67,7 @@ export default function AdminDashboardPage() {
               size="sm"
               className="w-full rounded-full border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white sm:w-auto"
             >
-              <Link href="/admin/stores">Boutiques</Link>
+              <Link href="/admin/payments">Paiements commandes</Link>
             </Button>
           </>
         }
@@ -135,6 +136,11 @@ export default function AdminDashboardPage() {
           href="/admin/payments"
           label="Paiements"
           icon={CreditCard}
+        />
+        <DashboardQuickLink
+          href="/admin/subscriptions"
+          label="Abonnements"
+          icon={Sparkles}
         />
         <DashboardQuickLink
           href="/admin/hero"
