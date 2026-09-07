@@ -17,12 +17,12 @@ export const BRAND = {
     light: "/brand/servis-mark.png",
     dark: "/brand/servis-mark-on-dark.png",
   },
-  /** App / PWA placeholders — replace when icons are finalized */
+  /** App / PWA icons */
   appIcon: {
-    /** 192×192 recommended */
-    sm: "/brand/servis-mark.png",
-    /** 512×512 recommended */
-    lg: "/brand/servis-mark.png",
+    sm: "/icons/icon-192.png",
+    lg: "/icons/icon-512.png",
+    maskable: "/icons/icon-512-maskable.png",
+    favicon: "/icons/icon-32.png",
   },
   colors: {
     orange: "#E84208",
