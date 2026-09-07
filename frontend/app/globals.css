@@ -233,42 +233,70 @@ body {
   }
 }
 
-@keyframes intro-mark {
-  from {
+@keyframes intro-slam {
+  0% {
     opacity: 0;
-    transform: translateX(-28px) scale(0.92);
+    transform: translateX(-92px) scale(0.62) rotate(-8deg);
   }
-  to {
+  62% {
     opacity: 1;
-    transform: translateX(0) scale(1);
+    transform: translateX(10px) scale(1.12) rotate(1.5deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1) rotate(0deg);
   }
 }
 
 @keyframes intro-word {
-  from {
+  0% {
     opacity: 0;
-    transform: translateY(14px);
+    transform: translateY(28px) scale(0.92);
   }
-  to {
+  100% {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
-@keyframes intro-lines {
-  from {
-    opacity: 0;
-    transform: scaleX(0.4);
+@keyframes intro-flash {
+  0% {
+    opacity: 0.7;
   }
-  to {
-    opacity: 1;
-    transform: scaleX(1);
+  100% {
+    opacity: 0;
   }
 }
 
-@keyframes intro-fade-out {
+@keyframes intro-glow {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes intro-streak {
+  0% {
+    opacity: 0;
+    transform: translateX(-40%);
+  }
+  35% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(130%);
+  }
+}
+
+@keyframes intro-wipe {
   to {
     opacity: 0;
+    transform: translateY(-12%) scale(1.04);
     visibility: hidden;
   }
 }

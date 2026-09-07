@@ -8,14 +8,14 @@ export const BRAND = {
   name: "SERVIS",
   /** Compact mark (chariot + S) — favicon, PWA, mobile nav */
   mark: {
-    light: "/brand/servis-mark.svg",
-    dark: "/brand/servis-mark-on-dark.svg",
+    light: "/brand/servis-mark.png",
+    dark: "/brand/servis-mark-on-dark.png",
     png: "/brand/servis-mark.png",
   },
   /** Future: lockup SVG with wordmark baked in (optional) */
   lockup: {
-    light: "/brand/servis-mark.svg",
-    dark: "/brand/servis-mark-on-dark.svg",
+    light: "/brand/servis-mark.png",
+    dark: "/brand/servis-mark-on-dark.png",
   },
   /** App / PWA placeholders — replace when icons are finalized */
   appIcon: {

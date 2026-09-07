@@ -26,12 +26,12 @@ export function SiteIntro() {
     document.documentElement.classList.add("servis-intro-lock");
 
     const startId = window.setTimeout(() => setPhase("play"), 0);
-    const exitId = window.setTimeout(() => setPhase("exit"), 1600);
+    const exitId = window.setTimeout(() => setPhase("exit"), 2100);
     const doneId = window.setTimeout(() => {
       sessionStorage.setItem(INTRO_KEY, "1");
       document.documentElement.classList.remove("servis-intro-lock");
       setPhase("off");
-    }, 2200);
+    }, 2800);
 
     return () => {
       window.clearTimeout(startId);
@@ -46,34 +46,36 @@ export function SiteIntro() {
   return (
     <div
       className={cn(
-        "fixed inset-0 z-[100] flex items-center justify-center bg-cr dark:bg-dk",
+        "fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-[#F7F5F1]",
         phase === "exit" &&
-          "pointer-events-none animate-[intro-fade-out_0.55s_ease_forwards]"
+          "pointer-events-none animate-[intro-wipe_0.7s_cubic-bezier(0.76,0,0.24,1)_forwards]"
       )}
       aria-hidden="true"
     >
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-1/4 top-1/3 h-64 w-[70%] -rotate-6 bg-[radial-gradient(ellipse_at_center,rgba(232,66,8,0.22),transparent_70%)] blur-2xl" />
-        <div className="absolute right-0 top-0 h-full w-1/2 bg-[linear-gradient(120deg,transparent,rgba(14,14,14,0.04))] dark:bg-[linear-gradient(120deg,transparent,rgba(247,245,241,0.04))]" />
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute inset-0 animate-[intro-flash_0.7s_ease-out_both] bg-primary" />
+        <div className="absolute -left-1/3 top-1/4 h-[28rem] w-[80%] animate-[intro-glow_1.2s_ease-out_both] bg-[radial-gradient(ellipse_at_center,rgba(232,66,8,0.45),transparent_62%)] blur-3xl" />
+        <span className="absolute left-[-20%] top-[42%] h-2 w-[55%] animate-[intro-streak_0.85s_0.15s_cubic-bezier(0.2,0.8,0.2,1)_both] rounded-full bg-dk" />
+        <span className="absolute left-[-10%] top-[48%] h-1.5 w-[40%] animate-[intro-streak_0.8s_0.22s_cubic-bezier(0.2,0.8,0.2,1)_both] rounded-full bg-dk/80" />
+        <span className="absolute left-[5%] top-[53%] h-1 w-[28%] animate-[intro-streak_0.75s_0.28s_cubic-bezier(0.2,0.8,0.2,1)_both] rounded-full bg-primary" />
       </div>
 
-      <div className="relative flex flex-col items-center gap-6">
-        <div className="animate-[intro-mark_1.1s_cubic-bezier(0.22,1,0.36,1)_both]">
+      <div className="relative flex flex-col items-center gap-5">
+        <div className="animate-[intro-slam_0.85s_cubic-bezier(0.16,1,0.3,1)_both] drop-shadow-[0_18px_40px_rgba(232,66,8,0.28)]">
           <ServisLogo
             variant="mark"
+            tone="on-light"
             href={null}
             priority
-            markClassName="h-24 w-auto sm:h-28"
+            markClassName="h-32 w-auto sm:h-40"
           />
         </div>
-        <p className="animate-[intro-word_1s_0.25s_cubic-bezier(0.22,1,0.36,1)_both] text-3xl font-bold tracking-[-0.06em] text-text-primary sm:text-4xl">
+        <p className="animate-[intro-word_0.7s_0.35s_cubic-bezier(0.16,1,0.3,1)_both] font-display text-4xl font-extrabold tracking-[-0.07em] text-dk sm:text-5xl">
           SERV<span className="text-primary">IS</span>
         </p>
-        <div className="flex gap-1.5 animate-[intro-lines_0.9s_0.45s_ease_both]">
-          <span className="h-1 w-6 rounded-full bg-dk/80 dark:bg-cr/80" />
-          <span className="h-1 w-10 rounded-full bg-dk/80 dark:bg-cr/80" />
-          <span className="h-1 w-4 rounded-full bg-primary" />
-        </div>
+        <p className="animate-[intro-word_0.65s_0.5s_cubic-bezier(0.16,1,0.3,1)_both] text-[11px] font-extrabold uppercase tracking-[0.32em] text-dk/55">
+          Marketplace · Maroc
+        </p>
       </div>
     </div>
   );
