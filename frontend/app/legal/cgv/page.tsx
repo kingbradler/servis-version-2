@@ -6,23 +6,23 @@ import { env } from "@/config/env";
 
 export const metadata: Metadata = {
   title: "Conditions générales de vente | SERVIS",
-  description: "CGV de la marketplace SERVIS.",
+  description: "Conditions de vente de la marketplace SERVIS.",
 };
 
 export default function CgvPage() {
   return (
     <LegalDocument
       title="Conditions générales de vente"
-      updatedAt="16 août 2026"
+      updatedAt="7 septembre 2026"
     >
       <section className="space-y-3">
         <h2>1. Champ d&apos;application</h2>
         <p>
-          Les présentes CGV encadrent les transactions réalisées via {env.appName}
-          entre un <strong>client</strong> et un <strong>vendeur</strong>{" "}
-          (produits) ou un <strong>professionnel</strong> (services). SERVIS agit
-          comme plateforme d&apos;intermédiation, non comme vendeur, sauf offre
-          expressément marquée autrement.
+          Ces conditions s&apos;appliquent aux achats et aux demandes de
+          service passés sur {env.appName}, entre un client et un professionnel
+          (boutique ou prestataire). SERVIS est la plateforme qui les met en
+          relation, pas le vendeur, sauf si une offre est clairement présentée
+          comme une offre SERVIS.
         </p>
       </section>
 
@@ -30,91 +30,85 @@ export default function CgvPage() {
         <h2>2. Produits et commandes</h2>
         <ul>
           <li>
-            Les prix affichés sont en MAD, indiqués par le vendeur. Une commande
-            concerne une seule boutique ; un panier multi-boutiques génère
-            plusieurs commandes.
+            Les prix sont en dirhams (MAD), fixés par le vendeur. Un panier
+            avec plusieurs boutiques donne lieu à une commande par boutique.
           </li>
           <li>
-            Le client fournit une adresse / contact de livraison au checkout
-            lorsque demandé.
+            Au paiement, le client indique un contact et, si besoin, une
+            adresse de livraison.
           </li>
           <li>
-            Le vendeur confirme, prépare et marque la commande comme terminée
-            selon le statut disponible dans son espace.
+            Le vendeur confirme la commande, prépare la commande, puis la
+            marque comme terminée depuis son espace.
           </li>
         </ul>
       </section>
 
       <section className="space-y-3">
-        <h2>3. Services et demandes</h2>
+        <h2>3. Services</h2>
         <p>
-          Une demande de service est envoyée au professionnel. Celui-ci peut
-          accepter, refuser, puis marquer la prestation comme terminée. Pour les
-          services à prix fixe / « à partir de », un paiement manuel peut être
-          proposé après acceptation. Les devis (« sur devis ») se négocient hors
-          flux de paiement automatique.
+          Le client envoie une demande au professionnel, qui peut l&apos;accepter
+          ou la refuser, puis indiquer quand la prestation est terminée. Pour un
+          prix fixe (ou « à partir de »), un paiement manuel peut être proposé
+          après acceptation. Un devis se discute directement, hors paiement en
+          ligne.
         </p>
       </section>
 
       <section className="space-y-3">
         <h2>4. Paiement</h2>
         <p>
-          Le paiement est <strong>manuel</strong> : le client suit les
-          instructions du vendeur / professionnel (ou de la plateforme pour les
-          abonnements), puis peut transmettre une preuve. La validation de la
-          preuve est effectuée par le vendeur (marketplace) ou l&apos;admin
-          (abonnements SERVIS).
+          Le paiement est manuel : le client suit les instructions du
+          professionnel (ou de SERVIS pour un abonnement), puis envoie une
+          preuve si demandé. Le professionnel valide la preuve pour une
+          commande ; l&apos;équipe SERVIS la valide pour un abonnement.
         </p>
         <p>
-          SERVIS ne conserve pas de données de carte bancaire et n&apos;opère
-          pas de prélèvement automatique à ce stade.
+          SERVIS ne stocke pas de numéro de carte bancaire et ne prélève pas
+          automatiquement votre compte.
         </p>
       </section>
 
       <section className="space-y-3">
-        <h2>5. Livraison / exécution</h2>
+        <h2>5. Livraison et réalisation</h2>
         <p>
-          Délais, modalités de retrait ou de livraison, et conditions
-          d&apos;exécution du service sont de la responsabilité du vendeur /
-          professionnel. Le client est invité à confirmer ces points via la
-          messagerie ou WhatsApp.
+          Les délais, le retrait, la livraison et la façon dont le service est
+          rendu relèvent du professionnel. Le client peut confirmer ces points
+          par message ou WhatsApp avant de payer.
         </p>
       </section>
 
       <section className="space-y-3">
         <h2>6. Annulation et litiges</h2>
         <p>
-          En cas de problème (non-réception, non-conformité, prestation non
-          réalisée), contactez d&apos;abord l&apos;autre partie. Vous pouvez
-          aussi écrire à{" "}
-          <a href={`mailto:${env.platformEmail}`}>{env.platformEmail}</a> pour un
-          accompagnement de modération via l&apos;espace{" "}
-          <strong>Litiges</strong> de la plateforme, ou{" "}
+          En cas de problème (colis non reçu, article non conforme, prestation
+          non réalisée), contactez d&apos;abord l&apos;autre partie. Vous pouvez
+          aussi ouvrir un litige depuis votre espace, ou écrire à{" "}
           <a href={`mailto:${env.platformEmail}`}>{env.platformEmail}</a>. SERVIS
-          peut suspendre un compte en cas d&apos;abus répété.
+          peut suspendre un compte en cas d&apos;abus.
         </p>
       </section>
 
       <section className="space-y-3">
         <h2>7. Avis</h2>
         <p>
-          Les avis vérifiés (après commande ou prestation terminée) aident la
-          communauté. Les faux avis ou contenus diffamatoires pourront être
-          masqués.
+          Les avis après une commande ou une prestation terminée aident les
+          autres utilisateurs. Un faux avis ou un texte injurieux pourra être
+          retiré.
         </p>
       </section>
 
       <section className="space-y-3">
         <h2>8. Droit applicable</h2>
         <p>
-          Les présentes CGV sont destinées à un usage au Maroc. En cas de
-          différend non résolu à l&apos;amiable, les tribunaux compétents du
-          ressort de Tanger pourront être saisis, sous réserve des règles
-          d&apos;ordre public applicables.
+          Ces conditions sont prévues pour un usage au Maroc. Si un désaccord
+          n&apos;est pas réglé à l&apos;amiable, les tribunaux compétents au
+          Maroc pourront être saisis, dans le respect des règles en vigueur.
         </p>
         <p>
-          Voir aussi les <Link href="/legal/cgu">CGU</Link> et la{" "}
-          <Link href="/legal/confidentialite">confidentialité</Link>.
+          Voir aussi les <Link href="/legal/cgu">conditions d&apos;utilisation</Link>{" "}
+          et la{" "}
+          <Link href="/legal/confidentialite">politique de confidentialité</Link>.
         </p>
       </section>
     </LegalDocument>
