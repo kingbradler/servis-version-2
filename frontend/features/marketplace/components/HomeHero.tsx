@@ -21,7 +21,7 @@ const FALLBACK_SLIDES: HeroSlide[] = [
     title: "Marketplace locale",
     highlight: "près de vous",
     subtitle:
-      "Produits d'étudiants entrepreneurs et services de proximité à Tanger.",
+      "Produits d'étudiants entrepreneurs et services de proximité, partout au Maroc.",
     image:
       "https://images.pexels.com/photos/4495416/pexels-photo-4495416.jpeg?auto=compress&cs=tinysrgb&h=900&w=1600",
     cta_href: "/products",
@@ -109,7 +109,7 @@ export function HomeHero() {
   };
 
   return (
-    <section className="relative isolate min-h-[min(92vh,860px)] overflow-hidden bg-dk text-white">
+    <section className="relative isolate min-h-[min(78vh,720px)] overflow-hidden bg-dk text-white sm:min-h-[min(92vh,860px)]">
       {slides.map((s, i) => {
         const src = resolveMediaUrl(s.image) || s.image;
         return (
@@ -141,24 +141,24 @@ export function HomeHero() {
       <div className="absolute inset-0 bg-[linear-gradient(105deg,rgba(14,14,14,0.92)_0%,rgba(14,14,14,0.72)_42%,rgba(14,14,14,0.35)_100%)]" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_80%_20%,rgba(232,66,8,0.28),transparent_55%)]" />
 
-      <div className="relative z-10 mx-auto flex min-h-[min(92vh,860px)] max-w-[1280px] flex-col justify-end px-4 pb-14 pt-24 sm:px-6 sm:pb-16 lg:px-12 lg:pb-20">
+      <div className="relative z-10 mx-auto flex min-h-[min(78vh,720px)] max-w-[1280px] flex-col justify-end px-4 pb-10 pt-20 sm:min-h-[min(92vh,860px)] sm:px-6 sm:pb-16 sm:pt-24 lg:px-12 lg:pb-20">
         <div className="max-w-2xl">
-          <p className="font-display text-[clamp(3.25rem,12vw,7.5rem)] font-extrabold leading-[0.88] tracking-[-0.04em] motion-safe:animate-[fade-up_0.55s_ease-out_both]">
+          <p className="font-display text-[clamp(2.35rem,14vw,7.5rem)] font-extrabold leading-[0.88] tracking-[-0.04em] motion-safe:animate-[fade-up_0.55s_ease-out_both]">
             Servis<span className="text-primary">.</span>
           </p>
-          <h1 className="font-display mt-5 text-[clamp(1.75rem,4.5vw,3.25rem)] font-extrabold leading-[1.05] tracking-tight motion-safe:animate-[fade-up_0.7s_ease-out_both]">
+          <h1 className="font-display mt-4 text-[clamp(1.5rem,6.5vw,3.25rem)] font-extrabold leading-[1.08] tracking-tight motion-safe:animate-[fade-up_0.7s_ease-out_both] sm:mt-5">
             {slide.title}
             <span className="block text-primary">{slide.highlight}</span>
           </h1>
-          <p className="mt-4 max-w-md text-[15px] leading-relaxed text-white/65 motion-safe:animate-[fade-up_0.85s_ease-out_both] sm:text-base">
+          <p className="mt-3 max-w-md text-[15px] leading-relaxed text-white/65 motion-safe:animate-[fade-up_0.85s_ease-out_both] sm:mt-4 sm:text-base">
             {slide.subtitle}
           </p>
 
           <form
             onSubmit={onSearch}
-            className="mt-8 flex max-w-xl gap-2 motion-safe:animate-[fade-up_0.95s_ease-out_both]"
+            className="mt-6 flex w-full max-w-xl flex-col gap-2 motion-safe:animate-[fade-up_0.95s_ease-out_both] sm:mt-8 sm:flex-row"
           >
-            <div className="relative flex-1">
+            <div className="relative min-w-0 flex-1">
               <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
               <input
                 type="search"
@@ -172,18 +172,18 @@ export function HomeHero() {
             <Button
               type="submit"
               variant="primary"
-              className="h-12 rounded-none px-5 font-bold uppercase tracking-wide"
+              className="h-12 w-full rounded-none px-5 font-bold uppercase tracking-wide sm:w-auto"
             >
               Go
             </Button>
           </form>
 
-          <div className="mt-6 flex flex-wrap gap-3 motion-safe:animate-[fade-up_1.05s_ease-out_both]">
+          <div className="mt-5 flex w-full flex-col gap-2 motion-safe:animate-[fade-up_1.05s_ease-out_both] sm:mt-6 sm:flex-row sm:flex-wrap sm:gap-3">
             <Button
               asChild
               variant="primary"
               size="lg"
-              className="rounded-none uppercase tracking-wide"
+              className="w-full rounded-none uppercase tracking-wide sm:w-auto"
             >
               <Link href={slide.cta_href || "/products"}>
                 {slide.cta_label || "Découvrir"}
@@ -194,7 +194,7 @@ export function HomeHero() {
               asChild
               variant="outline"
               size="lg"
-              className="rounded-none border-white/30 bg-transparent uppercase tracking-wide text-white hover:bg-white hover:text-dk"
+              className="w-full rounded-none border-white/30 bg-transparent uppercase tracking-wide text-white hover:bg-white hover:text-dk sm:w-auto"
             >
               <Link href="/stores">Boutiques</Link>
             </Button>
