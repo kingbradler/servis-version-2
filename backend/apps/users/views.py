@@ -95,7 +95,7 @@ class SellerRegisterView(APIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
         if not send_verification_email(user):
-    user.mark_email_verified()
+            user.mark_email_verified()
         return _auth_response(user, http_status=status.HTTP_201_CREATED)
 
 
