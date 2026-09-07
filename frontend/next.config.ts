@@ -28,6 +28,7 @@ function mediaPatternFromApiUrl(): ImageRemotePattern[] {
 }
 
 const nextConfig: NextConfig = {
+  allowedDevOrigins: ["127.0.0.1", "localhost"],
   turbopack: {
     // Pin root to frontend/ to avoid picking up a parent package-lock.json
     root: path.join(__dirname),
