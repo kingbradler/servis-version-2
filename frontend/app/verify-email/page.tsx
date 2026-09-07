@@ -38,7 +38,7 @@ function VerifyEmailContent() {
         const user = await authService.verifyEmail({ uid, token });
         if (cancelled) return;
         setStatus("ok");
-        setMessage("Votre e-mail est confirmé. Bienvenue sur SERVIS !");
+        setMessage("Votre adresse e-mail est confirmée. Votre compte est activé.");
         await refresh();
         const dest = getHomePathForRole(user.role);
         window.setTimeout(() => {
