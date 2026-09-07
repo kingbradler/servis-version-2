@@ -54,6 +54,7 @@ const STATUS_FALLBACKS: Record<number, string> = {
   403: "Cette action n’est pas autorisée avec votre compte actuel.",
   404: "Élément introuvable. Il a peut‑être été supprimé ou n’existe plus.",
   409: "Cette action entre en conflit avec l’état actuel. Réessayez ou actualisez la page.",
+  408: "Le serveur met trop de temps à répondre. Réessayez dans un instant.",
   413: "Le fichier est trop volumineux. Essayez une image plus légère.",
   429: "Trop de tentatives. Patientez un moment puis réessayez.",
   500: "Un problème est survenu de notre côté. Réessayez dans quelques instants.",
@@ -147,6 +148,7 @@ function softenTechnicalCopy(message: string): string {
     .replace(/\bDRAFT\b/g, "brouillon")
     .replace(/\bARCHIVED\b/g, "archivé")
     .replace(/\bPENDING\b/g, "en attente")
+    .replace(/CSRF Failed:?[^.]*\.?/gi, "Session expirée. Actualisez la page puis réessayez.")
     .replace(/\s{2,}/g, " ")
     .trim();
 }

@@ -18,7 +18,7 @@ from apps.stores.validators import sanitize_text, validate_phone
 class StoreMediaUploadSerializer(serializers.Serializer):
     """Multipart upload for store logo or banner."""
 
-    image = serializers.ImageField()
+    image = serializers.FileField()
     kind = serializers.ChoiceField(choices=("logo", "banner"))
 
     def validate_image(self, value):

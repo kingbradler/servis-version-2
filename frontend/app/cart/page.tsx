@@ -289,7 +289,7 @@ export default function CartPage() {
           <p className="mt-2 text-body-sm text-text-secondary">
             {step === "edit"
               ? "Ajustez les quantités, puis passez à la confirmation."
-              : "Vérifiez le récapitulatif. Une commande sera créée par boutique."}
+              : "Vérifiez le récapitulatif et l’adresse. Une commande sera créée par boutique."}
           </p>
         </header>
 

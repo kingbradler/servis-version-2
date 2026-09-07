@@ -1,6 +1,7 @@
 """Validation helpers for products and images."""
 
 from decimal import Decimal, InvalidOperation
+from pathlib import Path
 
 from django.core.files.uploadedfile import UploadedFile
 from django.utils.html import strip_tags
@@ -12,8 +13,18 @@ ALLOWED_IMAGE_CONTENT_TYPES = {
     "image/png": ("PNG",),
     "image/webp": ("WEBP",),
 }
+MIME_ALIASES = {
+    "image/jpg": "image/jpeg",
+    "image/pjpeg": "image/jpeg",
+    "image/x-png": "image/png",
+}
 ALLOWED_IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
 MAX_IMAGE_BYTES = 5 * 1024 * 1024  # 5 MB
+EXT_FOR_MIME = {
+    "image/jpeg": ".jpg",
+    "image/png": ".png",
+    "image/webp": ".webp",
+}
 
 # Magic bytes for common formats (SVG / EXE rejected)
 JPEG_MAGIC = (b"\xff\xd8\xff",)
@@ -66,6 +77,16 @@ def _magic_matches(header: bytes, content_type: str) -> bool:
     return False
 
 
+def _sniff_mime(header: bytes) -> str | None:
+    if any(header.startswith(m) for m in JPEG_MAGIC):
+        return "image/jpeg"
+    if any(header.startswith(m) for m in PNG_MAGIC):
+        return "image/png"
+    if header.startswith(WEBP_RIFF) and WEBP_WEBP in header[:16]:
+        return "image/webp"
+    return None
+
+
 def validate_product_image_file(uploaded: UploadedFile) -> UploadedFile:
     """
     Validate uploaded product images by size, declared type, magic bytes, and Pillow.
@@ -74,27 +95,44 @@ def validate_product_image_file(uploaded: UploadedFile) -> UploadedFile:
     if not isinstance(uploaded, UploadedFile):
         raise serializers.ValidationError("Fichier image invalide.")
 
-    content_type = (uploaded.content_type or "").lower().split(";")[0].strip()
-    if content_type not in ALLOWED_IMAGE_CONTENT_TYPES:
-        raise serializers.ValidationError(
-            "Format non autorisé. Formats acceptés: JPEG, PNG, WebP."
-        )
-
-    if not _extension_ok(getattr(uploaded, "name", "") or ""):
-        raise serializers.ValidationError(
-            "Extension non autorisée. Utilisez .jpg, .jpeg, .png ou .webp."
-        )
-
     size = getattr(uploaded, "size", None)
     if size is not None and size > MAX_IMAGE_BYTES:
         raise serializers.ValidationError("Image trop volumineuse (max 5 Mo).")
 
     header = uploaded.read(32)
     uploaded.seek(0)
+    sniffed = _sniff_mime(header)
+
+    content_type = (uploaded.content_type or "").lower().split(";")[0].strip()
+    content_type = MIME_ALIASES.get(content_type, content_type)
+    # Phones often send "" or application/octet-stream; trust JPEG/PNG/WebP bytes.
+    if content_type not in ALLOWED_IMAGE_CONTENT_TYPES:
+        if sniffed:
+            content_type = sniffed
+        else:
+            raise serializers.ValidationError(
+                "Format non autorisé. Formats acceptés: JPEG, PNG, WebP "
+                "(pas HEIC). Sur iPhone : Réglages → Appareil photo → Formats → "
+                "Le plus compatible, ou exportez en JPEG."
+            )
+
     if not _magic_matches(header, content_type):
-        raise serializers.ValidationError(
-            "Le contenu du fichier ne correspond pas à une image JPEG/PNG/WebP."
-        )
+        if sniffed:
+            content_type = sniffed
+        else:
+            raise serializers.ValidationError(
+                "Le contenu du fichier ne correspond pas à une image JPEG/PNG/WebP."
+            )
+
+    filename = getattr(uploaded, "name", "") or ""
+    if not _extension_ok(filename):
+        if content_type in EXT_FOR_MIME:
+            stem = Path(filename).stem or "photo"
+            uploaded.name = f"{stem}{EXT_FOR_MIME[content_type]}"
+        else:
+            raise serializers.ValidationError(
+                "Extension non autorisée. Utilisez .jpg, .jpeg, .png ou .webp."
+            )
 
     # SVG / script sniff
     sniff = header[:200].lower()

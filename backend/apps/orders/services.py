@@ -2,12 +2,15 @@
 
 from __future__ import annotations
 
+import logging
 from collections import defaultdict
 from decimal import Decimal
 
 from django.db import transaction
 from django.db.models import F
 from rest_framework.exceptions import NotFound, ValidationError
+
+logger = logging.getLogger(__name__)
 
 from apps.orders.models import Cart, CartItem, Order, OrderItem, OrderStatus
 from apps.products.models import Product, ProductStatus
@@ -237,15 +240,24 @@ def checkout_cart(user, *, delivery: dict) -> list[Order]:
 
     clear_cart(cart)
     # Re-fetch with items for serialization
-    order_ids = [o.id for o in orders]
     result = list(
-        Order.objects.filter(id__in=order_ids)
+        Order.objects.filter(id__in=[o.id for o in orders])
         .select_related("store", "user", "store__owner")
         .prefetch_related("items", "items__product")
         .order_by("created_at")
     )
-    from apps.notifications.services import notify_order_created
+    committed_ids = [o.id for o in result]
 
-    for order in result:
-        notify_order_created(order)
+    def _notify_after_commit() -> None:
+        from apps.notifications.services import notify_order_created
+
+        for order in Order.objects.filter(id__in=committed_ids).select_related(
+            "store", "store__owner"
+        ):
+            try:
+                notify_order_created(order)
+            except Exception:
+                logger.exception("Order notification failed for %s", order.id)
+
+    transaction.on_commit(_notify_after_commit)
     return result

@@ -3,13 +3,56 @@
 from __future__ import annotations
 
 import logging
+import threading
 
 from django.conf import settings
 from django.core.mail import send_mail
+from django.db import close_old_connections, transaction
 
 from apps.notifications.models import Notification, NotificationType
 
 logger = logging.getLogger(__name__)
+
+
+def _deliver_notification_email(to: str, title: str, body: str, link: str) -> None:
+    """SMTP/Resend in a background thread so checkout/payment never wait on mail."""
+    try:
+        close_old_connections()
+        frontend = getattr(settings, "FRONTEND_URL", "http://localhost:3000").rstrip("/")
+        full_link = f"{frontend}{link}" if link.startswith("/") else (link or frontend)
+        send_mail(
+            subject=f"SERVIS — {title}",
+            message=(
+                f"{body}\n\n"
+                + (f"Ouvrir : {full_link}\n\n" if link else "")
+                + "L'équipe SERVIS\n"
+            ),
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[to],
+            fail_silently=True,
+        )
+    except Exception:
+        logger.exception("Failed to email notification to %s", to)
+    finally:
+        close_old_connections()
+
+
+def _schedule_notification_email(to: str, title: str, body: str, link: str) -> None:
+    def start() -> None:
+        threading.Thread(
+            target=_deliver_notification_email,
+            args=(to, title, body, link),
+            daemon=True,
+            name="servis-notify-email",
+        ).start()
+
+    try:
+        if transaction.get_connection().in_atomic_block:
+            transaction.on_commit(start)
+            return
+    except Exception:
+        logger.exception("Could not schedule notification email after commit")
+    start()
 
 
 def notify(
@@ -40,19 +83,7 @@ def notify(
 
     if email and getattr(user, "email", None):
         try:
-            frontend = getattr(settings, "FRONTEND_URL", "http://localhost:3000").rstrip("/")
-            full_link = f"{frontend}{link}" if link.startswith("/") else (link or frontend)
-            send_mail(
-                subject=f"SERVIS — {title}",
-                message=(
-                    f"{body}\n\n"
-                    + (f"Ouvrir : {full_link}\n\n" if link else "")
-                    + "L'équipe SERVIS\n"
-                ),
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[user.email],
-                fail_silently=True,
-            )
+            _schedule_notification_email(user.email, title, body, link)
         except Exception:
             logger.exception("Failed to email notification to %s", user.email)
 

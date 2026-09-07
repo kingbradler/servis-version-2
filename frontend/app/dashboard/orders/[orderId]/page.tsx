@@ -237,9 +237,16 @@ function OrderDetailContent({ orderId }: { orderId: string }) {
                     ))}
                   </div>
                   {paymentApi.methods.length === 0 && (
-                    <Alert variant="warning" title="Aucun moyen disponible">
-                      Cette boutique n&apos;a pas encore configuré de moyen de
-                      paiement.
+                    <Alert variant="warning" title="Aucun moyen de paiement">
+                      Le vendeur n&apos;a pas encore indiqué comment payer
+                      (Orange Money, virement…). Ajoutez vos moyens dans{" "}
+                      <Link
+                        href="/seller/payments/methods"
+                        className="font-medium underline"
+                      >
+                        Moyens de paiement
+                      </Link>{" "}
+                      si c&apos;est votre boutique, ou contactez le vendeur.
                     </Alert>
                   )}
                   <Button
