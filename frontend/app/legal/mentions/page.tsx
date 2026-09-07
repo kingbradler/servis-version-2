@@ -1,79 +1,114 @@
-import type { Metadata } from "next";
-
 import { LegalDocument } from "@/features/legal/components/LegalDocument";
-import { env } from "@/config/env";
-
-export const metadata: Metadata = {
-  title: "Mentions légales | SERVIS",
-  description: "Mentions légales de la plateforme SERVIS.",
-};
 
 export default function MentionsLegalesPage() {
   return (
-    <LegalDocument title="Mentions légales" updatedAt="16 août 2026">
-      <section className="space-y-3">
-        <h2>1. Éditeur de la plateforme</h2>
-        <p>
-          La plateforme <strong>{env.appName}</strong> (ci-après « SERVIS ») est
-          une marketplace locale permettant de découvrir des produits et
-          services proposés par des vendeurs et professionnels, notamment à
-          Tanger (Maroc).
-        </p>
-        <ul>
-          <li>Nom commercial : SERVIS</li>
-          <li>
-            Contact :{" "}
-            <a href={`mailto:${env.platformEmail}`}>{env.platformEmail}</a>
-          </li>
-          <li>Téléphone : {env.platformPhone}</li>
-          <li>Zone d&apos;activité principale : Tanger, Maroc</li>
-        </ul>
-        <p className="text-body-sm text-text-muted">
-          Les mentions d&apos;identification formelle (raison sociale, ICE /
-          RC, adresse du siège) seront complétées dès formalisation de la
-          structure juridique. En attendant, le contact ci-dessus fait foi pour
-          toute demande.
-        </p>
-      </section>
-
-      <section className="space-y-3">
-        <h2>2. Hébergement</h2>
-        <p>
-          Le site et l&apos;API sont hébergés chez le(s) prestataire(s)
-          choisi(s) par SERVIS (hébergeur cloud / VPS). Les fichiers médias
-          peuvent être stockés via un service de stockage objet (ex. Supabase
-          Storage).
-        </p>
-      </section>
-
-      <section className="space-y-3">
-        <h2>3. Nature du service</h2>
-        <p>
-          SERVIS est un <strong>intermédiaire technique</strong> : elle met en
-          relation des acheteurs / clients avec des boutiques et
-          professionnels. SERVIS n&apos;est pas le vendeur des produits ni le
-          prestataire des services listés, sauf mention contraire.
-        </p>
-      </section>
-
-      <section className="space-y-3">
-        <h2>4. Propriété intellectuelle</h2>
-        <p>
-          La marque SERVIS, le logo, l&apos;interface et les contenus éditoriaux
-          de la plateforme sont protégés. Toute reproduction non autorisée est
-          interdite. Les contenus publiés par les vendeurs (photos, textes)
-          restent leur responsabilité.
-        </p>
-      </section>
-
-      <section className="space-y-3">
-        <h2>5. Signalement</h2>
-        <p>
-          Pour signaler un contenu illicite, une boutique frauduleuse ou un
-          abus :{" "}
-          <a href={`mailto:${env.platformEmail}`}>{env.platformEmail}</a>.
-        </p>
-      </section>
-    </LegalDocument>
+    <LegalDocument
+      title="Mentions légales"
+      updatedAt="7 septembre 2026"
+      sections={[
+        {
+          heading: "1. Éditeur du site",
+          body: (
+            <>
+              <p>
+                Le site <strong>SERVIS</strong> (servis-superrapid.com) est une
+                marketplace. Des étudiants et des professionnels peuvent y
+                proposer des produits et des services, partout au Maroc.
+              </p>
+              <p>
+                SERVIS n’est pas le vendeur de ces offres. Chaque vendeur est
+                responsable de ce qu’il publie et de ce qu’il vend.
+              </p>
+              <dl className="grid gap-2 sm:grid-cols-[10rem_1fr]">
+                <dt className="font-medium text-foreground">Nom</dt>
+                <dd>SERVIS</dd>
+                <dt className="font-medium text-foreground">Site</dt>
+                <dd>https://www.servis-superrapid.com</dd>
+                <dt className="font-medium text-foreground">Contact</dt>
+                <dd>
+                  <a href="mailto:contact@servis-superrapid.com">
+                    contact@servis-superrapid.com
+                  </a>
+                </dd>
+                <dt className="font-medium text-foreground">Pays</dt>
+                <dd>Maroc</dd>
+              </dl>
+            </>
+          ),
+        },
+        {
+          heading: "2. Hébergement",
+          body: (
+            <>
+              <p>Le site et l’application sont hébergés chez :</p>
+              <ul>
+                <li>
+                  <strong>Vercel Inc.</strong> — pages du site (États-Unis)
+                </li>
+                <li>
+                  <strong>Render</strong> — serveur de l’application
+                </li>
+              </ul>
+              <p>
+                Les données (comptes, commandes, messages) sont stockées chez
+                un prestataire d’hébergement de base de données, dans le cadre
+                du fonctionnement du service.
+              </p>
+            </>
+          ),
+        },
+        {
+          heading: "3. Propriété intellectuelle",
+          body: (
+            <p>
+              Le nom SERVIS, le logo, la présentation du site et les textes
+              rédigés par SERVIS sont protégés. Vous n’avez pas le droit de les
+              copier ou de les réutiliser sans accord écrit.
+            </p>
+          ),
+        },
+        {
+          heading: "4. Contenus publiés par les utilisateurs",
+          body: (
+            <p>
+              Les annonces, photos, avis et messages sont publiés par les
+              utilisateurs. SERVIS peut les retirer s’ils sont illégaux, faux
+              ou contraires aux règles du site.
+            </p>
+          ),
+        },
+        {
+          heading: "5. Responsabilité",
+          body: (
+            <p>
+              SERVIS met le site à disposition. SERVIS n’est pas responsable
+              des ventes entre un acheteur et un vendeur, ni des retards ou
+              des problèmes de livraison dus au vendeur ou au transporteur.
+            </p>
+          ),
+        },
+        {
+          heading: "6. Données personnelles",
+          body: (
+            <p>
+              L’utilisation des données personnelles est expliquée dans la{" "}
+              <a href="/legal/confidentialite">politique de confidentialité</a>.
+            </p>
+          ),
+        },
+        {
+          heading: "7. Contact",
+          body: (
+            <p>
+              Pour une question sur ces mentions :{" "}
+              <a href="mailto:contact@servis-superrapid.com">
+                contact@servis-superrapid.com
+              </a>
+              .
+            </p>
+          ),
+        },
+      ]}
+    />
   );
 }
