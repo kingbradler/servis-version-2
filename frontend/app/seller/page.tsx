@@ -32,6 +32,7 @@ import { getSellerServiceRequests } from "@/features/pro-services/api/service-re
 import { getSellerServices } from "@/features/pro-services/api/services.api";
 import type { ServiceSeller } from "@/features/pro-services/types/service.types";
 import { useSellerPaymentMethods } from "@/features/payments/hooks/useSellerPaymentMethods";
+import { useSellerStore } from "@/features/stores/hooks/useSellerStore";
 import * as storesService from "@/features/stores/services/stores.service";
 import type { SellerStats, StoreStatus } from "@/features/stores/types/store.types";
 import { isApiError } from "@/lib/api/errors";
