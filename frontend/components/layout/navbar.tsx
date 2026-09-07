@@ -43,6 +43,7 @@ const NAV_LINKS = [
   { href: "/", label: "Accueil", exact: true },
   { href: "/products", label: "Produits" },
   { href: "/services", label: "Services" },
+  { href: "/stores", label: "Boutiques" },
   { href: "/explore", label: "Explorer" },
 ];
 
@@ -162,24 +163,22 @@ export function Navbar({ className }: NavbarProps) {
           </Button>
 
           {isAuthenticated && (
-            <>
-              <div className="hidden sm:block">
-                <NotificationBell tone="dark" />
-              </div>
-              <Link
-                href="/cart"
-                className={cn(iconBtn, "relative")}
-                aria-label={`Panier${cartCount > 0 ? `, ${cartCount} article${cartCount > 1 ? "s" : ""}` : ""}`}
-              >
-                <ShoppingCart className="h-[18px] w-[18px]" />
-                {cartCount > 0 && (
-                  <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-0.5 text-[10px] font-bold text-white">
-                    {cartCount > 9 ? "9+" : cartCount}
-                  </span>
-                )}
-              </Link>
-            </>
+            <div className="hidden sm:block">
+              <NotificationBell tone="dark" />
+            </div>
           )}
+          <Link
+            href="/cart"
+            className={cn(iconBtn, "relative")}
+            aria-label={`Panier${cartCount > 0 ? `, ${cartCount} article${cartCount > 1 ? "s" : ""}` : ""}`}
+          >
+            <ShoppingCart className="h-[18px] w-[18px]" />
+            {cartCount > 0 && (
+              <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-0.5 text-[10px] font-bold text-white">
+                {cartCount > 9 ? "9+" : cartCount}
+              </span>
+            )}
+          </Link>
 
           <div className="hidden sm:block [&_button]:h-10 [&_button]:w-10 [&_button]:rounded-lg [&_button]:bg-white/[0.07] [&_button]:text-white/70 [&_button]:hover:bg-white/12 [&_button]:hover:text-white">
             <ThemeToggle />
@@ -293,6 +292,14 @@ export function Navbar({ className }: NavbarProps) {
                 {link.label}
               </Link>
             ))}
+
+            <Link
+              href="/cart"
+              onClick={() => setMobileOpen(false)}
+              className="rounded-lg bg-white/[0.07] px-4 py-3 text-left text-[15px] font-semibold text-white/85"
+            >
+              Panier
+            </Link>
 
             {!isAuthenticated && (
               <>

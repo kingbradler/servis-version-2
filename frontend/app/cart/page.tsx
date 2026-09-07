@@ -132,13 +132,18 @@ export default function CartPage() {
       <MarketplaceShell>
         <div className="mx-auto max-w-3xl px-4 py-12">
           <EmptyState
-            title="Connexion requise"
-            description="Connectez-vous pour voir et gérer votre panier."
+            title="Connectez-vous pour votre panier"
+            description="Le panier est lié à votre compte pour payer le vendeur (Orange Money, virement, etc.). Pas encore inscrit ? Créez un compte, c'est gratuit."
             actionLabel="Se connecter"
             onAction={() =>
               router.push(`/login?next=${encodeURIComponent("/cart")}`)
             }
           />
+          <p className="mt-4 text-center text-body-sm text-text-secondary">
+            <Link href="/register" className="font-medium text-primary hover:underline">
+              Créer un compte
+            </Link>
+          </p>
         </div>
       </MarketplaceShell>
     );

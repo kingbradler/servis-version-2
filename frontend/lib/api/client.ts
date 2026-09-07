@@ -5,6 +5,7 @@
 
 import { env } from "@/config/env";
 import { ApiError, messageFromApiBody } from "@/lib/api/errors";
+import { hasUiSession } from "@/lib/session-flag";
 
 const CSRF_COOKIE_NAME = "csrftoken";
 
@@ -86,6 +87,10 @@ export async function apiFetch<T>(
   // Access token expired → try refresh once, then retry
   // Allow refresh for /auth/me/ (and other non-auth-mutating paths)
   if (response.status === 401 && !shouldSkipAuthRefresh(path)) {
+    const lookingUpSession = path.includes("/auth/me");
+    if (lookingUpSession && !hasUiSession()) {
+      await throwApiError(response);
+    }
     const csrf = await ensureCsrfCookie();
     const refreshed = await fetch(`${env.apiUrl}/auth/refresh/`, {
       method: "POST",

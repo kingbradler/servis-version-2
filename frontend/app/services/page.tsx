@@ -193,10 +193,26 @@ function ServicesCatalog() {
 
             {!loading && !error && services.length === 0 && (
               <EmptyState
-                title="Aucun service trouvé"
-                description="Essayez d'élargir vos filtres ou de modifier la recherche."
-                actionLabel="Réinitialiser"
-                onAction={resetFilters}
+                title={
+                  queryFilters.search || queryFilters.category
+                    ? "Aucun service trouvé"
+                    : "Pas encore de services"
+                }
+                description={
+                  queryFilters.search || queryFilters.category
+                    ? "Élargissez vos filtres ou modifiez la recherche."
+                    : "Proposez vos services aux étudiants et aux habitants près de chez vous."
+                }
+                actionLabel={
+                  queryFilters.search || queryFilters.category
+                    ? "Réinitialiser"
+                    : "Proposer un service"
+                }
+                onAction={
+                  queryFilters.search || queryFilters.category
+                    ? resetFilters
+                    : () => router.push("/register")
+                }
               />
             )}
 

@@ -9,14 +9,33 @@ import { useCallback, useEffect, useState } from "react";
 
 import type { UserRole } from "@/types";
 
+import { isApiError } from "@/lib/api/errors";
+import { clearUiSession, hasUiSession, UI_SESSION_EVENT } from "@/lib/session-flag";
+
 import type { AuthUser } from "../types/auth.types";
 import * as authService from "../services/auth.service";
 
-export function useCurrentUser(options?: { autoLoad?: boolean }) {
+export function useCurrentUser(options?: {
+  autoLoad?: boolean;
+  /** Probe /auth/me even without a UI session flag (protected pages). */
+  probeSession?: boolean;
+}) {
   const autoLoad = options?.autoLoad ?? true;
+  const probeSession = options?.probeSession ?? false;
   const [user, setUser] = useState<AuthUser | null>(null);
-  const [loading, setLoading] = useState(autoLoad);
+  const [loading, setLoading] = useState(
+    () =>
+      !!autoLoad &&
+      (probeSession ||
+        (typeof document !== "undefined" && hasUiSession()))
+  );
   const [error, setError] = useState<string | null>(null);
+
+  const forgetSession = useCallback((err: unknown) => {
+    if (isApiError(err) && err.status === 401) {
+      clearUiSession();
+    }
+  }, []);
 
   const refresh = useCallback(async () => {
     setLoading(true);
@@ -26,16 +45,22 @@ export function useCurrentUser(options?: { autoLoad?: boolean }) {
       setUser(data);
       return data;
     } catch (err) {
+      forgetSession(err);
       setUser(null);
       setError(err instanceof Error ? err.message : "Non authentifié");
       return null;
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [forgetSession]);
 
   useEffect(() => {
     if (!autoLoad) return;
+    if (!probeSession && !hasUiSession()) {
+      setLoading(false);
+      setUser(null);
+      return;
+    }
     let cancelled = false;
     void authService
       .getMe()
@@ -44,6 +69,7 @@ export function useCurrentUser(options?: { autoLoad?: boolean }) {
       })
       .catch((err: unknown) => {
         if (cancelled) return;
+        forgetSession(err);
         setUser(null);
         setError(err instanceof Error ? err.message : "Non authentifié");
       })
@@ -53,7 +79,22 @@ export function useCurrentUser(options?: { autoLoad?: boolean }) {
     return () => {
       cancelled = true;
     };
-  }, [autoLoad]);
+  }, [autoLoad, probeSession, forgetSession]);
+
+  useEffect(() => {
+    const onChange = (event: Event) => {
+      const on = (event as CustomEvent<boolean>).detail;
+      if (on) {
+        void refresh();
+        return;
+      }
+      setUser(null);
+      setError(null);
+      setLoading(false);
+    };
+    window.addEventListener(UI_SESSION_EVENT, onChange);
+    return () => window.removeEventListener(UI_SESSION_EVENT, onChange);
+  }, [refresh]);
 
   const role: UserRole | null = user?.role ?? null;
 

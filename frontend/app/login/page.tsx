@@ -74,7 +74,7 @@ function LoginForm() {
           Connexion
         </h1>
         <p className="mt-2 text-body text-text-secondary">
-          Connectez-vous pour accéder à votre compte.
+          Panier, commandes et boutique : tout passe par votre compte.
         </p>
 
         <form

@@ -99,10 +99,16 @@ export function StoresListPage() {
 
         {!loading && !error && stores.length === 0 && (
           <EmptyState
-            title="Aucune boutique trouvée"
-            description="Essayez une autre recherche."
-            actionLabel="Voir les produits"
-            onAction={() => router.push("/products")}
+            title={search.trim() ? "Aucune boutique trouvée" : "Pas encore de boutique"}
+            description={
+              search.trim()
+                ? "Essayez un autre nom ou une autre ville."
+                : "Ouvrez la première boutique SERVIS de votre ville."
+            }
+            actionLabel={search.trim() ? "Effacer la recherche" : "Créer ma boutique"}
+            onAction={() =>
+              search.trim() ? setSearch("") : router.push("/register")
+            }
           />
         )}
 

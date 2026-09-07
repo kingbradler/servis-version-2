@@ -48,7 +48,7 @@ export function DashboardShell({
   className?: string;
 }) {
   const [open, setOpen] = useState(false);
-  const { user } = useCurrentUser();
+  const { user } = useCurrentUser({ probeSession: true });
   const { logout } = useAuth();
   const router = useRouter();
   const { count: unreadMessages } = useUnreadMessages();

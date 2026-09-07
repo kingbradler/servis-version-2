@@ -40,7 +40,7 @@ function RegisterForm() {
     const whatsapp = phone.trim();
     if (!whatsapp) {
       setLocalError(
-        "Le numéro WhatsApp est obligatoire pour vous contacter après un paiement."
+        "Indiquez un numéro WhatsApp : le vendeur (ou vous, si vous vendez) s’en sert après une commande."
       );
       return;
     }

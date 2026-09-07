@@ -25,7 +25,7 @@ const FALLBACK_SLIDES: HeroSlide[] = [
     image:
       "https://images.pexels.com/photos/4495416/pexels-photo-4495416.jpeg?auto=compress&cs=tinysrgb&h=900&w=1600",
     cta_href: "/products",
-    cta_label: "Shop produits",
+    cta_label: "Voir les produits",
     sort_order: 0,
     is_active: true,
     created_at: "",
@@ -174,7 +174,7 @@ export function HomeHero() {
               variant="primary"
               className="h-12 w-full rounded-none px-5 font-bold uppercase tracking-wide sm:w-auto"
             >
-              Go
+              Rechercher
             </Button>
           </form>
 

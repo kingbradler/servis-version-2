@@ -4,40 +4,53 @@
  */
 
 import { apiFetch } from "@/lib/api/client";
+import { clearUiSession, markUiSession } from "@/lib/session-flag";
 
 import type { AuthUser, LoginPayload, RegisterPayload, UpdateMePayload } from "../types/auth.types";
 
 const AUTH_BASE = "/auth";
 
 export async function registerClient(payload: RegisterPayload): Promise<AuthUser> {
-  return apiFetch<AuthUser>(`${AUTH_BASE}/register/`, {
+  const user = await apiFetch<AuthUser>(`${AUTH_BASE}/register/`, {
     method: "POST",
     body: JSON.stringify(payload),
   });
+  markUiSession();
+  return user;
 }
 
 export async function registerSeller(payload: RegisterPayload): Promise<AuthUser> {
-  return apiFetch<AuthUser>(`${AUTH_BASE}/register/seller/`, {
+  const user = await apiFetch<AuthUser>(`${AUTH_BASE}/register/seller/`, {
     method: "POST",
     body: JSON.stringify(payload),
   });
+  markUiSession();
+  return user;
 }
 
 export async function login(payload: LoginPayload): Promise<AuthUser> {
-  return apiFetch<AuthUser>(`${AUTH_BASE}/login/`, {
+  const user = await apiFetch<AuthUser>(`${AUTH_BASE}/login/`, {
     method: "POST",
     body: JSON.stringify(payload),
   });
+  markUiSession();
+  return user;
 }
 
 export async function logout(): Promise<{ detail: string }> {
-  return apiFetch<{ detail: string }>(`${AUTH_BASE}/logout/`, {
-    method: "POST",
-  });
+  try {
+    return await apiFetch<{ detail: string }>(`${AUTH_BASE}/logout/`, {
+      method: "POST",
+    });
+  } finally {
+    clearUiSession();
+  }
 }
 
 export async function getMe(): Promise<AuthUser> {
-  return apiFetch<AuthUser>(`${AUTH_BASE}/me/`);
+  const user = await apiFetch<AuthUser>(`${AUTH_BASE}/me/`);
+  markUiSession();
+  return user;
 }
 
 export async function updateMe(payload: UpdateMePayload): Promise<AuthUser> {
@@ -61,10 +74,12 @@ export async function verifyEmail(payload: {
   uid: string;
   token: string;
 }): Promise<AuthUser> {
-  return apiFetch<AuthUser>(`${AUTH_BASE}/verify-email/`, {
+  const user = await apiFetch<AuthUser>(`${AUTH_BASE}/verify-email/`, {
     method: "POST",
     body: JSON.stringify(payload),
   });
+  markUiSession();
+  return user;
 }
 
 export async function resendVerification(email?: string): Promise<{
@@ -95,8 +110,10 @@ export async function confirmPasswordReset(payload: {
   password: string;
   password_confirm: string;
 }): Promise<AuthUser> {
-  return apiFetch<AuthUser>(`${AUTH_BASE}/password-reset/confirm/`, {
+  const user = await apiFetch<AuthUser>(`${AUTH_BASE}/password-reset/confirm/`, {
     method: "POST",
     body: JSON.stringify(payload),
   });
+  markUiSession();
+  return user;
 }

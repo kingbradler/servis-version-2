@@ -206,9 +206,8 @@ Frontend : `features/map/` — Mapbox GL (`MapView` + clustering), `/explore`, t
 ### Seed
 ```bash
 python manage.py seed_catalog
-python manage.py seed_catalog --with-future-cities
 ```
-Primary city: **Tanger**. Categories adapted to student marketplace.
+Villes : Casablanca, Rabat, Marrakech, Fès, Tanger, Tétouan, Agadir. Catégories marketplace étudiante.
 
 ## Sécurité (fondations)
 

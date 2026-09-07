@@ -49,6 +49,8 @@ describe("Navbar navigation", () => {
     expect(screen.getByRole("link", { name: "Produits" })).toBeTruthy();
     expect(screen.getByRole("link", { name: "Services" })).toBeTruthy();
     expect(screen.getByRole("link", { name: "Explorer" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Boutiques" })).toBeTruthy();
+    expect(screen.getByLabelText(/panier/i)).toBeTruthy();
     expect(screen.getAllByText("Connexion").length).toBeGreaterThan(0);
   });
 

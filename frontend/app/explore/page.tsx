@@ -96,6 +96,7 @@ function ExploreResultsList({
   onSelect: (id: string) => void;
   onRetry: () => void;
 }) {
+  const router = useRouter();
   if (loading) {
     return (
       <div className="space-y-3 p-4">
@@ -116,8 +117,10 @@ function ExploreResultsList({
     return (
       <div className="p-4">
         <EmptyState
-          title="Aucun résultat géolocalisé"
-          description="Essayez une autre recherche ou activez « Autour de moi »."
+          title="Rien autour de vous pour l'instant"
+          description="La carte se remplira dès que des boutiques et des pros publieront. En attendant, ouvrez la vôtre."
+          actionLabel="Vendre sur SERVIS"
+          onAction={() => router.push("/register")}
         />
       </div>
     );

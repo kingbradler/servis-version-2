@@ -144,10 +144,38 @@ function ProductsCatalog() {
 
             {!loading && !error && products.length === 0 && (
               <EmptyState
-                title="Aucun produit trouvé"
-                description="Essayez d'élargir vos filtres ou de modifier la recherche."
-                actionLabel="Réinitialiser"
-                onAction={resetFilters}
+                title={
+                  queryFilters.search ||
+                  queryFilters.category ||
+                  queryFilters.city ||
+                  queryFilters.store
+                    ? "Aucun produit trouvé"
+                    : "Pas encore de produits"
+                }
+                description={
+                  queryFilters.search ||
+                  queryFilters.category ||
+                  queryFilters.city ||
+                  queryFilters.store
+                    ? "Élargissez vos filtres ou modifiez la recherche."
+                    : "Soyez le premier à vendre sur SERVIS : inscription en quelques minutes."
+                }
+                actionLabel={
+                  queryFilters.search ||
+                  queryFilters.category ||
+                  queryFilters.city ||
+                  queryFilters.store
+                    ? "Réinitialiser"
+                    : "Vendre sur SERVIS"
+                }
+                onAction={
+                  queryFilters.search ||
+                  queryFilters.category ||
+                  queryFilters.city ||
+                  queryFilters.store
+                    ? resetFilters
+                    : () => router.push("/register")
+                }
               />
             )}
 

@@ -74,13 +74,24 @@ export function AddToCartButton({
           <ModalHeader>
             <ModalTitle>Connexion requise</ModalTitle>
             <ModalDescription>
-              Connectez-vous pour ajouter ce produit à votre panier. Vous
-              reviendrez ensuite sur cette page.
+              Connectez-vous (ou créez un compte) pour ajouter ce produit au
+              panier, puis payer le vendeur.
             </ModalDescription>
           </ModalHeader>
           <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-end">
             <Button variant="outline" onClick={() => setLoginOpen(false)}>
               Annuler
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setLoginOpen(false);
+                router.push(
+                  `/register?next=${encodeURIComponent(pathname || "/")}`
+                );
+              }}
+            >
+              Créer un compte
             </Button>
             <Button
               variant="primary"
