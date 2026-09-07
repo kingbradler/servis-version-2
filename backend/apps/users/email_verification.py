@@ -39,6 +39,11 @@ def build_verification_url(user) -> str:
     return f"{frontend}/verify-email?uid={uid}&token={token}"
 
 
+def _greeting(user) -> str:
+    name = (getattr(user, "first_name", None) or "").strip()
+    return f"Bonjour {name}," if name else "Bonjour,"
+
+
 def send_verification_email(user) -> bool:
     """
     Send verification email. Returns True if send_mail succeeded.
@@ -47,21 +52,22 @@ def send_verification_email(user) -> bool:
     verify_url = build_verification_url(user)
     subject = "Confirmez votre adresse e-mail — SERVIS"
     message = (
-        f"Bonjour {user.first_name or 'bonjour'},\n\n"
-        "Bienvenue sur SERVIS. Pour confirmer votre adresse e-mail, "
-        "ouvrez ce lien :\n\n"
+        f"{_greeting(user)}\n\n"
+        "Merci de vous être inscrit sur SERVIS.\n"
+        "Pour activer votre compte, ouvrez ce lien :\n\n"
         f"{verify_url}\n\n"
-        "Ce lien expire après quelques jours. Si vous n'avez pas créé de compte, "
-        "ignorez ce message.\n\n"
-        "— L'équipe SERVIS\n"
+        "Le lien reste valable quelques jours. Si vous n'êtes pas à l'origine "
+        "de cette inscription, ignorez simplement ce message.\n\n"
+        "L'équipe SERVIS\n"
     )
     html = (
-        f"<p>Bonjour {user.first_name or ''},</p>"
-        "<p>Bienvenue sur <strong>SERVIS</strong>. Cliquez pour confirmer "
-        "votre adresse e-mail :</p>"
+        f"<p>{_greeting(user)}</p>"
+        "<p>Merci de vous être inscrit sur <strong>SERVIS</strong>.</p>"
+        "<p>Pour activer votre compte, confirmez votre adresse e-mail :</p>"
         f'<p><a href="{verify_url}">Confirmer mon e-mail</a></p>'
         f"<p style='color:#888;font-size:12px'>Ou copiez ce lien :<br>{verify_url}</p>"
-        "<p>— L'équipe SERVIS</p>"
+        "<p>Si vous n'êtes pas à l'origine de cette inscription, ignorez ce message.</p>"
+        "<p>L'équipe SERVIS</p>"
     )
     try:
         send_mail(
