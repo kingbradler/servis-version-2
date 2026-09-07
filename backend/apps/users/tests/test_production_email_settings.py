@@ -66,6 +66,32 @@ class ProductionEmailSettingsTests(SimpleTestCase):
             _reload_production(env)
         self.assertIn("EMAIL_HOST", str(ctx.exception))
 
+    def test_resend_host_uses_https_backend_even_in_bootstrap(self):
+        env = {
+            "DJANGO_SECRET_KEY": _BASE_ENV["DJANGO_SECRET_KEY"],
+            "DJANGO_ALLOWED_HOSTS": "api.example.com",
+            "DATABASE_URL": _BASE_ENV["DATABASE_URL"],
+            "SERVIS_BOOTSTRAP": "true",
+            "EMAIL_HOST": "smtp.resend.com",
+            "EMAIL_HOST_USER": "resend",
+            "EMAIL_HOST_PASSWORD": "re_test_key",
+            "DEFAULT_FROM_EMAIL": "SERVIS <noreply@example.com>",
+            "FRONTEND_URL": "https://www.example.com",
+        }
+        for key in (
+            "EMAIL_BACKEND",
+            "STORAGE_BACKEND",
+            "SUPABASE_URL",
+            "SUPABASE_SERVICE_KEY",
+            "CORS_ALLOWED_ORIGINS",
+            "CSRF_TRUSTED_ORIGINS",
+        ):
+            env.setdefault(key, "")
+        mod = _reload_production(env)
+        self.assertEqual(
+            mod.EMAIL_BACKEND, "apps.core.resend_backend.ResendAPIEmailBackend"
+        )
+
     def test_accepts_smtp_config(self):
         mod = _reload_production(_BASE_ENV)
         self.assertEqual(

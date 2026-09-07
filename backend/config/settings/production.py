@@ -211,12 +211,28 @@ _INSECURE_EMAIL_BACKENDS = frozenset(
     }
 )
 
-_default_email_backend = (
-    "django.core.mail.backends.console.EmailBackend"
-    if BOOTSTRAP
-    else "django.core.mail.backends.smtp.EmailBackend"
-)
-EMAIL_BACKEND = os.getenv("EMAIL_BACKEND", "").strip() or _default_email_backend
+_env_email_backend = os.getenv("EMAIL_BACKEND", "").strip()
+_email_host = os.getenv("EMAIL_HOST", "").strip()
+_email_user = os.getenv("EMAIL_HOST_USER", "").strip()
+_email_password = os.getenv("EMAIL_HOST_PASSWORD", "").strip()
+_is_resend = "resend.com" in _email_host.lower()
+_smtp_backend = "django.core.mail.backends.smtp.EmailBackend"
+_resend_backend = "apps.core.resend_backend.ResendAPIEmailBackend"
+
+if _is_resend and _email_password and (
+    not _env_email_backend or _env_email_backend == _smtp_backend
+):
+    # HTTPS instead of SMTP — Render often hangs on smtp.resend.com:587.
+    EMAIL_BACKEND = _resend_backend
+elif _env_email_backend:
+    EMAIL_BACKEND = _env_email_backend
+elif _email_password:
+    EMAIL_BACKEND = _smtp_backend
+elif BOOTSTRAP:
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+else:
+    EMAIL_BACKEND = _smtp_backend
+
 if EMAIL_BACKEND in _INSECURE_EMAIL_BACKENDS and not BOOTSTRAP:
     raise ImproperlyConfigured(
         "Production forbids console/locmem/dummy/filebased EMAIL_BACKEND. "
