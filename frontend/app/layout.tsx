@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     template: "%s | SERVIS",
   },
   description:
-    "La plateforme e-commerce multi-vendeurs pour les étudiants entrepreneurs de Tanger, Maroc.",
+    "Marketplace multi-vendeurs pour acheter et vendre des produits et services près de chez vous, au Maroc.",
   applicationName: "SERVIS",
   openGraph: {
     type: "website",
@@ -47,13 +47,13 @@ export const metadata: Metadata = {
     siteName: "SERVIS",
     title: "SERVIS — Marketplace étudiants entrepreneurs",
     description:
-      "Achetez et vendez auprès des étudiants entrepreneurs de Tanger.",
+      "Achetez et vendez des produits et services près de chez vous.",
   },
   twitter: {
     card: "summary_large_image",
     title: "SERVIS",
     description:
-      "Marketplace multi-vendeurs pour étudiants entrepreneurs — Tanger, Maroc.",
+      "Marketplace multi-vendeurs pour étudiants entrepreneurs, au Maroc.",
   },
   robots: {
     index: true,
@@ -72,7 +72,7 @@ export default function RootLayout({
       className={`${dmSans.variable} ${syne.variable} h-full`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col font-sans antialiased">
+      <body className="flex min-h-full max-w-full flex-col overflow-x-clip font-sans antialiased">
         <ThemeProvider>
           <ToastProvider>
             <CartProvider>{children}</CartProvider>
