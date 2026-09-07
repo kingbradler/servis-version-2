@@ -12,7 +12,15 @@ import {
   type HeroSlide,
 } from "@/features/marketplace/services/hero-slides.service";
 import { resolveMediaUrl } from "@/features/products/utils/media";
+import { frenchCtaLabel } from "@/lib/marketplace/french-cta";
 import { cn } from "@/lib/utils";
+
+function withFrenchCtas(slides: HeroSlide[]): HeroSlide[] {
+  return slides.map((slide) => ({
+    ...slide,
+    cta_label: frenchCtaLabel(slide.cta_label, slide.cta_href),
+  }));
+}
 
 /** Fallback if API empty / offline — same visuals as initial seed. */
 const FALLBACK_SLIDES: HeroSlide[] = [
@@ -68,7 +76,9 @@ const FALLBACK_SLIDES: HeroSlide[] = [
  */
 export function HomeHero() {
   const router = useRouter();
-  const [slides, setSlides] = useState<HeroSlide[]>(FALLBACK_SLIDES);
+  const [slides, setSlides] = useState<HeroSlide[]>(() =>
+    withFrenchCtas(FALLBACK_SLIDES)
+  );
   const [active, setActive] = useState(0);
   const [search, setSearch] = useState("");
 
@@ -77,7 +87,7 @@ export function HomeHero() {
     void getPublicHeroSlides()
       .then((data) => {
         if (cancelled) return;
-        if (data.length > 0) setSlides(data);
+        if (data.length > 0) setSlides(withFrenchCtas(data));
       })
       .catch(() => {
         /* keep fallback */
