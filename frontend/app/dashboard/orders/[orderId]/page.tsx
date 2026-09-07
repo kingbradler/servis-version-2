@@ -321,10 +321,13 @@ function OrderDetailContent({ orderId }: { orderId: string }) {
               )}
             </section>
 
-            {order.status === "COMPLETED" && (
+            {(order.status === "CONFIRMED" ||
+              order.status === "PROCESSING" ||
+              order.status === "READY" ||
+              order.status === "COMPLETED") && (
               <section className="rounded-xl border border-border bg-surface p-4">
                 <p className="text-body-sm text-text-secondary">
-                  Commande terminée — vous pouvez noter les produits achetés.
+                  Vous pouvez noter les produits de cette commande.
                 </p>
                 <Button asChild variant="primary" className="mt-3">
                   <Link href="/dashboard/reviews">Laisser un avis</Link>

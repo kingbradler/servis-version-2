@@ -31,3 +31,10 @@ export async function getSellerOrders(page = 1): Promise<PaginatedOrders> {
 export async function getSellerOrder(id: string): Promise<Order> {
   return apiFetch<Order>(`/seller/orders/${id}/`);
 }
+
+export async function completeSellerOrder(id: string): Promise<Order> {
+  return apiFetch<Order>(`/seller/orders/${id}/complete/`, {
+    method: "POST",
+    body: JSON.stringify({}),
+  });
+}

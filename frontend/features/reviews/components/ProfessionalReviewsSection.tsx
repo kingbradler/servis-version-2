@@ -39,7 +39,7 @@ export function ProfessionalReviewsSection({ slug }: { slug: string }) {
         ]);
         if (cancelled) return;
         setSummary(sum);
-        setReviews(list.results);
+        setReviews(Array.isArray(list) ? list : list.results ?? []);
       } catch (err) {
         if (!cancelled) {
           setError(isApiError(err) ? err.message : "Impossible de charger les avis");

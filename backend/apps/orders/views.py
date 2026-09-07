@@ -2,11 +2,12 @@
 
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import generics, status
+from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.core.pagination import StandardPagination
-from apps.orders.models import Order
+from apps.orders.models import Order, OrderStatus
 from apps.orders.serializers import (
     AddCartItemSerializer,
     CartSerializer,
@@ -207,6 +208,40 @@ class SellerOrderDetailView(generics.RetrieveAPIView):
     @extend_schema(tags=["Seller — Orders"], summary="Détail commande boutique")
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
+
+
+class SellerOrderCompleteView(APIView):
+    """CONFIRMED / PROCESSING / READY → COMPLETED so the client can leave a review."""
+
+    permission_classes = [IsSeller]
+
+    @extend_schema(tags=["Seller — Orders"], summary="Marquer la commande comme livrée")
+    def post(self, request, order_id):
+        from apps.reviews.eligibility import SELLER_CAN_COMPLETE_FROM
+
+        try:
+            order = Order.objects.select_related("store", "user").prefetch_related(
+                "items"
+            ).get(pk=order_id, store__owner=request.user)
+        except Order.DoesNotExist:
+            return Response(
+                {"detail": "Commande introuvable."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        if order.status == OrderStatus.COMPLETED:
+            return Response(SellerOrderSerializer(order).data)
+        if order.status not in SELLER_CAN_COMPLETE_FROM:
+            raise ValidationError(
+                {
+                    "status": (
+                        "Confirmez d'abord le paiement, puis marquez la commande "
+                        "comme livrée."
+                    )
+                }
+            )
+        order.status = OrderStatus.COMPLETED
+        order.save(update_fields=["status", "updated_at"])
+        return Response(SellerOrderSerializer(order).data)
 
 
 @extend_schema_view(

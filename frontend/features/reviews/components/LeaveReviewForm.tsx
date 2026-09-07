@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/toast";
 import { createReview } from "@/features/reviews/api/reviews.api";
 import { StarRatingInput } from "@/features/reviews/components/StarRating";
-import { isApiError } from "@/lib/api/errors";
+import { getUserFacingErrorMessage } from "@/lib/api/errors";
 
 export function LeaveReviewForm({
   serviceRequestId,
@@ -38,7 +38,7 @@ export function LeaveReviewForm({
       toast({ title: "Avis publié", variant: "success" });
       onSuccess?.();
     } catch (err) {
-      const message = isApiError(err) ? err.message : "Échec de l'envoi";
+      const message = getUserFacingErrorMessage(err, "Échec de l'envoi");
       setError(message);
       toast({ title: "Erreur", description: message, variant: "error" });
     } finally {

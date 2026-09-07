@@ -72,8 +72,7 @@ function Content() {
         <div>
           <h2 className="text-heading-l font-bold tracking-tight">Avis</h2>
           <p className="mt-1 text-body-sm text-text-secondary">
-            Notez un professionnel ou un produit après une prestation / commande
-            terminée.
+            Notez un produit ou un professionnel après un paiement confirmé.
           </p>
         </div>
 
@@ -98,7 +97,7 @@ function Content() {
                 <EmptyState
                   icon={Star}
                   title="Rien à noter pour le moment"
-                  description="Dès qu'une demande ou une commande est terminée, vous pourrez laisser un avis ici."
+                  description="Dès que le vendeur confirme votre paiement (ou qu’une prestation est acceptée), le formulaire d’avis s’affiche ici. Une commande seulement créée, sans paiement confirmé, ne peut pas encore être notée."
                 />
               ) : (
                 <ul className="space-y-4">

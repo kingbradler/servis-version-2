@@ -400,7 +400,7 @@ function Content() {
               </div>
             )}
 
-            {request.status === "COMPLETED" && (
+            {(request.status === "ACCEPTED" || request.status === "COMPLETED") && (
               <Button asChild variant="primary">
                 <Link href="/dashboard/reviews">Laisser un avis</Link>
               </Button>
