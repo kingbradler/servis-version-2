@@ -55,7 +55,7 @@ export function Sidebar({
 
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 flex w-[min(280px,88vw)] flex-col bg-dk text-white transition-transform duration-200 safe-pt md:static md:w-[260px] md:translate-x-0",
+          "fixed inset-y-0 left-0 z-50 flex h-dvh max-h-dvh w-[min(280px,88vw)] flex-col bg-dk text-white transition-transform duration-200 safe-pt md:static md:h-auto md:max-h-none md:w-[260px] md:translate-x-0",
           open ? "translate-x-0" : "-translate-x-full",
           className
         )}
@@ -130,7 +130,7 @@ export function Sidebar({
             SERVIS
           </p>
           <p className="mt-0.5 text-[11px] text-white/25">
-            Marketplace · Tanger
+            Marketplace · Maroc
           </p>
         </div>
       </aside>
