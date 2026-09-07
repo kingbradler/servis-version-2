@@ -357,11 +357,11 @@ function ExplorePageInner() {
 
   return (
     <MarketplaceShell hideFooter hideBanner fillViewport>
-      <div className="relative min-h-0 w-full flex-1 overflow-hidden bg-cr">
+      <div className="relative min-h-0 w-full min-w-0 max-w-full flex-1 overflow-hidden bg-cr">
         {/* Full-bleed map — fills space under the navbar */}
         <div className="absolute inset-0">
           <MapViewClient
-            className="servis-map-explore h-full min-h-0 rounded-none"
+            className="servis-map-explore h-full min-h-0 max-w-full overflow-hidden rounded-none"
             markers={markers}
             userLocation={userLocation}
             center={mapCenter}
@@ -377,9 +377,9 @@ function ExplorePageInner() {
         </div>
 
         {/* Top controls overlay */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 p-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:p-4 lg:p-5">
-          <div className="pointer-events-auto mx-auto flex max-w-[1200px] flex-col gap-3">
-            <div className="flex flex-col gap-2 rounded-[18px] border border-black/8 bg-white/92 p-3 shadow-[0_12px_40px_rgba(0,0,0,0.12)] backdrop-blur-xl dark:border-white/10 dark:bg-dk/88 sm:flex-row sm:items-center sm:p-3.5">
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 min-w-0 max-w-full p-2 pt-[max(0.5rem,env(safe-area-inset-top))] sm:p-4 lg:p-5">
+          <div className="pointer-events-auto mx-auto flex min-w-0 max-w-[1200px] flex-col gap-2.5">
+            <div className="flex min-w-0 flex-col gap-2 rounded-[18px] border border-black/8 bg-white/92 p-2.5 shadow-[0_12px_40px_rgba(0,0,0,0.12)] backdrop-blur-xl dark:border-white/10 dark:bg-dk/88 sm:flex-row sm:items-center sm:p-3.5">
               <div className="relative min-w-0 flex-1">
                 <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted dark:text-white/35" />
                 <input
@@ -388,11 +388,11 @@ function ExplorePageInner() {
                   onChange={(e) => setSearchInput(e.target.value)}
                   placeholder="Rechercher une boutique, un service ou un pro…"
                   aria-label="Rechercher"
-                  className="h-11 w-full rounded-xl border-[1.5px] border-border bg-white pl-10 pr-4 text-body-sm text-text-primary outline-none transition-colors placeholder:text-text-muted focus:border-primary dark:border-white/11 dark:bg-white/8 dark:text-white dark:placeholder:text-white/30"
+                  className="h-11 w-full min-w-0 rounded-xl border-[1.5px] border-border bg-white pl-10 pr-4 text-body-sm text-text-primary outline-none transition-colors placeholder:text-text-muted focus:border-primary dark:border-white/11 dark:bg-white/8 dark:text-white dark:placeholder:text-white/30"
                 />
               </div>
               <AroundMeButton
-                className="shrink-0 [&_button]:rounded-xl"
+                className="min-w-0 shrink-0 [&_button]:rounded-xl"
                 onLocated={(coords, radiusKm) => {
                   setGeoError(null);
                   router.push(
@@ -408,11 +408,12 @@ function ExplorePageInner() {
               />
             </div>
             {geoError && (
-              <p className="text-caption text-error" role="alert">
+              <p className="max-w-full break-words text-caption text-error" role="alert">
                 {geoError}
               </p>
             )}
-            <div className="flex gap-2 overflow-x-auto pb-0.5 scrollbar-hide">
+            <div className="min-w-0 max-w-full overflow-x-auto overscroll-x-contain pb-0.5 scrollbar-hide">
+              <div className="flex w-max gap-2">
               {TYPE_TABS.map((tab) => {
                 const Icon = tab.icon;
                 const active = type === tab.value;
@@ -433,6 +434,7 @@ function ExplorePageInner() {
                   </button>
                 );
               })}
+              </div>
             </div>
           </div>
         </div>
@@ -440,13 +442,13 @@ function ExplorePageInner() {
         {/* Results overlay — bottom sheet mobile / left panel desktop */}
         <aside
           className={cn(
-            "pointer-events-none absolute z-10 flex",
+            "pointer-events-none absolute z-10 flex min-w-0 max-w-full",
             "inset-x-0 bottom-0 lg:inset-x-auto lg:bottom-4 lg:left-4 lg:top-[158px] lg:w-[360px]"
           )}
         >
           <div
             className={cn(
-              "pointer-events-auto flex w-full flex-col overflow-hidden border border-black/8 bg-white/96 shadow-[0_16px_48px_rgba(0,0,0,0.16)] backdrop-blur-xl dark:border-white/10 dark:bg-dk2/96",
+              "pointer-events-auto flex w-full min-w-0 flex-col overflow-hidden border border-black/8 bg-white/96 shadow-[0_16px_48px_rgba(0,0,0,0.16)] backdrop-blur-xl dark:border-white/10 dark:bg-dk2/96",
               "rounded-t-[22px] border-b-0 lg:rounded-[18px] lg:border-b",
               listOpen
                 ? "h-[min(42dvh,380px)] min-h-[220px] lg:h-auto lg:min-h-0 lg:max-h-full"

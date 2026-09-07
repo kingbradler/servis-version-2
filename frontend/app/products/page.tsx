@@ -89,7 +89,7 @@ function ProductsCatalog() {
 
   return (
     <MarketplaceShell>
-      <div className="mx-auto max-w-[1200px] px-4 py-8 sm:px-6 sm:py-10 lg:px-12">
+      <div className="mx-auto w-full min-w-0 max-w-[1200px] overflow-x-clip px-3 py-5 sm:px-6 sm:py-10 lg:px-12">
         <PageHero
           tone="dark"
           eyebrow="Marketplace"
@@ -109,7 +109,7 @@ function ProductsCatalog() {
           </div>
         </PageHero>
 
-        <div className="mb-6">
+        <div className="mb-6 min-w-0 max-w-full">
           <CategoryPills
             categories={categories}
             activeSlug={queryFilters.category}
@@ -119,7 +119,7 @@ function ProductsCatalog() {
           />
         </div>
 
-        <div className="flex flex-col gap-6 lg:flex-row">
+        <div className="flex min-w-0 flex-col gap-6 lg:flex-row">
           <ProductFiltersPanel
             filters={queryFilters}
             categories={categories}

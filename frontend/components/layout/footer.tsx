@@ -34,7 +34,7 @@ export function Footer({ className }: FooterProps) {
   }, []);
 
   return (
-    <footer className={cn("relative overflow-hidden bg-dk text-white", className)}>
+    <footer className={cn("relative min-w-0 overflow-hidden bg-dk text-white", className)}>
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_10%_0%,rgba(232,66,8,0.18),transparent_55%)]" />
 
       <div className="relative border-b border-white/10">

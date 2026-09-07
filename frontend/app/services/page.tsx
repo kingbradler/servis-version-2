@@ -112,7 +112,7 @@ function ServicesCatalog() {
 
   return (
     <MarketplaceShell>
-      <div className="mx-auto max-w-[1200px] px-4 py-8 sm:px-6 sm:py-10 lg:px-12">
+      <div className="mx-auto w-full min-w-0 max-w-[1200px] overflow-x-clip px-3 py-5 sm:px-6 sm:py-10 lg:px-12">
         <PageHero
           tone="dark"
           eyebrow="Services"
@@ -130,7 +130,7 @@ function ServicesCatalog() {
               className="h-12 w-full rounded-xl border-[1.5px] border-white/11 bg-white/8 pl-10 pr-4 text-body-sm text-white outline-none transition-colors placeholder:text-white/30 focus:border-primary"
             />
           </div>
-          <div className="mt-4 flex flex-wrap items-center gap-3">
+          <div className="mt-4 flex min-w-0 flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:items-center">
             <AroundMeButton
               className="[&_button]:rounded-xl [&_button]:border-white/20 [&_button]:bg-white/10 [&_button]:text-white [&_button]:hover:bg-white/15 [&_button]:hover:text-white [&_p]:text-red-300"
               onLocated={(coords, radiusKm) =>
@@ -150,21 +150,21 @@ function ServicesCatalog() {
                   ? `/explore?type=services&search=${encodeURIComponent(filters.search ?? "")}`
                   : "/explore?type=services"
               }
-              className="inline-flex items-center gap-1.5 text-body-sm font-medium text-white/70 transition-colors hover:text-primary"
+              className="inline-flex min-w-0 items-center gap-1.5 text-body-sm font-medium text-white/70 transition-colors hover:text-primary"
             >
-              <MapPin className="h-4 w-4" />
+              <MapPin className="h-4 w-4 shrink-0" />
               Voir sur la carte
             </Link>
             <Link
               href="/professionals"
-              className="inline-flex items-center gap-1.5 text-body-sm font-medium text-white/70 transition-colors hover:text-primary"
+              className="inline-flex min-w-0 items-center gap-1.5 text-body-sm font-medium text-white/70 transition-colors hover:text-primary"
             >
               Voir les professionnels
             </Link>
           </div>
         </PageHero>
 
-        <div className="mb-6">
+        <div className="mb-6 min-w-0 max-w-full">
           <CategoryPills
             categories={pillCategories}
             activeSlug={queryFilters.category}
@@ -175,7 +175,7 @@ function ServicesCatalog() {
           />
         </div>
 
-        <div className="flex flex-col gap-6 lg:flex-row">
+        <div className="flex min-w-0 flex-col gap-6 lg:flex-row">
           <ServiceFiltersPanel
             filters={queryFilters}
             categories={categories}

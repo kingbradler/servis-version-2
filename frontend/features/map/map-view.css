@@ -87,9 +87,29 @@
 }
 
 /* Keep Mapbox zoom controls clear of bottom UI chrome on Explore */
+.servis-map-explore {
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.servis-map-explore .mapboxgl-canvas-container,
+.servis-map-explore .mapboxgl-canvas {
+  max-width: 100%;
+}
+
 .servis-map-explore .mapboxgl-ctrl-bottom-right {
   bottom: 88px;
-  right: 12px;
+  right: 8px;
+}
+
+.servis-map-explore .mapboxgl-ctrl-bottom-left {
+  max-width: calc(100% - 72px);
+}
+
+.servis-map-explore .mapboxgl-ctrl-attrib {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 @media (min-width: 1024px) {

@@ -35,7 +35,7 @@ export function ProfessionalsListPage() {
 
   return (
     <MarketplaceShell>
-      <div className="mx-auto max-w-[1200px] px-4 py-8 sm:px-6 sm:py-10 lg:px-12">
+      <div className="mx-auto w-full min-w-0 max-w-[1200px] overflow-x-clip px-3 py-5 sm:px-6 sm:py-10 lg:px-12">
         <PageHero
           tone="dark"
           eyebrow="Professionnels"
@@ -52,7 +52,7 @@ export function ProfessionalsListPage() {
               className="h-12 w-full rounded-xl border-[1.5px] border-white/11 bg-white/8 pl-10 pr-4 text-body-sm text-white outline-none transition-colors placeholder:text-white/30 focus:border-primary"
             />
           </div>
-          <div className="mt-4 flex flex-wrap items-center gap-3">
+          <div className="mt-4 flex min-w-0 flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:items-center">
             <AroundMeButton
               className="[&_button]:rounded-xl [&_button]:border-white/20 [&_button]:bg-white/10 [&_button]:text-white [&_button]:hover:bg-white/15 [&_button]:hover:text-white [&_p]:text-red-300"
               onLocated={(coords, radiusKm) =>
@@ -66,14 +66,14 @@ export function ProfessionalsListPage() {
             />
             <Link
               href="/explore?type=professionals"
-              className="inline-flex items-center gap-1.5 text-body-sm font-medium text-white/70 transition-colors hover:text-primary"
+              className="inline-flex min-w-0 items-center gap-1.5 text-body-sm font-medium text-white/70 transition-colors hover:text-primary"
             >
-              <MapPin className="h-4 w-4" />
+              <MapPin className="h-4 w-4 shrink-0" />
               Explorer sur la carte
             </Link>
             <Link
               href="/services"
-              className="inline-flex items-center gap-1.5 text-body-sm font-medium text-white/70 transition-colors hover:text-primary"
+              className="inline-flex min-w-0 items-center gap-1.5 text-body-sm font-medium text-white/70 transition-colors hover:text-primary"
             >
               Voir les services
             </Link>

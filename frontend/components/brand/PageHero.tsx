@@ -20,7 +20,7 @@ export function PageHero({
   return (
     <header
       className={cn(
-        "relative mb-8 overflow-hidden rounded-[26px] px-5 py-8 sm:mb-10 sm:px-8 sm:py-10",
+        "relative mb-8 min-w-0 max-w-full overflow-hidden rounded-[22px] px-4 py-6 sm:mb-10 sm:rounded-[26px] sm:px-8 sm:py-10",
         dark
           ? "bg-dk text-white"
           : "bg-[radial-gradient(ellipse_80%_80%_at_90%_10%,rgba(232,66,8,0.16),transparent_55%),linear-gradient(145deg,var(--surface)_0%,rgba(232,66,8,0.05)_100%)] dark:bg-[radial-gradient(ellipse_80%_80%_at_90%_10%,rgba(232,66,8,0.22),transparent_55%),linear-gradient(145deg,var(--surface)_0%,rgba(232,66,8,0.08)_100%)]",
@@ -30,7 +30,7 @@ export function PageHero({
       {dark && (
         <div className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-[radial-gradient(circle,rgba(232,66,8,0.22),transparent_68%)]" />
       )}
-      <div className="relative">
+      <div className="relative min-w-0">
         {eyebrow && (
           <p
             className={cn(
