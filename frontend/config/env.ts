@@ -1,6 +1,6 @@
-const PROD_API_URL = "https://servis-version-2.onrender.com/api/v1";
+const PROD_API_URL = "https://api.servis-superrapid.com/api/v1";
 const LOCAL_API_URL = "http://localhost:8000/api/v1";
-const PROD_APP_URL = "https://servis-version-2.vercel.app";
+const PROD_APP_URL = "https://www.servis-superrapid.com";
 const LOCAL_APP_URL = "http://localhost:3000";
 
 function isLocalUrl(value: string): boolean {

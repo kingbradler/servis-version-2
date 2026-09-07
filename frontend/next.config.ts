@@ -45,6 +45,11 @@ const nextConfig: NextConfig = {
         pathname: "/photos/**",
       },
       {
+        protocol: "https",
+        hostname: "api.servis-superrapid.com",
+        pathname: "/media/**",
+      },
+      {
         protocol: "http",
         hostname: "localhost",
         port: "8000",
