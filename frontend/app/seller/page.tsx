@@ -62,9 +62,40 @@ const PRO_STATUS_LABELS: Record<string, string> = {
 };
 
 function SubscriptionSummary() {
-  const { entitlements, loading } = useEntitlements({ autoLoad: true });
+  const { entitlements, loading, error, refresh } = useEntitlements({
+    autoLoad: true,
+  });
   if (loading) return <Skeleton className="h-24 w-full rounded-[18px]" />;
-  if (!entitlements) return null;
+  if (error || !entitlements) {
+    return (
+      <Card>
+        <CardContent className="flex flex-col gap-3 py-5 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-heading-s font-semibold">Abonnement Premium</p>
+            <p className="text-body-sm text-text-secondary">
+              {error
+                ? "Impossible d’afficher votre offre pour le moment."
+                : "Choisissez Free, Standard ou Premium pour la boutique et les services."}
+            </p>
+          </div>
+          <div className="flex gap-2">
+            {error ? (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => void refresh()}
+              >
+                Réessayer
+              </Button>
+            ) : null}
+            <Button asChild size="sm">
+              <Link href="/seller/subscription">Voir les offres</Link>
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
   const { store, services } = entitlements;
   return (
     <section className="grid gap-3 md:grid-cols-2">
@@ -86,7 +117,7 @@ function SubscriptionSummary() {
             </p>
           )}
           <Button asChild size="sm" variant="outline" className="mt-2">
-            <Link href="/seller/subscription">Gérer mon abonnement</Link>
+            <Link href="/seller/subscription">Gérer / passer Premium</Link>
           </Button>
         </CardContent>
       </Card>

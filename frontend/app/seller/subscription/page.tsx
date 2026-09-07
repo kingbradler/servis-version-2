@@ -266,8 +266,8 @@ export default function SellerSubscriptionPage() {
         <>
           {storePlans.length === 0 && servicePlans.length === 0 && (
             <EmptyState
-              title="Aucune offre d'abonnement"
-              description="Les formules SERVIS n'apparaissent pas encore. Réessayez dans un instant."
+              title="Les offres Free, Standard et Premium"
+              description="Les formules boutique et services n’ont pas encore été chargées. Réessayez — elles s’affichent dès que le serveur les a enregistrées."
               actionLabel="Réessayer"
               onAction={() => void load()}
             />

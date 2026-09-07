@@ -19,9 +19,9 @@ from django.utils import timezone
 class PlanType(models.TextChoices):
     STORE_FREE = "STORE_FREE", "Boutique Free"
     STORE_STANDARD = "STORE_STANDARD", "Boutique Standard"
-    STORE_PRO = "STORE_PRO", "Boutique Pro"
+    STORE_PRO = "STORE_PRO", "Boutique Premium"
     SERVICE_STANDARD = "SERVICE_STANDARD", "Services Standard"
-    SERVICE_PRO = "SERVICE_PRO", "Services Pro"
+    SERVICE_PRO = "SERVICE_PRO", "Services Premium"
 
 
 class PlanCategory(models.TextChoices):

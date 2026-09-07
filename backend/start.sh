@@ -11,7 +11,8 @@ if [ "${SERVIS_SEED_CATALOG:-}" = "true" ]; then
 fi
 
 # Plans d'abonnement + moyens de paiement SERVIS (idempotent).
-python manage.py seed_billing
+# Ne bloque pas le démarrage si le seed échoue : la migration 0003 fait le même travail.
+python manage.py seed_billing || echo "WARN: seed_billing a échoué" >&2
 
 exec gunicorn config.wsgi:application \
   --bind "0.0.0.0:${PORT:-8000}" \

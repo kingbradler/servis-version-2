@@ -12,9 +12,21 @@ import type {
   SubscriptionPayment,
 } from "../types/billing.types";
 
+function asList<T>(data: T[] | Paginated<T> | unknown): T[] {
+  if (Array.isArray(data)) return data;
+  if (
+    data &&
+    typeof data === "object" &&
+    Array.isArray((data as Paginated<T>).results)
+  ) {
+    return (data as Paginated<T>).results;
+  }
+  return [];
+}
+
 export async function getPlans(category?: string): Promise<Plan[]> {
   const qs = category ? `?category=${encodeURIComponent(category)}` : "";
-  return apiFetch(`/billing/plans/${qs}`);
+  return asList<Plan>(await apiFetch(`/billing/plans/${qs}`));
 }
 
 export async function getBoostPackages(): Promise<BoostPackage[]> {
@@ -24,7 +36,9 @@ export async function getBoostPackages(): Promise<BoostPackage[]> {
 export async function getPlatformPaymentMethods(): Promise<
   PlatformPaymentMethod[]
 > {
-  return apiFetch("/billing/payment-methods/");
+  return asList<PlatformPaymentMethod>(
+    await apiFetch("/billing/payment-methods/")
+  );
 }
 
 export async function getEntitlements(): Promise<Entitlements> {
@@ -39,7 +53,9 @@ export async function getMySubscriptions(params?: {
   if (params?.category) query.set("category", params.category);
   if (params?.status) query.set("status", params.status);
   const qs = query.toString();
-  return apiFetch(`/seller/subscriptions/${qs ? `?${qs}` : ""}`);
+  return asList<Subscription>(
+    await apiFetch(`/seller/subscriptions/${qs ? `?${qs}` : ""}`)
+  );
 }
 
 export async function createSubscription(payload: {
