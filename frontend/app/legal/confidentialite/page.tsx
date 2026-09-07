@@ -6,116 +6,114 @@ import { env } from "@/config/env";
 
 export const metadata: Metadata = {
   title: "Politique de confidentialité | SERVIS",
-  description: "Politique de confidentialité et protection des données SERVIS.",
+  description: "Comment SERVIS utilise vos données personnelles.",
 };
 
 export default function ConfidentialitePage() {
   return (
     <LegalDocument
       title="Politique de confidentialité"
-      updatedAt="16 août 2026"
+      updatedAt="7 septembre 2026"
     >
       <section className="space-y-3">
-        <h2>1. Responsable du traitement</h2>
+        <h2>1. Qui est responsable</h2>
         <p>
-          {env.appName} traite des données personnelles pour faire fonctionner
-          la marketplace. Contact :{" "}
+          {env.appName} utilise vos données pour faire fonctionner la
+          marketplace. Pour toute question :{" "}
           <a href={`mailto:${env.platformEmail}`}>{env.platformEmail}</a>.
         </p>
       </section>
 
       <section className="space-y-3">
-        <h2>2. Données collectées</h2>
+        <h2>2. Quelles données</h2>
         <ul>
           <li>
-            Compte : email, nom, prénom, téléphone / WhatsApp, rôle
-            (client / vendeur).
+            Compte : e-mail, nom, prénom, téléphone / WhatsApp, type de compte
+            (client ou professionnel).
           </li>
           <li>
-            Boutique / profil pro : description, ville, géolocalisation
-            éventuelle, réseaux sociaux, médias.
+            Boutique ou profil : description, ville, localisation si vous la
+            renseignez, liens, photos.
           </li>
           <li>
             Commandes et demandes : articles, montants, adresse de livraison,
-            messages, preuves de paiement (fichiers).
+            messages, preuves de paiement.
           </li>
           <li>
-            Technique : cookies de session (JWT HttpOnly), logs de sécurité
-            limités, données de navigation nécessaires au service.
+            Connexion : cookies nécessaires pour rester connecté et protéger
+            votre session.
           </li>
         </ul>
       </section>
 
       <section className="space-y-3">
-        <h2>3. Finalités</h2>
+        <h2>3. Pourquoi nous les utilisons</h2>
         <ul>
-          <li>Créer et sécuriser les comptes (auth, vérification email)</li>
-          <li>Exécuter commandes, demandes de service et messagerie</li>
-          <li>Gérer abonnements et preuves de paiement</li>
-          <li>Notifications in-app / emails transactionnels</li>
-          <li>Modération, prévention de la fraude, support</li>
-          <li>Améliorer le service (stats agrégées, non nominatives)</li>
+          <li>Créer votre compte et confirmer votre e-mail</li>
+          <li>Traiter les commandes, les demandes de service et les messages</li>
+          <li>Gérer les abonnements et les preuves de paiement</li>
+          <li>Vous envoyer les e-mails utiles (confirmation, mot de passe)</li>
+          <li>Modérer le site, limiter la fraude, vous aider en cas de souci</li>
+          <li>Améliorer SERVIS à partir de chiffres d&apos;ensemble, sans vous identifier</li>
         </ul>
       </section>
 
       <section className="space-y-3">
-        <h2>4. Base et conservation</h2>
+        <h2>4. Combien de temps</h2>
         <p>
-          Les traitements reposent sur l&apos;exécution du contrat
-          (fourniture du service), l&apos;intérêt légitime (sécurité,
-          amélioration) et, le cas échéant, le consentement. Les données sont
-          conservées le temps nécessaire au compte et aux obligations légales
-          / litiges, puis supprimées ou anonymisées.
+          Nous gardons vos données tant que votre compte existe, et le temps
+          nécessaire ensuite pour la comptabilité ou un litige. Elles sont
+          ensuite supprimées ou rendues anonymes.
         </p>
       </section>
 
       <section className="space-y-3">
-        <h2>5. Destinataires</h2>
+        <h2>5. Qui y a accès</h2>
         <p>
-          Données accessibles aux équipes SERVIS habilitées, à l&apos;autre
-          partie d&apos;une transaction (ex. vendeur voit votre commande), et
-          aux sous-traitants techniques (hébergement, email, stockage) dans la
-          limite du nécessaire. Pas de vente de données à des annonceurs.
+          L&apos;équipe SERVIS, dans la limite de ce qui est utile ; l&apos;autre
+          partie d&apos;une commande (par exemple le vendeur voit votre
+          commande) ; et nos prestataires techniques (hébergement, e-mail,
+          stockage des fichiers), uniquement pour faire tourner le service. Nous
+          ne vendons pas vos données à des publicitaires.
         </p>
       </section>
 
       <section className="space-y-3">
-        <h2>6. Cookies et auth</h2>
+        <h2>6. Cookies</h2>
         <p>
-          SERVIS utilise des cookies HttpOnly pour l&apos;authentification (accès
-          / refresh) et un mécanisme CSRF. Ce ne sont pas des cookies publicitaires
-          tiers. Vous pouvez supprimer les cookies via le navigateur ; la
-          déconnexion invalide la session côté serveur selon les règles en
-          vigueur.
+          SERVIS utilise des cookies de connexion, indispensables pour vous
+          reconnaître et sécuriser votre compte. Ce ne sont pas des cookies
+          publicitaires. Vous pouvez les supprimer dans votre navigateur ; vous
+          serez alors déconnecté.
         </p>
       </section>
 
       <section className="space-y-3">
         <h2>7. Sécurité</h2>
         <p>
-          Mesures raisonnables : HTTPS en production, mots de passe hashés,
-          permissions côté API, rate limiting sur certaines routes sensibles,
-          preuves de paiement en stockage privé.
+          Le site est servi en HTTPS. Les mots de passe sont stockés de façon
+          chiffrée. Les preuves de paiement ne sont pas visibles publiquement.
+          Aucun système n&apos;est infaillible : signalez-nous tout usage
+          suspect de votre compte.
         </p>
       </section>
 
       <section className="space-y-3">
         <h2>8. Vos droits</h2>
         <p>
-          Vous pouvez demander l&apos;accès, la rectification, la limitation ou
-          la suppression de vos données de compte, dans les limites légales,
-          en écrivant à{" "}
+          Vous pouvez demander à consulter, corriger ou supprimer les données
+          de votre compte, dans les limites prévues par la loi, en écrivant à{" "}
           <a href={`mailto:${env.platformEmail}`}>{env.platformEmail}</a>.
-          Certaines données liées à des transactions peuvent être conservées
-          pour preuve.
+          Certaines informations liées à une commande peuvent être conservées
+          comme preuve.
         </p>
       </section>
 
       <section className="space-y-3">
-        <h2>9. Documents liés</h2>
+        <h2>9. Autres documents</h2>
         <p>
-          <Link href="/legal/cgu">CGU</Link> ·{" "}
-          <Link href="/legal/cgv">CGV</Link> ·{" "}
+          <Link href="/legal/cgu">Conditions d&apos;utilisation</Link> ·{" "}
+          <Link href="/legal/cgv">Conditions de vente</Link> ·{" "}
           <Link href="/legal/mentions">Mentions légales</Link>
         </p>
       </section>
