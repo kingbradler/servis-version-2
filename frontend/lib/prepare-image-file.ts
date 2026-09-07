@@ -79,3 +79,18 @@ export async function prepareProductImageFile(file: File): Promise<File> {
     );
   }
 }
+
+const MAX_PROOF_BYTES = 8 * 1024 * 1024;
+
+/** Gallery photo or PDF for payment proofs. */
+export async function prepareProofFile(file: File): Promise<File> {
+  const type = (file.type || "").toLowerCase();
+  const name = file.name || "";
+  if (type === "application/pdf" || /\.pdf$/i.test(name)) {
+    if (file.size > MAX_PROOF_BYTES) {
+      throw new Error("Fichier trop volumineux (max 8 Mo).");
+    }
+    return file;
+  }
+  return prepareProductImageFile(file);
+}

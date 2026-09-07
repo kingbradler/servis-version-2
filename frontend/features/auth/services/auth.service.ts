@@ -70,6 +70,21 @@ export async function updateMe(payload: UpdateMePayload): Promise<AuthUser> {
   });
 }
 
+export async function uploadMyAvatar(file: File): Promise<AuthUser> {
+  const form = new FormData();
+  form.append("image", file);
+  return apiFetch<AuthUser>(`${AUTH_BASE}/me/avatar/`, {
+    method: "POST",
+    body: form,
+  });
+}
+
+export async function deleteMyAvatar(): Promise<AuthUser> {
+  return apiFetch<AuthUser>(`${AUTH_BASE}/me/avatar/`, {
+    method: "DELETE",
+  });
+}
+
 export async function refreshTokens(): Promise<{ detail: string }> {
   return apiFetch<{ detail: string }>(`${AUTH_BASE}/refresh/`, {
     method: "POST",

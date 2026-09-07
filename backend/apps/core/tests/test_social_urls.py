@@ -23,6 +23,16 @@ class SocialUrlValidationTests(SimpleTestCase):
         )
         self.assertEqual(url, "https://www.tiktok.com/@servis")
 
+    def test_youtube_channel(self):
+        url = validate_social_url(
+            "https://www.youtube.com/@servis", networks={"youtube"}
+        )
+        self.assertEqual(url, "https://www.youtube.com/@servis")
+
+    def test_youtu_be(self):
+        url = validate_social_url("https://youtu.be/abc123", networks={"youtube"})
+        self.assertEqual(url, "https://youtu.be/abc123")
+
     def test_facebook_rejects_wrong_network(self):
         with self.assertRaises(ValidationError):
             validate_social_url(

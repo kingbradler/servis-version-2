@@ -146,6 +146,43 @@ export function StoreDetailPage({ storeSlug }: { storeSlug: string }) {
                     </Button>
                   )}
                 </div>
+                {(store.tiktok_url || store.youtube_url || store.facebook_url) && (
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {store.tiktok_url ? (
+                      <Button asChild variant="outline" size="sm" className="rounded-xl">
+                        <a
+                          href={store.tiktok_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          TikTok
+                        </a>
+                      </Button>
+                    ) : null}
+                    {store.youtube_url ? (
+                      <Button asChild variant="outline" size="sm" className="rounded-xl">
+                        <a
+                          href={store.youtube_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          YouTube
+                        </a>
+                      </Button>
+                    ) : null}
+                    {store.facebook_url ? (
+                      <Button asChild variant="outline" size="sm" className="rounded-xl">
+                        <a
+                          href={store.facebook_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Facebook
+                        </a>
+                      </Button>
+                    ) : null}
+                  </div>
+                )}
               </div>
             </section>
 

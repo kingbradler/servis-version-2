@@ -29,6 +29,7 @@ import type {
   StoreUpdatePayload,
 } from "@/features/stores/types/store.types";
 import { getUserFacingErrorMessage } from "@/lib/api/errors";
+import { prepareProductImageFile } from "@/lib/prepare-image-file";
 
 const STATUS_LABELS: Record<StoreStatus, string> = {
   DRAFT: "Brouillon",
@@ -53,6 +54,9 @@ interface FormState {
   city: string;
   phone: string;
   whatsapp: string;
+  tiktok_url: string;
+  youtube_url: string;
+  facebook_url: string;
   address: string;
   neighborhood: string;
   postal_code: string;
@@ -67,6 +71,9 @@ function toFormState(store: StoreSeller | null): FormState {
     city: store?.city?.id ?? "",
     phone: store?.phone ?? "",
     whatsapp: store?.whatsapp ?? "",
+    tiktok_url: store?.tiktok_url ?? "",
+    youtube_url: store?.youtube_url ?? "",
+    facebook_url: store?.facebook_url ?? "",
     address: store?.address ?? "",
     neighborhood: store?.neighborhood ?? "",
     postal_code: store?.postal_code ?? "",
@@ -124,6 +131,9 @@ function StoreForm({
           city_id: form.city || undefined,
           phone: form.phone,
           whatsapp: form.whatsapp,
+          tiktok_url: form.tiktok_url.trim(),
+          youtube_url: form.youtube_url.trim(),
+          facebook_url: form.facebook_url.trim(),
           address: form.address,
           neighborhood: form.neighborhood,
           postal_code: form.postal_code,
@@ -138,6 +148,9 @@ function StoreForm({
           city: form.city,
           phone: form.phone,
           whatsapp: form.whatsapp,
+          tiktok_url: form.tiktok_url.trim(),
+          youtube_url: form.youtube_url.trim(),
+          facebook_url: form.facebook_url.trim(),
           address: form.address,
           neighborhood: form.neighborhood,
           postal_code: form.postal_code,
@@ -169,7 +182,8 @@ function StoreForm({
     if (!store) return;
     setUploadingKind(kind);
     try {
-      const updated = await storesService.uploadSellerStoreMedia(kind, file);
+      const ready = await prepareProductImageFile(file);
+      const updated = await storesService.uploadSellerStoreMedia(kind, ready);
       onStoreMediaUpdated(updated);
       toast({
         title: kind === "logo" ? "Logo mis à jour" : "Bannière mise à jour",
@@ -218,6 +232,31 @@ function StoreForm({
             />
           </div>
 
+          <div className="space-y-3 rounded-[18px] border border-cr2 p-4 dark:border-border">
+            <h3 className="text-body-sm font-semibold">Réseaux sociaux</h3>
+            <p className="text-caption text-text-muted">
+              Liens publics affichés sur la page de votre boutique.
+            </p>
+            <Input
+              label="TikTok"
+              value={form.tiktok_url}
+              onChange={handleField("tiktok_url")}
+              placeholder="https://tiktok.com/@votrecompte"
+            />
+            <Input
+              label="YouTube"
+              value={form.youtube_url}
+              onChange={handleField("youtube_url")}
+              placeholder="https://youtube.com/@votrechaine"
+            />
+            <Input
+              label="Facebook"
+              value={form.facebook_url}
+              onChange={handleField("facebook_url")}
+              placeholder="https://facebook.com/votrepage"
+            />
+          </div>
+
           {store ? (
             <div className="space-y-3 rounded-[18px] border border-cr2 p-4 dark:border-border">
               <h3 className="text-body-sm font-semibold">Photos boutique</h3>
@@ -245,7 +284,7 @@ function StoreForm({
                   <input
                     ref={logoInputRef}
                     type="file"
-                    accept="image/jpeg,image/png,image/webp"
+                    accept="image/*"
                     className="hidden"
                     onChange={(e) => {
                       const file = e.target.files?.[0];
@@ -284,7 +323,7 @@ function StoreForm({
                   <input
                     ref={bannerInputRef}
                     type="file"
-                    accept="image/jpeg,image/png,image/webp"
+                    accept="image/*"
                     className="hidden"
                     onChange={(e) => {
                       const file = e.target.files?.[0];

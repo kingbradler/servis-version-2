@@ -5,6 +5,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import ensure_csrf_cookie
 from drf_spectacular.utils import OpenApiResponse, extend_schema
 from rest_framework import status
+from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -21,6 +22,7 @@ from apps.users.permissions import IsAuthenticatedUser
 from apps.users.serializers import (
     ClientRegisterSerializer,
     LoginSerializer,
+    MeAvatarUploadSerializer,
     PasswordResetConfirmSerializer,
     PasswordResetRequestSerializer,
     ResendVerificationSerializer,
@@ -295,6 +297,46 @@ class MeView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(UserMeSerializer(request.user).data, status=status.HTTP_200_OK)
+
+
+class MeAvatarView(APIView):
+    """Upload or remove the connected user's profile photo (gallery file)."""
+
+    permission_classes = [IsAuthenticatedUser]
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
+
+    @extend_schema(
+        tags=["Auth"],
+        summary="Envoyer ma photo de profil",
+        request=MeAvatarUploadSerializer,
+        responses={
+            200: UserMeSerializer,
+            400: OpenApiResponse(description="Erreur de validation"),
+            401: OpenApiResponse(description="Non authentifié"),
+        },
+    )
+    def post(self, request):
+        serializer = MeAvatarUploadSerializer(
+            data=request.data, context={"user": request.user, "request": request}
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(UserMeSerializer(request.user).data, status=status.HTTP_200_OK)
+
+    @extend_schema(
+        tags=["Auth"],
+        summary="Supprimer ma photo de profil",
+        responses={
+            200: UserMeSerializer,
+            401: OpenApiResponse(description="Non authentifié"),
+        },
+    )
+    def delete(self, request):
+        user = request.user
+        if user.avatar:
+            user.avatar = ""
+            user.save(update_fields=["avatar", "updated_at"])
+        return Response(UserMeSerializer(user).data, status=status.HTTP_200_OK)
 
 
 class RefreshView(APIView):

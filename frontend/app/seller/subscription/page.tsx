@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Upload } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -24,6 +25,7 @@ import type {
 import { getUserFacingErrorMessage } from "@/lib/api/errors";
 import { env } from "@/config/env";
 import { formatPrice } from "@/lib/utils";
+import { prepareProofFile } from "@/lib/prepare-image-file";
 import { subscriptionPaymentNotifyPlatformMessage } from "@/lib/whatsapp";
 import { WhatsAppNotifyButton } from "@/features/payments/components/WhatsAppNotifyButton";
 
@@ -49,6 +51,7 @@ export default function SellerSubscriptionPage() {
   const [reference, setReference] = useState("");
   const [busy, setBusy] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
+  const proofInputRef = useRef<HTMLInputElement>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -504,14 +507,48 @@ export default function SellerSubscriptionPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-body-sm text-text-secondary">
-              Téléversez une capture ou un PDF du paiement. La preuve reste
-              privée.
+              Choisissez une capture dans votre galerie, ou un PDF. La preuve
+              reste privée.
             </p>
             <input
+              ref={proofInputRef}
               type="file"
-              accept="image/*,application/pdf"
-              onChange={(e) => setProofFile(e.target.files?.[0] ?? null)}
+              accept="image/*,image/heic,image/heif,application/pdf"
+              className="hidden"
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                try {
+                  const ready = await prepareProofFile(file);
+                  setProofFile(ready);
+                  setActionError(null);
+                } catch (err) {
+                  setProofFile(null);
+                  setActionError(
+                    getUserFacingErrorMessage(
+                      err,
+                      "Photo illisible. Utilisez JPEG, PNG, WebP ou PDF."
+                    )
+                  );
+                } finally {
+                  if (proofInputRef.current) proofInputRef.current.value = "";
+                }
+              }}
             />
+            <Button
+              type="button"
+              variant="outline"
+              className="rounded-xl"
+              onClick={() => proofInputRef.current?.click()}
+            >
+              <Upload className="h-4 w-4" />
+              Choisir depuis la galerie
+            </Button>
+            {proofFile ? (
+              <p className="text-caption text-text-secondary">
+                Fichier : {proofFile.name}
+              </p>
+            ) : null}
             <input
               type="text"
               placeholder="Référence (optionnel)"
