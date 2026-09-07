@@ -102,7 +102,7 @@ export default function CartPage() {
   const [deliveryName, setDeliveryName] = useState("");
   const [deliveryPhone, setDeliveryPhone] = useState("");
   const [deliveryAddress, setDeliveryAddress] = useState("");
-  const [deliveryCity, setDeliveryCity] = useState("Tanger");
+  const [deliveryCity, setDeliveryCity] = useState("");
   const [deliveryNotes, setDeliveryNotes] = useState("");
 
   const items = cart?.cart?.items ?? [];
@@ -208,11 +208,15 @@ export default function CartPage() {
     const name = deliveryName.trim();
     const phone = deliveryPhone.trim();
     const address = deliveryAddress.trim();
-    const city = deliveryCity.trim() || "Tanger";
+    const city = deliveryCity.trim();
     if (name.length < 2 || phone.replace(/\D/g, "").length < 8 || address.length < 5) {
       setActionError(
         "Complétez le destinataire, un téléphone valide et l'adresse de livraison."
       );
+      return;
+    }
+    if (city.length < 2) {
+      setActionError("Indiquez la ville de livraison.");
       return;
     }
 
@@ -391,8 +395,7 @@ export default function CartPage() {
             <section className="space-y-3 rounded-2xl border border-border bg-surface p-4">
               <h2 className="font-semibold">Adresse de livraison</h2>
               <p className="text-caption text-text-muted">
-                Indiquez où le vendeur peut vous livrer ou vous rencontrer à
-                Tanger.
+                Indiquez où le vendeur peut vous livrer ou vous rencontrer.
               </p>
               <Input
                 label="Destinataire"
@@ -421,7 +424,9 @@ export default function CartPage() {
                 label="Ville"
                 value={deliveryCity}
                 onChange={(e) => setDeliveryCity(e.target.value)}
+                required
                 autoComplete="address-level2"
+                placeholder="Votre ville"
               />
               <label className="block space-y-1.5">
                 <span className="text-body-sm font-medium text-text-primary">

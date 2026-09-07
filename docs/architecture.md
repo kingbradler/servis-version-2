@@ -2,7 +2,7 @@
 
 ## Vue d'ensemble
 
-SERVIS est une plateforme SaaS e-commerce multi-vendeurs destinée aux étudiants entrepreneurs de Tanger (Maroc), conçue pour s'étendre à d'autres villes.
+SERVIS est une plateforme e-commerce multi-vendeurs destinée aux étudiants entrepreneurs au Maroc.
 
 Le projet est un **monorepo** avec frontend et backend déployables séparément.
 
@@ -39,7 +39,7 @@ servis/
 6. **RIB non public** — exposé uniquement dans le contexte de paiement d'une commande
 7. **JWT en HttpOnly cookies** — jamais localStorage
 8. **Langue** : français (structure i18n prête pour l'arabe)
-9. **Ville initiale** : Tanger (table `City` pour extension)
+9. **Villes** : plusieurs villes marocaines (table `City`)
 
 ## Architecture frontend
 

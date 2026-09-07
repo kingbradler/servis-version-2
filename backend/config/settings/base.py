@@ -267,6 +267,7 @@ EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
 EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "true").lower() in ("1", "true", "yes")
 EMAIL_USE_SSL = os.getenv("EMAIL_USE_SSL", "false").lower() in ("1", "true", "yes")
+# Avoid hanging registration when SMTP/Resend is unreachable.
 EMAIL_TIMEOUT = int(os.getenv("EMAIL_TIMEOUT", "8"))
 
 # Frontend base URL (verification links in emails)

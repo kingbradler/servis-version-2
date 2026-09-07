@@ -13,9 +13,7 @@ from apps.users.choices import UserRole
 
 class City(models.Model):
     """
-    Moroccan city supported by SERVIS.
-
-    v1 launch focuses on Tanger; architecture supports more cities later.
+    Moroccan city available on SERVIS.
     """
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

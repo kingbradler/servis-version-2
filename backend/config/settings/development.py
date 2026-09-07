@@ -4,7 +4,16 @@ from .base import *  # noqa: F403
 
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "testserver"]  # noqa: F405
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in os.getenv(  # noqa: F405
+        "DJANGO_ALLOWED_HOSTS",
+        "localhost,127.0.0.1,testserver,0.0.0.0",
+    ).split(",")
+    if host.strip()
+]
+# Cloud / LAN preview proxies send various Host headers.
+ALLOWED_HOSTS.append("*")
 
 CORS_ALLOW_ALL_ORIGINS = False
 

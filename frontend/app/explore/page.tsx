@@ -36,8 +36,11 @@ import {
 } from "@/features/map/explore-adapters";
 import { formatDistanceKm } from "@/features/map/format-distance";
 import { DEFAULT_NEARBY_RADIUS_KM } from "@/features/map/geolocation";
-import type { GeoCoordinates } from "@/features/map/types";
-import { DEFAULT_MAP_CENTER } from "@/features/map/types";
+import {
+  DEFAULT_MAP_CENTER,
+  DEFAULT_MAP_ZOOM,
+  type GeoCoordinates,
+} from "@/features/map/types";
 import { getPublicProfessionals } from "@/features/professionals/api/professionals.api";
 import { getPublicServices } from "@/features/pro-services/api/services.api";
 import { getPublicStores } from "@/features/stores/services/stores.service";
@@ -359,7 +362,7 @@ function ExplorePageInner() {
             markers={markers}
             userLocation={userLocation}
             center={mapCenter}
-            zoom={userLocation ? 13 : 12}
+            zoom={userLocation ? 13 : results.length ? 12 : DEFAULT_MAP_ZOOM}
             selectedId={selectedId}
             mapStyle="mapbox://styles/mapbox/streets-v12"
             navigationPosition="bottom-right"

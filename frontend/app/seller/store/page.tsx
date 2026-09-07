@@ -365,7 +365,7 @@ function StoreForm({
                 label="Latitude"
                 value={form.latitude}
                 onChange={handleField("latitude")}
-                placeholder="35.759500"
+                placeholder="33.573110"
                 inputMode="decimal"
                 readOnly
               />
@@ -373,7 +373,7 @@ function StoreForm({
                 label="Longitude"
                 value={form.longitude}
                 onChange={handleField("longitude")}
-                placeholder="-5.834000"
+                placeholder="-7.589840"
                 inputMode="decimal"
                 readOnly
               />

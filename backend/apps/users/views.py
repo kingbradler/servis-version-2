@@ -69,7 +69,8 @@ class RegisterView(APIView):
         serializer = ClientRegisterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
-        send_verification_email(user)
+        if not send_verification_email(user):
+            user.mark_email_verified()
         return _auth_response(user, http_status=status.HTTP_201_CREATED)
 
 

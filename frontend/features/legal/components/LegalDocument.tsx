@@ -13,13 +13,11 @@ const LEGAL_NAV = [
 export function LegalDocument({
   title,
   updatedAt,
-  sections,
   children,
 }: {
   title: string;
   updatedAt: string;
-  sections?: { heading: string; body: React.ReactNode }[];
-  children?: React.ReactNode;
+  children: React.ReactNode;
 }) {
   return (
     <MarketplaceShell>
@@ -47,12 +45,6 @@ export function LegalDocument({
         </p>
 
         <div className="legal-prose mt-8 space-y-6 text-body leading-relaxed text-text-secondary [&_h2]:font-display [&_h2]:text-xl [&_h2]:font-extrabold [&_h2]:tracking-tight [&_h2]:text-text-primary [&_h3]:mt-2 [&_h3]:text-heading-s [&_h3]:font-semibold [&_h3]:text-text-primary [&_ul]:list-disc [&_ul]:space-y-1 [&_ul]:pl-5 [&_a]:text-primary [&_a]:hover:underline">
-          {sections?.map((section) => (
-            <section key={section.heading} className="space-y-3">
-              <h2>{section.heading}</h2>
-              {section.body}
-            </section>
-          ))}
           {children}
         </div>
 

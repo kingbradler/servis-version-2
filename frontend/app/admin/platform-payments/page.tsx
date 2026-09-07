@@ -59,8 +59,7 @@ export default function AdminPlatformPaymentsPage() {
           Moyens de paiement SERVIS
         </h2>
         <p className="mt-1 text-body-sm text-text-secondary">
-          Coordonnées affichées aux professionnels pour les abonnements. Édition
-          complète via l&apos;admin Django si besoin.
+          Coordonnées affichées aux professionnels pour les abonnements.
         </p>
       </div>
 

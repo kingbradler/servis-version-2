@@ -1,15 +1,25 @@
 # SERVIS
 
-Plateforme SaaS e-commerce multi-vendeurs pour les étudiants entrepreneurs de Tanger, Maroc.
+Plateforme e-commerce multi-vendeurs pour étudiants entrepreneurs, au Maroc.
+
+## Mettre en ligne
+
+1. **Publier** le frontend (Vercel, Root Directory = `frontend`)
+2. Déployer l’API avec le blueprint [`render.yaml`](render.yaml) (Render)
+3. Brancher `NEXT_PUBLIC_API_URL` sur l’URL de l’API, puis redéployer le site
+
+Guide : [docs/mise-en-ligne.md](docs/mise-en-ligne.md)
 
 ## Structure
 
 ```
 servis/
-├── frontend/     # Next.js + TypeScript + Tailwind CSS
-├── backend/      # Django + Django REST Framework
-├── docs/         # Architecture, Design System, API
-└── docker-compose.yml
+├── frontend/          # Next.js + TypeScript + Tailwind CSS
+├── backend/           # Django + Django REST Framework
+├── docs/              # Architecture, Design System, API, mise en ligne
+├── docker-compose.yml # PostgreSQL local
+├── render.yaml        # Blueprint API + Postgres (Render)
+└── vercel.json        # Build frontend (Vercel)
 ```
 
 ## Prérequis

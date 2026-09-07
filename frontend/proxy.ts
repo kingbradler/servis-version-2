@@ -1,28 +1,18 @@
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import type { NextRequest } from "next/request";
 
 /**
- * Soft UX guards for private areas (Next.js 16 `proxy` convention).
- * Real authorization is enforced by Django DRF permissions.
+ * Soft UX note for private areas (Next.js 16 `proxy` convention).
+ *
+ * Do not redirect here based on `servis_access`. That JWT cookie is set by
+ * the API host (api.servis-superrapid.com). The browser does not send it to
+ * the frontend host (www) unless JWT_COOKIE_DOMAIN is the parent domain.
+ * Gating on it bounced logged-in admins back to /login.
+ *
+ * Real authorization: RequireAuth (client, via /auth/me) + Django.
  */
 
-const ACCESS_COOKIE = "servis_access";
-
-export function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-  const hasAccessCookie = Boolean(request.cookies.get(ACCESS_COOKIE)?.value);
-
-  const needsAuth =
-    pathname.startsWith("/dashboard") ||
-    pathname.startsWith("/seller") ||
-    pathname.startsWith("/admin");
-
-  if (needsAuth && !hasAccessCookie) {
-    const loginUrl = new URL("/login", request.url);
-    loginUrl.searchParams.set("next", pathname);
-    return NextResponse.redirect(loginUrl);
-  }
-
+export function proxy(_request: NextRequest) {
   return NextResponse.next();
 }
 

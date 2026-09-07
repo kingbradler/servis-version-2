@@ -182,7 +182,7 @@ def checkout_cart(user, *, delivery: dict) -> list[Order]:
         "delivery_name": delivery["delivery_name"],
         "delivery_phone": delivery["delivery_phone"],
         "delivery_address": delivery["delivery_address"],
-        "delivery_city": delivery.get("delivery_city") or "Tanger",
+        "delivery_city": delivery.get("delivery_city") or "",
         "delivery_notes": delivery.get("delivery_notes") or "",
     }
 

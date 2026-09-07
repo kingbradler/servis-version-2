@@ -68,15 +68,15 @@ export function DashboardShell({
   return (
     <div
       className={cn(
-        "flex min-h-full bg-background text-text-primary",
+        "flex min-h-full min-w-0 overflow-x-clip bg-background text-text-primary",
         className
       )}
     >
       <Sidebar items={navItems} open={open} onClose={() => setOpen(false)} />
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-3 border-b border-cr2 bg-surface/95 px-3 backdrop-blur safe-pt dark:border-border sm:px-4">
-          <div className="flex min-w-0 items-center gap-2.5">
+        <header className="sticky top-0 z-30 flex min-h-14 items-center justify-between gap-2 border-b border-cr2 bg-surface/95 px-2 backdrop-blur safe-pt dark:border-border sm:gap-3 sm:px-4">
+          <div className="flex min-w-0 items-center gap-2 sm:gap-2.5">
             <Button
               variant="ghost"
               size="icon"
@@ -86,17 +86,17 @@ export function DashboardShell({
             >
               <Menu className="h-5 w-5" />
             </Button>
-            <div>
+            <div className="min-w-0">
               <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-primary">
                 Espace
               </p>
-              <h1 className="font-display text-[15px] font-extrabold leading-tight text-text-primary">
+              <h1 className="truncate font-display text-[15px] font-extrabold leading-tight text-text-primary">
                 {title}
               </h1>
             </div>
           </div>
 
-          <div className="flex items-center gap-1">
+          <div className="flex shrink-0 items-center gap-0.5 sm:gap-1">
             <Button
               asChild
               variant="ghost"
@@ -106,7 +106,9 @@ export function DashboardShell({
               <Link href="/">Marketplace</Link>
             </Button>
             <NotificationBell tone="light" />
-            <ThemeToggle />
+            <div className="hidden sm:block">
+              <ThemeToggle />
+            </div>
             {user && (
               <Dropdown>
                 <DropdownTrigger asChild>
@@ -121,7 +123,7 @@ export function DashboardShell({
                   </button>
                 </DropdownTrigger>
                 <DropdownContent align="end" className="w-52">
-                  <DropdownLabel>
+                  <DropdownLabel className="truncate">
                     {user.first_name} {user.last_name}
                   </DropdownLabel>
                   <DropdownSeparator />
@@ -131,6 +133,9 @@ export function DashboardShell({
                     }
                   >
                     Mon espace
+                  </DropdownItem>
+                  <DropdownItem onSelect={() => router.push("/")}>
+                    Marketplace
                   </DropdownItem>
                   <DropdownSeparator />
                   <DropdownItem onSelect={() => void handleLogout()}>
@@ -143,7 +148,7 @@ export function DashboardShell({
           </div>
         </header>
 
-        <div className="flex-1 overflow-x-hidden p-3 sm:p-6 lg:p-8">
+        <div className="min-w-0 flex-1 overflow-x-clip p-3 pb-[max(0.75rem,var(--safe-bottom))] sm:p-6 lg:p-8">
           {children}
         </div>
       </div>

@@ -294,8 +294,40 @@ body {
   }
 }
 
+html {
+  overflow-x: clip;
+}
+
 html.servis-intro-lock {
   overflow: hidden;
+}
+
+body {
+  overflow-x: clip;
+  max-width: 100%;
+}
+
+img,
+video,
+canvas {
+  max-width: 100%;
+}
+
+@media (max-width: 639px) {
+  .text-heading-xl {
+    font-size: 1.75rem;
+    line-height: 1.15;
+  }
+  .text-heading-l {
+    font-size: 1.45rem;
+    line-height: 1.2;
+  }
+  .text-heading-m {
+    font-size: 1.25rem;
+  }
+  .text-heading-s {
+    font-size: 1.125rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

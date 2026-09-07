@@ -146,12 +146,12 @@ export default function AdminUsersPage() {
             return (
               <Card key={user.id}>
                 <CardContent className="flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between">
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-body font-semibold">
                       {user.first_name} {user.last_name}
                       {isSelf ? " (vous)" : ""}
                     </p>
-                    <p className="text-caption text-text-muted">{user.email}</p>
+                    <p className="break-all text-caption text-text-muted">{user.email}</p>
                     <div className="mt-2 flex flex-wrap gap-2">
                       <Badge variant="secondary">{user.role}</Badge>
                       <Badge variant={user.is_active ? "success" : "error"}>
@@ -159,7 +159,7 @@ export default function AdminUsersPage() {
                       </Badge>
                     </div>
                   </div>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex w-full flex-wrap gap-2 sm:w-auto">
                     {user.is_active ? (
                       <Button
                         size="sm"

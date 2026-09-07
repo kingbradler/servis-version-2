@@ -1,0 +1,56 @@
+# Blueprint Render — API Django + PostgreSQL
+# Premier déploiement : SERVIS_BOOTSTRAP=true (pas besoin de Supabase / Resend).
+# Ensuite : STORAGE_BACKEND=supabase + SMTP, puis SERVIS_BOOTSTRAP=false.
+
+databases:
+  - name: servis-db
+    postgresMajorVersion: 16
+
+services:
+  - type: web
+    name: servis-api
+    runtime: python
+    rootDir: backend
+    plan: starter
+    buildCommand: pip install -r requirements/production.txt
+    startCommand: ./start.sh
+    healthCheckPath: /api/v1/health/
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.3"
+      - key: DJANGO_SETTINGS_MODULE
+        value: config.settings.production
+      - key: DJANGO_DEBUG
+        value: "false"
+      - key: SERVIS_BOOTSTRAP
+        value: "true"
+      - key: SERVIS_SEED_CATALOG
+        value: "true"
+      - key: CORS_TRUST_VERCEL
+        value: "true"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: servis-db
+          property: connectionString
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: STORAGE_BACKEND
+        value: local
+      - key: JWT_COOKIE_SECURE
+        value: "true"
+      - key: JWT_COOKIE_SAMESITE
+        value: None
+      - key: FRONTEND_URL
+        sync: false
+      - key: CORS_ALLOWED_ORIGINS
+        sync: false
+      - key: CSRF_TRUSTED_ORIGINS
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: EMAIL_HOST_PASSWORD
+        sync: false
+      - key: DEFAULT_FROM_EMAIL
+        sync: false

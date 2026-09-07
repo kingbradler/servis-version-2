@@ -47,7 +47,7 @@ def notify(
                 message=(
                     f"{body}\n\n"
                     + (f"Ouvrir : {full_link}\n\n" if link else "")
-                    + "— L'équipe SERVIS\n"
+                    + "L'équipe SERVIS\n"
                 ),
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=[user.email],

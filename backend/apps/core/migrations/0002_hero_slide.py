@@ -10,7 +10,7 @@ DEFAULT_SLIDES = [
     {
         "title": "Marketplace locale",
         "highlight": "près de vous",
-        "subtitle": "Produits d'étudiants entrepreneurs et services de proximité à Tanger.",
+        "subtitle": "Produits d'étudiants entrepreneurs et services de proximité, partout au Maroc.",
         "image": "https://images.pexels.com/photos/4495416/pexels-photo-4495416.jpeg?auto=compress&cs=tinysrgb&h=900&w=1600",
         "cta_href": "/products",
         "cta_label": "Shop produits",

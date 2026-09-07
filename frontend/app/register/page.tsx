@@ -88,8 +88,8 @@ function RegisterForm() {
           Créer un compte
         </h1>
         <p className="mt-2 text-body text-text-secondary">
-          Un seul compte. Choisissez votre parcours principal — un
-          professionnel peut aussi acheter.
+          Créez votre compte pour acheter, vendre ou proposer vos services.
+          Un professionnel peut aussi commander comme un client.
         </p>
 
         <div className="mt-6 grid gap-3 sm:grid-cols-2">

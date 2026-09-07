@@ -22,7 +22,7 @@ export function MarketplaceShell({
   return (
     <div
       className={cn(
-        "flex min-h-full flex-col bg-background text-text-primary",
+        "flex min-h-full min-w-0 flex-col overflow-x-clip bg-background text-text-primary",
         fillViewport && "h-dvh max-h-dvh overflow-hidden",
         className
       )}

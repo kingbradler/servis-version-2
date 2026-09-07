@@ -145,9 +145,7 @@ class CheckoutSerializer(serializers.Serializer):
     delivery_name = serializers.CharField(max_length=120)
     delivery_phone = serializers.CharField(max_length=30)
     delivery_address = serializers.CharField(max_length=300)
-    delivery_city = serializers.CharField(
-        max_length=100, required=False, allow_blank=True, default="Tanger"
-    )
+    delivery_city = serializers.CharField(max_length=100)
     delivery_notes = serializers.CharField(
         max_length=400, required=False, allow_blank=True, default=""
     )
@@ -161,7 +159,7 @@ class CheckoutSerializer(serializers.Serializer):
         name = clean(attrs.get("delivery_name", ""))
         phone = clean(attrs.get("delivery_phone", ""))
         address = clean(attrs.get("delivery_address", ""))
-        city = clean(attrs.get("delivery_city", "")) or "Tanger"
+        city = clean(attrs.get("delivery_city", ""))
         notes = clean(attrs.get("delivery_notes", ""))
 
         if len(name) < 2:
@@ -176,6 +174,10 @@ class CheckoutSerializer(serializers.Serializer):
         if len(address) < 5:
             raise serializers.ValidationError(
                 {"delivery_address": "Indiquez une adresse de livraison."}
+            )
+        if len(city) < 2:
+            raise serializers.ValidationError(
+                {"delivery_city": "Indiquez la ville de livraison."}
             )
 
         attrs["delivery_name"] = name[:120]

@@ -57,14 +57,14 @@ export default function AdminDashboardPage() {
         description="Vue d'ensemble de la marketplace SERVIS — utilisateurs, boutiques, commandes et paiements."
         actions={
           <>
-            <Button asChild variant="primary" size="sm" className="rounded-full">
+            <Button asChild variant="primary" size="sm" className="w-full rounded-full sm:w-auto">
               <Link href="/admin/payments">Preuves à revoir</Link>
             </Button>
             <Button
               asChild
               variant="outline"
               size="sm"
-              className="rounded-full border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white"
+              className="w-full rounded-full border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white sm:w-auto"
             >
               <Link href="/admin/stores">Boutiques</Link>
             </Button>

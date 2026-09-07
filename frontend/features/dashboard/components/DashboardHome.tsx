@@ -21,7 +21,7 @@ export function DashboardWelcome({
   return (
     <section
       className={cn(
-        "relative overflow-hidden rounded-[22px] border border-dk/10 bg-dk px-5 py-6 text-white sm:px-7 sm:py-7",
+        "relative overflow-hidden rounded-[22px] border border-dk/10 bg-dk px-4 py-5 text-white sm:px-7 sm:py-7",
         "motion-safe:animate-[fade-up_0.45s_ease-out_both]",
         className
       )}
@@ -48,7 +48,7 @@ export function DashboardWelcome({
               {eyebrow}
             </p>
           ) : null}
-          <h2 className="mt-1 font-display text-[clamp(1.6rem,3.5vw,2.15rem)] font-extrabold leading-tight tracking-tight">
+          <h2 className="mt-1 break-words font-display text-[clamp(1.35rem,6vw,2.15rem)] font-extrabold leading-tight tracking-tight">
             {title}
           </h2>
           {description ? (
@@ -58,7 +58,9 @@ export function DashboardWelcome({
           ) : null}
         </div>
         {actions ? (
-          <div className="flex flex-wrap gap-2 sm:justify-end">{actions}</div>
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:flex-wrap sm:justify-end">
+            {actions}
+          </div>
         ) : null}
       </div>
     </section>
@@ -134,18 +136,18 @@ export function DashboardQuickLink({
     <Link
       href={href}
       className={cn(
-        "group inline-flex items-center gap-2.5 rounded-[16px] border border-cr2 bg-white px-4 py-3.5 text-body-sm font-semibold text-text-primary transition-all",
+        "group flex w-full min-w-0 items-center gap-2.5 rounded-[16px] border border-cr2 bg-white px-4 py-3.5 text-body-sm font-semibold text-text-primary transition-all",
         "hover:-translate-y-0.5 hover:border-primary/25 hover:shadow-[0_8px_28px_rgba(14,14,14,0.08)]",
         "dark:border-border dark:bg-surface",
         className
       )}
     >
       {Icon ? (
-        <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-dk text-white transition-colors group-hover:bg-primary">
+        <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-dk text-white transition-colors group-hover:bg-primary">
           <Icon className="h-4 w-4" />
         </span>
       ) : null}
-      {label}
+      <span className="min-w-0 truncate">{label}</span>
     </Link>
   );
 }
@@ -163,8 +165,8 @@ export function DashboardSection({
 }) {
   return (
     <section className={cn("space-y-3", className)}>
-      <div className="flex items-center justify-between gap-3">
-        <h3 className="font-display text-[17px] font-extrabold text-text-primary">
+      <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <h3 className="min-w-0 font-display text-[17px] font-extrabold text-text-primary">
           {title}
         </h3>
         {action}

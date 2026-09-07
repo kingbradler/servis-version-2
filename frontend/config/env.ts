@@ -1,6 +1,50 @@
+const PROD_API_URL = "https://servis-version-2.onrender.com/api/v1";
+const LOCAL_API_URL = "http://localhost:8000/api/v1";
+const PROD_APP_URL = "https://servis-version-2.vercel.app";
+const LOCAL_APP_URL = "http://localhost:3000";
+
+function isLocalUrl(value: string): boolean {
+  return (
+    !value ||
+    value.includes("localhost") ||
+    value.includes("127.0.0.1")
+  );
+}
+
+function isBrowserOnPublicHost(): boolean {
+  if (typeof window === "undefined") return false;
+  const host = window.location.hostname;
+  return host !== "localhost" && host !== "127.0.0.1";
+}
+
+/** Resolve API base. On Vercel, never keep a localhost fallback. */
+export function getApiUrl(): string {
+  const configured = (process.env.NEXT_PUBLIC_API_URL ?? "")
+    .trim()
+    .replace(/\/$/, "");
+  if (isBrowserOnPublicHost() && isLocalUrl(configured)) {
+    return PROD_API_URL;
+  }
+  return configured || LOCAL_API_URL;
+}
+
+export function getAppUrl(): string {
+  const configured = (process.env.NEXT_PUBLIC_APP_URL ?? "")
+    .trim()
+    .replace(/\/$/, "");
+  if (isBrowserOnPublicHost() && isLocalUrl(configured)) {
+    return PROD_APP_URL;
+  }
+  return configured || LOCAL_APP_URL;
+}
+
 export const env = {
-  apiUrl: process.env.NEXT_PUBLIC_API_URL ?? "https://servis-version-2.onrender.com/api/v1",
-  appUrl: process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
+  get apiUrl() {
+    return getApiUrl();
+  },
+  get appUrl() {
+    return getAppUrl();
+  },
   /** Public Mapbox token — never log this value. */
   mapboxToken: process.env.NEXT_PUBLIC_MAPBOX_TOKEN?.trim() || null,
   /** WhatsApp plateforme (chiffres internationaux, sans +) */
@@ -14,5 +58,4 @@ export const env = {
     process.env.NEXT_PUBLIC_PLATFORM_EMAIL?.trim() ||
     "servis.superrapid@gmail.com",
   appName: "SERVIS",
-
-} as const;
+};

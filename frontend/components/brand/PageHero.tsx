@@ -43,7 +43,7 @@ export function PageHero({
         )}
         <h1
           className={cn(
-            "font-display max-w-2xl text-3xl font-extrabold tracking-tight sm:text-4xl",
+            "font-display max-w-2xl text-[clamp(1.6rem,7vw,2.25rem)] font-extrabold tracking-tight sm:text-4xl",
             dark ? "text-white" : "text-text-primary"
           )}
         >

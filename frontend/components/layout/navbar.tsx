@@ -109,7 +109,7 @@ export function Navbar({ className }: NavbarProps) {
   return (
     <header
       className={cn(
-        "sticky top-0 z-[90] w-full border-b border-white/5 bg-dk/97 backdrop-blur-xl safe-pt",
+        "sticky top-0 z-[90] w-full max-w-full overflow-x-clip border-b border-white/5 bg-dk/97 backdrop-blur-xl safe-pt",
         className
       )}
     >

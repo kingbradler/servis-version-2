@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 import { ServisLogo } from "@/components/brand/ServisLogo";
 import { MarketplaceShell } from "@/components/layout/marketplace-shell";
@@ -11,6 +11,7 @@ import { FormMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { resolvePostLoginPath } from "@/features/auth/lib/roles";
+import * as authService from "@/features/auth/services/auth.service";
 import { getUserFacingErrorMessage } from "@/lib/api/errors";
 
 function LoginForm() {
@@ -21,6 +22,23 @@ function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [localError, setLocalError] = useState<string | null>(null);
+
+  // Already signed in (API cookie) → leave /login instead of showing the form.
+  useEffect(() => {
+    let cancelled = false;
+    void authService
+      .getMe()
+      .then((user) => {
+        if (cancelled || !user) return;
+        router.replace(resolvePostLoginPath(user.role, nextParam));
+      })
+      .catch(() => {
+        /* stay on the form */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [router, nextParam]);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,8 +74,7 @@ function LoginForm() {
           Connexion
         </h1>
         <p className="mt-2 text-body text-text-secondary">
-          Accédez à votre espace Client ou Professionnel. Un professionnel peut
-          aussi acheter et demander des services.
+          Connectez-vous pour accéder à votre compte.
         </p>
 
         <form

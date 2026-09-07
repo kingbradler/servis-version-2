@@ -1,6 +1,32 @@
 import type { NextConfig } from "next";
 import path from "path";
 
+function mediaPatternFromApiUrl(): NonNullable<
+  NextConfig["images"]
+>["remotePatterns"] {
+  const raw = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+  try {
+    const url = new URL(raw);
+    const protocol = url.protocol === "https:" ? "https" : "http";
+    const pattern: {
+      protocol: "http" | "https";
+      hostname: string;
+      port?: string;
+      pathname: string;
+    } = {
+      protocol,
+      hostname: url.hostname,
+      pathname: "/media/**",
+    };
+    if (url.port) {
+      pattern.port = url.port;
+    }
+    return [pattern];
+  } catch {
+    return [];
+  }
+}
+
 const nextConfig: NextConfig = {
   turbopack: {
     // Pin root to frontend/ to avoid picking up a parent package-lock.json
@@ -30,6 +56,13 @@ const nextConfig: NextConfig = {
         port: "8000",
         pathname: "/media/**",
       },
+      {
+        protocol: "http",
+        hostname: "127.0.0.1",
+        port: "18001",
+        pathname: "/media/**",
+      },
+      ...mediaPatternFromApiUrl(),
     ],
   },
 };

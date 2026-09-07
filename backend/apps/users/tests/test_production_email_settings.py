@@ -18,6 +18,7 @@ _BASE_ENV = {
     "DATABASE_URL": "postgres://servis:pass@localhost:5432/servis",
     "CORS_ALLOWED_ORIGINS": "https://www.example.com",
     "CSRF_TRUSTED_ORIGINS": "https://www.example.com",
+    "STORAGE_BACKEND": "supabase",
     "SUPABASE_URL": "https://xxxx.supabase.co",
     "SUPABASE_SERVICE_KEY": "service-role-key",
     "EMAIL_BACKEND": "django.core.mail.backends.smtp.EmailBackend",
@@ -75,3 +76,44 @@ class ProductionEmailSettingsTests(SimpleTestCase):
         self.assertEqual(
             mod.REST_FRAMEWORK["DEFAULT_THROTTLE_RATES"]["auth_login"], "10/min"
         )
+        self.assertTrue(mod.CORS_TRUST_VERCEL)
+        self.assertTrue(
+            any("vercel" in pattern for pattern in mod.CORS_ALLOWED_ORIGIN_REGEXES)
+        )
+        self.assertIn("https://*.vercel.app", mod.CSRF_TRUSTED_ORIGINS)
+
+    def test_bootstrap_allows_local_storage_and_console_email(self):
+        env = {
+            "DJANGO_SECRET_KEY": _BASE_ENV["DJANGO_SECRET_KEY"],
+            "DJANGO_ALLOWED_HOSTS": "api.example.com",
+            "DATABASE_URL": _BASE_ENV["DATABASE_URL"],
+            "SERVIS_BOOTSTRAP": "true",
+        }
+        # Clear production-only keys that may leak from the process env
+        for key in (
+            "EMAIL_BACKEND",
+            "EMAIL_HOST",
+            "FRONTEND_URL",
+            "STORAGE_BACKEND",
+            "SUPABASE_URL",
+            "SUPABASE_SERVICE_KEY",
+            "CORS_ALLOWED_ORIGINS",
+            "CSRF_TRUSTED_ORIGINS",
+        ):
+            env.setdefault(key, "")
+        mod = _reload_production(env)
+        self.assertTrue(mod.BOOTSTRAP)
+        self.assertEqual(mod.STORAGE_BACKEND, "local")
+        self.assertEqual(
+            mod.EMAIL_BACKEND, "django.core.mail.backends.console.EmailBackend"
+        )
+        self.assertEqual(mod.FRONTEND_URL, "https://servis.vercel.app")
+
+    def test_render_hostname_is_accepted_as_allowed_host(self):
+        env = {
+            **_BASE_ENV,
+            "DJANGO_ALLOWED_HOSTS": "",
+            "RENDER_EXTERNAL_HOSTNAME": "servis-api.onrender.com",
+        }
+        mod = _reload_production(env)
+        self.assertIn("servis-api.onrender.com", mod.ALLOWED_HOSTS)

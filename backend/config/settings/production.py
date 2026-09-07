@@ -2,6 +2,9 @@
 
 Loaded via DJANGO_SETTINGS_MODULE=config.settings.production (WSGI/ASGI).
 Fails fast on missing/insecure required configuration.
+
+Set SERVIS_BOOTSTRAP=true for a first public deploy without Supabase / SMTP.
+Turn it off once storage and email are connected.
 """
 
 from __future__ import annotations
@@ -15,12 +18,27 @@ from .base import *  # noqa: F403
 
 DEBUG = False
 
+BOOTSTRAP = os.getenv("SERVIS_BOOTSTRAP", "false").lower() in ("1", "true", "yes")
+CORS_TRUST_VERCEL = os.getenv("CORS_TRUST_VERCEL", "true").lower() in (
+    "1",
+    "true",
+    "yes",
+)
+
 
 def _require_env(name: str) -> str:
     value = os.getenv(name, "").strip()
     if not value:
         raise ImproperlyConfigured(f"{name} must be set in production.")
     return value
+
+
+def _csv_env(name: str) -> list[str]:
+    return [
+        item.strip()
+        for item in os.getenv(name, "").split(",")
+        if item.strip()
+    ]
 
 
 def _parse_database_url(url: str) -> dict:
@@ -55,13 +73,20 @@ if _secret.startswith("django-insecure") or len(_secret) < 32:
 SECRET_KEY = _secret
 SIMPLE_JWT = {**SIMPLE_JWT, "SIGNING_KEY": SECRET_KEY}  # noqa: F405
 
-_hosts = [
-    host.strip()
-    for host in _require_env("DJANGO_ALLOWED_HOSTS").split(",")
-    if host.strip()
-]
+_hosts = _csv_env("DJANGO_ALLOWED_HOSTS")
+for _platform_host_key in (
+    "RENDER_EXTERNAL_HOSTNAME",
+    "RAILWAY_PUBLIC_DOMAIN",
+):
+    _platform_host = os.getenv(_platform_host_key, "").strip()
+    if _platform_host:
+        _hosts.append(_platform_host)
+_hosts = list(dict.fromkeys(_hosts))
 if not _hosts:
-    raise ImproperlyConfigured("DJANGO_ALLOWED_HOSTS must list at least one host.")
+    raise ImproperlyConfigured(
+        "DJANGO_ALLOWED_HOSTS must list at least one host "
+        "(or rely on RENDER_EXTERNAL_HOSTNAME / RAILWAY_PUBLIC_DOMAIN)."
+    )
 ALLOWED_HOSTS = _hosts
 
 # ── Database (PostgreSQL) ────────────────────────────────────────────
@@ -83,24 +108,27 @@ else:
         }
     }
 
-# ── CORS / CSRF (must be explicit — no localhost defaults) ───────────
+# ── CORS / CSRF ──────────────────────────────────────────────────────
+# Default: trust https://*.vercel.app so the site can go live before the
+# exact Vercel URL is known. Extra origins still come from env.
 
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOWED_ORIGINS = [
-    origin.strip()
-    for origin in _require_env("CORS_ALLOWED_ORIGINS").split(",")
-    if origin.strip()
-]
-CSRF_TRUSTED_ORIGINS = [
-    origin.strip()
-    for origin in _require_env("CSRF_TRUSTED_ORIGINS").split(",")
-    if origin.strip()
-]
-if not CORS_ALLOWED_ORIGINS or not CSRF_TRUSTED_ORIGINS:
+CORS_ALLOWED_ORIGINS = _csv_env("CORS_ALLOWED_ORIGINS")
+CSRF_TRUSTED_ORIGINS = _csv_env("CSRF_TRUSTED_ORIGINS")
+CORS_ALLOWED_ORIGIN_REGEXES: list[str] = []
+
+if CORS_TRUST_VERCEL:
+    CORS_ALLOWED_ORIGIN_REGEXES = [r"^https://([a-z0-9-]+\.)*vercel\.app$"]
+    if "https://*.vercel.app" not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append("https://*.vercel.app")
+
+if not CORS_ALLOWED_ORIGINS and not CORS_ALLOWED_ORIGIN_REGEXES:
     raise ImproperlyConfigured(
-        "CORS_ALLOWED_ORIGINS and CSRF_TRUSTED_ORIGINS must be set in production."
+        "Set CORS_ALLOWED_ORIGINS or keep CORS_TRUST_VERCEL=true."
     )
+if not CSRF_TRUSTED_ORIGINS:
+    raise ImproperlyConfigured("CSRF_TRUSTED_ORIGINS must be set in production.")
 
 # ── Cookies & HTTPS ──────────────────────────────────────────────────
 
@@ -114,7 +142,9 @@ JWT_COOKIE_SECURE = True
 # Cross-site SPA/API: SameSite=None + Secure. Override via env if same-site.
 JWT_COOKIE_SAMESITE = os.getenv("JWT_COOKIE_SAMESITE", "None")
 CSRF_COOKIE_SAMESITE = JWT_COOKIE_SAMESITE
+# Parent domain (e.g. .servis-superrapid.com) so www can see the session cookie.
 JWT_COOKIE_DOMAIN = os.getenv("JWT_COOKIE_DOMAIN", "") or None
+CSRF_COOKIE_DOMAIN = JWT_COOKIE_DOMAIN
 
 SECURE_SSL_REDIRECT = os.getenv("SECURE_SSL_REDIRECT", "true").lower() == "true"
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
@@ -142,23 +172,35 @@ STORAGES = {
     },
 }
 
-# ── Storage — Supabase required ──────────────────────────────────────
+# ── Storage ──────────────────────────────────────────────────────────
 
-STORAGE_BACKEND = os.getenv("STORAGE_BACKEND", "supabase")
-if STORAGE_BACKEND != "supabase":
+STORAGE_BACKEND = os.getenv("STORAGE_BACKEND", "").strip() or (
+    "local" if BOOTSTRAP else "supabase"
+)
+if STORAGE_BACKEND == "supabase":
+    SUPABASE_URL = _require_env("SUPABASE_URL")
+    SUPABASE_SERVICE_KEY = _require_env("SUPABASE_SERVICE_KEY")
+    SUPABASE_STORAGE_BUCKET = os.getenv("SUPABASE_STORAGE_BUCKET", "servis")
+    SUPABASE_PRIVATE_BUCKET = os.getenv("SUPABASE_PRIVATE_BUCKET", "servis-private")
+elif STORAGE_BACKEND == "local":
+    if not BOOTSTRAP:
+        raise ImproperlyConfigured(
+            "Production must use STORAGE_BACKEND=supabase "
+            "(or set SERVIS_BOOTSTRAP=true for a first deploy)."
+        )
+    SUPABASE_URL = os.getenv("SUPABASE_URL", "")
+    SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_KEY", "")
+    SUPABASE_STORAGE_BUCKET = os.getenv("SUPABASE_STORAGE_BUCKET", "servis")
+    SUPABASE_PRIVATE_BUCKET = os.getenv("SUPABASE_PRIVATE_BUCKET", "servis-private")
+else:
     raise ImproperlyConfigured(
-        "Production must use STORAGE_BACKEND=supabase "
-        f"(got {STORAGE_BACKEND!r})."
+        f"Unknown STORAGE_BACKEND={STORAGE_BACKEND!r} (use local or supabase)."
     )
-SUPABASE_URL = _require_env("SUPABASE_URL")
-SUPABASE_SERVICE_KEY = _require_env("SUPABASE_SERVICE_KEY")
-SUPABASE_STORAGE_BUCKET = os.getenv("SUPABASE_STORAGE_BUCKET", "servis")
-SUPABASE_PRIVATE_BUCKET = os.getenv("SUPABASE_PRIVATE_BUCKET", "servis-private")
 
 # Media uploads go through StorageBackend; local MEDIA_ROOT is not the CDN.
 MEDIA_URL = os.getenv("MEDIA_URL", "/media/")
 
-# ── Email — real delivery required (no console / locmem / dummy) ─────
+# ── Email ────────────────────────────────────────────────────────────
 
 _INSECURE_EMAIL_BACKENDS = frozenset(
     {
@@ -169,27 +211,46 @@ _INSECURE_EMAIL_BACKENDS = frozenset(
     }
 )
 
-EMAIL_BACKEND = os.getenv(
-    "EMAIL_BACKEND", "django.core.mail.backends.smtp.EmailBackend"
-).strip()
-if EMAIL_BACKEND in _INSECURE_EMAIL_BACKENDS:
+_default_email_backend = (
+    "django.core.mail.backends.console.EmailBackend"
+    if BOOTSTRAP
+    else "django.core.mail.backends.smtp.EmailBackend"
+)
+EMAIL_BACKEND = os.getenv("EMAIL_BACKEND", "").strip() or _default_email_backend
+if EMAIL_BACKEND in _INSECURE_EMAIL_BACKENDS and not BOOTSTRAP:
     raise ImproperlyConfigured(
         "Production forbids console/locmem/dummy/filebased EMAIL_BACKEND. "
         "Set EMAIL_BACKEND to SMTP (or another real delivery backend) "
         "and configure EMAIL_HOST / credentials."
     )
 
-EMAIL_HOST = _require_env("EMAIL_HOST")
-EMAIL_HOST_USER = _require_env("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = _require_env("EMAIL_HOST_PASSWORD")
-EMAIL_PORT = int(os.getenv("EMAIL_PORT", "587"))
-EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "true").lower() in ("1", "true", "yes")
-EMAIL_USE_SSL = os.getenv("EMAIL_USE_SSL", "false").lower() in ("1", "true", "yes")
+if EMAIL_BACKEND not in _INSECURE_EMAIL_BACKENDS:
+    EMAIL_HOST = _require_env("EMAIL_HOST")
+    EMAIL_HOST_USER = _require_env("EMAIL_HOST_USER")
+    EMAIL_HOST_PASSWORD = _require_env("EMAIL_HOST_PASSWORD")
+    EMAIL_PORT = int(os.getenv("EMAIL_PORT", "587"))
+    EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "true").lower() in ("1", "true", "yes")
+    EMAIL_USE_SSL = os.getenv("EMAIL_USE_SSL", "false").lower() in ("1", "true", "yes")
+    DEFAULT_FROM_EMAIL = _require_env("DEFAULT_FROM_EMAIL")
+    SERVER_EMAIL = os.getenv("SERVER_EMAIL", DEFAULT_FROM_EMAIL).strip() or DEFAULT_FROM_EMAIL
+else:
+    EMAIL_HOST = os.getenv("EMAIL_HOST", "")
+    EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
+    EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
+    EMAIL_PORT = int(os.getenv("EMAIL_PORT", "587"))
+    EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "true").lower() in ("1", "true", "yes")
+    EMAIL_USE_SSL = os.getenv("EMAIL_USE_SSL", "false").lower() in ("1", "true", "yes")
+    DEFAULT_FROM_EMAIL = os.getenv(
+        "DEFAULT_FROM_EMAIL", "SERVIS <noreply@servis.local>"
+    )
+    SERVER_EMAIL = os.getenv("SERVER_EMAIL", DEFAULT_FROM_EMAIL).strip() or DEFAULT_FROM_EMAIL
 
-DEFAULT_FROM_EMAIL = _require_env("DEFAULT_FROM_EMAIL")
-SERVER_EMAIL = os.getenv("SERVER_EMAIL", DEFAULT_FROM_EMAIL).strip() or DEFAULT_FROM_EMAIL
-
-FRONTEND_URL = _require_env("FRONTEND_URL").rstrip("/")
+FRONTEND_URL = os.getenv("FRONTEND_URL", "").strip().rstrip("/")
+if not FRONTEND_URL:
+    if BOOTSTRAP:
+        FRONTEND_URL = "https://servis.vercel.app"
+    else:
+        raise ImproperlyConfigured("FRONTEND_URL must be set in production.")
 if "localhost" in FRONTEND_URL or "127.0.0.1" in FRONTEND_URL:
     raise ImproperlyConfigured(
         "FRONTEND_URL must be the public site URL in production "

@@ -103,7 +103,7 @@ export default function AdminOrdersPage() {
             {orders.map((order) => (
               <li
                 key={order.id}
-                className="flex flex-col gap-2 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
+                className="flex min-w-0 flex-col gap-2 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
               >
                 <div>
                   <p className="font-medium">

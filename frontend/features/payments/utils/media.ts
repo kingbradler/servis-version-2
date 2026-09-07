@@ -1,10 +1,10 @@
+import { getApiUrl } from "@/config/env";
+
 /** Resolve relative or signed media URLs for payment proofs. */
 export function resolveProofUrl(url?: string | null): string | undefined {
   if (!url) return undefined;
   if (url.startsWith("http://") || url.startsWith("https://")) return url;
-  const api =
-    process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api/v1";
-  const origin = api.replace(/\/api\/v1\/?$/, "");
+  const origin = getApiUrl().replace(/\/api\/v1\/?$/, "");
   // Signed local proofs: /api/v1/storage/signed/...
   if (url.startsWith("/api/")) {
     return `${origin}${url}`;

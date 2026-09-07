@@ -80,7 +80,7 @@ export default function AdminPaymentsPage() {
         <div className="space-y-3">
           {payments.map((payment) => (
             <Card key={payment.id}>
-              <CardContent className="flex flex-col gap-2 py-4 sm:flex-row sm:items-center sm:justify-between">
+              <CardContent className="flex min-w-0 flex-col gap-2 py-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <p className="font-medium">
                     {payment.order_id
