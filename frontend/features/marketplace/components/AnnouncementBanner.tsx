@@ -2,7 +2,7 @@
 
 const ANNOUNCEMENTS = [
   "Marketplace locale — produits & services près de chez vous",
-  "Professionnels et boutiques étudiants à Tanger",
+  "Professionnels et boutiques près de chez vous",
   "Explorez la carte · trouvez ce qu'il vous faut",
   "Paiements manuels sécurisés entre acheteurs et vendeurs",
   "Ouvrez votre boutique ou publiez vos services sur SERVIS",
