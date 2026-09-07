@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/request";
 
 /**
  * Soft UX note for private areas (Next.js 16 `proxy` convention).
@@ -12,7 +11,7 @@ import type { NextRequest } from "next/request";
  * Real authorization: RequireAuth (client, via /auth/me) + Django.
  */
 
-export function proxy(_request: NextRequest) {
+export function proxy() {
   return NextResponse.next();
 }
 
