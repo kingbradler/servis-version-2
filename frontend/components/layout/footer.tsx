@@ -44,7 +44,7 @@ export function Footer({ className }: FooterProps) {
               À propos de nous
             </p>
             <h2 className="font-display mt-3 text-[clamp(1.6rem,3vw,2.4rem)] font-extrabold tracking-tight">
-              SERVIS, né à Tanger
+              SERVIS, partout au Maroc
             </h2>
             <div className="mt-4 max-w-xl space-y-3 text-body-sm leading-relaxed text-white/65">
               <p>
@@ -53,9 +53,9 @@ export function Footer({ className }: FooterProps) {
                 services, proximité.
               </p>
               <p>
-                Une marketplace pensée pour Tanger : découvrir une boutique
+                Une marketplace pour tout le Maroc : découvrir une boutique
                 près de chez soi, contacter un professionnel, commander sans
-                friction, et faire grandir l&apos;économie étudiante.
+                friction, et faire grandir l&apos;économie locale.
               </p>
               <p>
                 Notre ambition : rendre le commerce local plus accessible, plus
@@ -88,7 +88,7 @@ export function Footer({ className }: FooterProps) {
                     href={whatsappHref}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-white transition-colors hover:text-primary"
+                    className="break-all text-white transition-colors hover:text-primary"
                   >
                     WhatsApp
                   </a>
@@ -280,7 +280,7 @@ export function Footer({ className }: FooterProps) {
               Confidentialité
             </Link>
             <span aria-hidden>·</span>
-            <span>Tanger, Maroc</span>
+            <span>Maroc</span>
           </div>
         </div>
       </div>
