@@ -68,5 +68,6 @@ describe("Navbar navigation", () => {
     });
     render(<Navbar />);
     expect(screen.getByLabelText(/panier/i)).toBeTruthy();
+    expect(screen.getByLabelText("Profil")).toBeTruthy();
   });
 });

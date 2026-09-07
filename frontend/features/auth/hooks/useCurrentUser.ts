@@ -10,7 +10,13 @@ import { useCallback, useEffect, useState } from "react";
 import type { UserRole } from "@/types";
 
 import { isApiError } from "@/lib/api/errors";
-import { clearUiSession, hasUiSession, UI_SESSION_EVENT } from "@/lib/session-flag";
+import {
+  clearUiSession,
+  hasUiSession,
+  isAuthBootstrapped,
+  markAuthBootstrapped,
+  UI_SESSION_EVENT,
+} from "@/lib/session-flag";
 
 import type { AuthUser } from "../types/auth.types";
 import * as authService from "../services/auth.service";
@@ -56,11 +62,16 @@ export function useCurrentUser(options?: {
 
   useEffect(() => {
     if (!autoLoad) return;
-    if (!probeSession && !hasUiSession()) {
+    const flagged = hasUiSession();
+    const silentGuest =
+      !probeSession && !flagged && isAuthBootstrapped();
+    if (silentGuest) {
       setLoading(false);
       setUser(null);
       return;
     }
+    const blockUi = probeSession || flagged;
+    if (blockUi) setLoading(true);
     let cancelled = false;
     void authService
       .getMe()
@@ -74,6 +85,7 @@ export function useCurrentUser(options?: {
         setError(err instanceof Error ? err.message : "Non authentifié");
       })
       .finally(() => {
+        markAuthBootstrapped();
         if (!cancelled) setLoading(false);
       });
     return () => {

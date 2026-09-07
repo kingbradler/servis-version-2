@@ -205,57 +205,55 @@ export function Navbar({ className }: NavbarProps) {
             </>
           )}
 
-          {!authLoading && isAuthenticated && user && (
-            <div className="hidden sm:block">
-              <Dropdown>
-                <DropdownTrigger asChild>
-                  <button
-                    type="button"
-                    className="inline-flex items-center gap-2 rounded-lg p-0.5 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                    aria-label="Menu compte"
-                  >
-                    <Avatar size="sm">
-                      <AvatarFallback className="bg-white/15 text-white">
-                        {initials}
-                      </AvatarFallback>
-                    </Avatar>
-                  </button>
-                </DropdownTrigger>
-                <DropdownContent align="end" className="w-56">
-                  <DropdownLabel>
-                    {user.first_name} {user.last_name}
-                  </DropdownLabel>
-                  <DropdownSeparator />
-                  {user.role === "CLIENT" && (
-                    <DropdownItem onSelect={() => router.push("/dashboard")}>
-                      <UserIcon className="mr-2 h-4 w-4" />
-                      Dashboard
-                    </DropdownItem>
-                  )}
-                  {user.role === "SELLER" && (
-                    <DropdownItem onSelect={() => router.push("/seller")}>
-                      <Store className="mr-2 h-4 w-4" />
-                      Espace professionnel
-                    </DropdownItem>
-                  )}
-                  {user.role === "ADMIN" && (
-                    <DropdownItem onSelect={() => router.push("/admin")}>
-                      <UserIcon className="mr-2 h-4 w-4" />
-                      Administration
-                    </DropdownItem>
-                  )}
-                  <DropdownItem onSelect={() => router.push("/cart")}>
-                    <ShoppingCart className="mr-2 h-4 w-4" />
-                    Panier
+          {isAuthenticated && user && (
+            <Dropdown>
+              <DropdownTrigger asChild>
+                <button
+                  type="button"
+                  className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white/[0.07] p-0.5 hover:bg-white/12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  aria-label="Profil"
+                >
+                  <Avatar size="sm">
+                    <AvatarFallback className="bg-white/15 text-white">
+                      {initials}
+                    </AvatarFallback>
+                  </Avatar>
+                </button>
+              </DropdownTrigger>
+              <DropdownContent align="end" className="w-56">
+                <DropdownLabel>
+                  {user.first_name} {user.last_name}
+                </DropdownLabel>
+                <DropdownSeparator />
+                {user.role === "CLIENT" && (
+                  <DropdownItem onSelect={() => router.push("/dashboard")}>
+                    <UserIcon className="mr-2 h-4 w-4" />
+                    Mon profil
                   </DropdownItem>
-                  <DropdownSeparator />
-                  <DropdownItem onSelect={() => void handleLogout()}>
-                    <LogOut className="mr-2 h-4 w-4" />
-                    Déconnexion
+                )}
+                {user.role === "SELLER" && (
+                  <DropdownItem onSelect={() => router.push("/seller")}>
+                    <Store className="mr-2 h-4 w-4" />
+                    Espace professionnel
                   </DropdownItem>
-                </DropdownContent>
-              </Dropdown>
-            </div>
+                )}
+                {user.role === "ADMIN" && (
+                  <DropdownItem onSelect={() => router.push("/admin")}>
+                    <UserIcon className="mr-2 h-4 w-4" />
+                    Administration
+                  </DropdownItem>
+                )}
+                <DropdownItem onSelect={() => router.push("/cart")}>
+                  <ShoppingCart className="mr-2 h-4 w-4" />
+                  Panier
+                </DropdownItem>
+                <DropdownSeparator />
+                <DropdownItem onSelect={() => void handleLogout()}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Déconnexion
+                </DropdownItem>
+              </DropdownContent>
+            </Dropdown>
           )}
 
           <button
@@ -327,7 +325,7 @@ export function Navbar({ className }: NavbarProps) {
                   onClick={() => setMobileOpen(false)}
                   className="rounded-lg bg-white/[0.07] px-4 py-3 text-left text-[15px] font-semibold text-white/85"
                 >
-                  Mon espace
+                  Profil
                 </Link>
                 <Link
                   href={

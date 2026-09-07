@@ -25,3 +25,25 @@ export function clearUiSession(): void {
   document.cookie = `${FLAG}=; Path=/; Max-Age=0; SameSite=Lax`;
   notify(false);
 }
+
+/** One silent /auth/me probe per browser tab, so existing JWT sessions
+ * still restore the profile button without spamming every public page. */
+const BOOT_KEY = "servis_auth_bootstrapped";
+
+export function isAuthBootstrapped(): boolean {
+  if (typeof sessionStorage === "undefined") return false;
+  try {
+    return sessionStorage.getItem(BOOT_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+export function markAuthBootstrapped(): void {
+  if (typeof sessionStorage === "undefined") return;
+  try {
+    sessionStorage.setItem(BOOT_KEY, "1");
+  } catch {
+    /* private mode */
+  }
+}

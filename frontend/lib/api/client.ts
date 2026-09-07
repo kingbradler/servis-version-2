@@ -5,7 +5,7 @@
 
 import { env } from "@/config/env";
 import { ApiError, messageFromApiBody } from "@/lib/api/errors";
-import { hasUiSession } from "@/lib/session-flag";
+import { hasUiSession, isAuthBootstrapped } from "@/lib/session-flag";
 
 const CSRF_COOKIE_NAME = "csrftoken";
 
@@ -88,7 +88,8 @@ export async function apiFetch<T>(
   // Allow refresh for /auth/me/ (and other non-auth-mutating paths)
   if (response.status === 401 && !shouldSkipAuthRefresh(path)) {
     const lookingUpSession = path.includes("/auth/me");
-    if (lookingUpSession && !hasUiSession()) {
+    // Skip refresh only after this tab already learned the visitor is a guest.
+    if (lookingUpSession && !hasUiSession() && isAuthBootstrapped()) {
       await throwApiError(response);
     }
     const csrf = await ensureCsrfCookie();

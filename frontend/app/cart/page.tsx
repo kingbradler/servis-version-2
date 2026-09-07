@@ -17,6 +17,7 @@ import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import type { CartItem } from "@/features/orders/types/order.types";
 import * as ordersService from "@/features/orders/services/orders.service";
 import { getUserFacingErrorMessage } from "@/lib/api/errors";
+import { hasUiSession } from "@/lib/session-flag";
 import { cn, formatPrice } from "@/lib/utils";
 import { useOptionalCart } from "@/providers/cart-provider";
 
@@ -117,7 +118,7 @@ export default function CartPage() {
     setDeliveryPhone((prev) => prev || user.phone || "");
   }, [user]);
 
-  if (!cart || cart.authLoading) {
+  if (!cart) {
     return (
       <MarketplaceShell>
         <div className="mx-auto max-w-3xl px-4 py-12">
@@ -128,6 +129,15 @@ export default function CartPage() {
   }
 
   if (!cart.isAuthenticated) {
+    if (cart.authLoading && hasUiSession()) {
+      return (
+        <MarketplaceShell>
+          <div className="mx-auto max-w-3xl px-4 py-12">
+            <LoadingState message="Chargement du panier…" />
+          </div>
+        </MarketplaceShell>
+      );
+    }
     return (
       <MarketplaceShell>
         <div className="mx-auto max-w-3xl px-4 py-12">

@@ -47,10 +47,20 @@ export async function logout(): Promise<{ detail: string }> {
   }
 }
 
+let meInflight: Promise<AuthUser> | null = null;
+
 export async function getMe(): Promise<AuthUser> {
-  const user = await apiFetch<AuthUser>(`${AUTH_BASE}/me/`);
-  markUiSession();
-  return user;
+  if (!meInflight) {
+    meInflight = apiFetch<AuthUser>(`${AUTH_BASE}/me/`)
+      .then((user) => {
+        markUiSession();
+        return user;
+      })
+      .finally(() => {
+        meInflight = null;
+      });
+  }
+  return meInflight;
 }
 
 export async function updateMe(payload: UpdateMePayload): Promise<AuthUser> {

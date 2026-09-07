@@ -50,6 +50,7 @@ export function ProductGrid({
               }
               imageUrl={resolveMediaUrl(primary?.image)}
               storeName={product.store.name}
+              description={product.description}
               badge={productBadge(product)}
               href={`/stores/${product.store.slug}/products/${product.slug}`}
             />
