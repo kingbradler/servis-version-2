@@ -371,6 +371,19 @@ class OrderTests(CartOrderBase):
         self.assertEqual(self.product.stock, 0)
         self.assertEqual(self.product.status, ProductStatus.OUT_OF_STOCK)
 
+    def test_checkout_accepts_city_when_street_is_blank(self):
+        self._fill_cart(self.client_a, self.product, qty=1)
+        payload = {
+            **DELIVERY,
+            "delivery_address": "",
+            "delivery_city": "Fes",
+        }
+        response = self.client.post(self.orders_url, payload, format="json")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        order = Order.objects.get(user=self.client_a)
+        self.assertEqual(order.delivery_city, "Fes")
+        self.assertEqual(order.delivery_address, "Fes")
+
     def test_checkout_succeeds_when_seller_notification_fails(self):
         from unittest.mock import patch
 

@@ -144,7 +144,7 @@ class CheckoutSerializer(serializers.Serializer):
 
     delivery_name = serializers.CharField(max_length=120)
     delivery_phone = serializers.CharField(max_length=30)
-    delivery_address = serializers.CharField(max_length=300)
+    delivery_address = serializers.CharField(max_length=300, allow_blank=True)
     delivery_city = serializers.CharField(max_length=100)
     delivery_notes = serializers.CharField(
         max_length=400, required=False, allow_blank=True, default=""
@@ -156,6 +156,12 @@ class CheckoutSerializer(serializers.Serializer):
         def clean(value: str) -> str:
             return strip_tags(str(value or "")).strip().replace("<", "").replace(">", "")
 
+        def phone_digits(value: str) -> str:
+            mapped = (value or "").translate(
+                str.maketrans("٠١٢٣٤٥٦٧٨٩۰۱۲۳۴۵۶۷۸۹", "01234567890123456789")
+            )
+            return "".join(ch for ch in mapped if ch.isdigit())
+
         name = clean(attrs.get("delivery_name", ""))
         phone = clean(attrs.get("delivery_phone", ""))
         address = clean(attrs.get("delivery_address", ""))
@@ -166,14 +172,17 @@ class CheckoutSerializer(serializers.Serializer):
             raise serializers.ValidationError(
                 {"delivery_name": "Indiquez le nom du destinataire."}
             )
-        digits = "".join(c for c in phone if c.isdigit())
+        digits = phone_digits(phone)
         if len(digits) < 8:
             raise serializers.ValidationError(
                 {"delivery_phone": "Indiquez un numéro de téléphone valide."}
             )
-        if len(address) < 5:
+        # City-only is enough (quartier left blank is common).
+        if len(address) < 3 and len(city) >= 2:
+            address = city
+        if len(address) < 3:
             raise serializers.ValidationError(
-                {"delivery_address": "Indiquez une adresse de livraison."}
+                {"delivery_address": "Indiquez une adresse ou au moins la ville."}
             )
         if len(city) < 2:
             raise serializers.ValidationError(

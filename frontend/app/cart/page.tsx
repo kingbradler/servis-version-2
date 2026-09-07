@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+from { useEffect, useMemo, useRef, useState } from "react";
+import type { FormEvent } from "react";
 import { Minus, Plus, ShoppingBag } from "lucide-react";
 
 import { MarketplaceShell } from "@/components/layout/marketplace-shell";
@@ -17,6 +18,7 @@ import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import type { CartItem } from "@/features/orders/types/order.types";
 import * as ordersService from "@/features/orders/services/orders.service";
 import { getUserFacingErrorMessage } from "@/lib/api/errors";
+import { phoneDigits, resolveDeliveryAddress } from "@/lib/delivery-fields";
 import { hasUiSession } from "@/lib/session-flag";
 import { cn, formatPrice } from "@/lib/utils";
 import { useOptionalCart } from "@/providers/cart-provider";
@@ -105,6 +107,13 @@ export default function CartPage() {
   const [deliveryAddress, setDeliveryAddress] = useState("");
   const [deliveryCity, setDeliveryCity] = useState("");
   const [deliveryNotes, setDeliveryNotes] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<{
+    name?: string;
+    phone?: string;
+    address?: string;
+    city?: string;
+  }>({});
+  const deliveryFormRef = useRef<HTMLFormElement>(null);
 
   const items = cart?.cart?.items ?? [];
   const groups = useMemo(() => groupByStore(items), [items]);
@@ -219,31 +228,65 @@ export default function CartPage() {
     }
   };
 
-  const onCheckout = async () => {
-    const name = deliveryName.trim();
-    const phone = deliveryPhone.trim();
-    const address = deliveryAddress.trim();
-    const city = deliveryCity.trim();
-    if (name.length < 2 || phone.replace(/\D/g, "").length < 8 || address.length < 5) {
-      setActionError(
-        "Complétez le destinataire, un téléphone valide et l'adresse de livraison."
-      );
-      return;
+  const readDeliveryForm = () => {
+    const form = deliveryFormRef.current;
+    const data = form ? new FormData(form) : null;
+    const pick = (key: string, fallback: string) =>
+      String(data?.get(key) ?? fallback ?? "").trim();
+    return {
+      name: pick("delivery_name", deliveryName),
+      phone: pick("delivery_phone", deliveryPhone),
+      address: pick("delivery_address", deliveryAddress),
+      city: pick("delivery_city", deliveryCity),
+      notes: pick("delivery_notes", deliveryNotes),
+    };
+  };
+
+  const onCheckout = async (e?: FormEvent) => {
+    e?.preventDefault();
+    const raw = readDeliveryForm();
+    const name = raw.name;
+    const phone = raw.phone;
+    const city = raw.city;
+    const address = resolveDeliveryAddress(raw.address, city);
+    const notes = raw.notes;
+
+    setDeliveryName(name);
+    setDeliveryPhone(phone);
+    setDeliveryAddress(raw.address);
+    setDeliveryCity(city);
+    setDeliveryNotes(notes);
+
+    const nextErrors: typeof fieldErrors = {};
+    if (name.length < 2) {
+      nextErrors.name = "Indiquez le nom de la personne qui reçoit.";
+    }
+    if (phoneDigits(phone).length < 8) {
+      nextErrors.phone = "Indiquez un WhatsApp à 8 chiffres ou plus (ex. 0612345678).";
+    }
+    if (address.length < 3) {
+      nextErrors.address = "Indiquez le quartier ou la rue.";
     }
     if (city.length < 2) {
-      setActionError("Indiquez la ville de livraison.");
+      nextErrors.city = "Indiquez la ville.";
+    }
+    if (Object.keys(nextErrors).length > 0) {
+      setFieldErrors(nextErrors);
+      setActionError("Complétez les champs en rouge, puis confirmez.");
+      deliveryFormRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
       return;
     }
 
     setCheckingOut(true);
     setActionError(null);
+    setFieldErrors({});
     try {
       const result = await ordersService.checkoutCart({
         delivery_name: name,
         delivery_phone: phone,
         delivery_address: address,
         delivery_city: city,
-        delivery_notes: deliveryNotes.trim(),
+        delivery_notes: notes,
       });
       await cart.refresh();
       toast({
@@ -407,47 +450,76 @@ export default function CartPage() {
               }
             />
 
-            <section className="space-y-3 rounded-2xl border border-border bg-surface p-4">
+            <form
+              id="checkout-delivery"
+              ref={deliveryFormRef}
+              className="space-y-3 rounded-2xl border border-border bg-surface p-4"
+              onSubmit={(e) => void onCheckout(e)}
+            >
               <h2 className="font-semibold">Adresse de livraison</h2>
               <p className="text-caption text-text-muted">
-                Indiquez où le vendeur peut vous livrer ou vous rencontrer.
+                Indiquez où le vendeur peut vous livrer ou vous rencontrer. La
+                ville suffit si vous n’avez pas encore la rue exacte.
               </p>
               <Input
                 label="Destinataire"
+                name="delivery_name"
                 value={deliveryName}
-                onChange={(e) => setDeliveryName(e.target.value)}
+                onChange={(e) => {
+                  setDeliveryName(e.target.value);
+                  setFieldErrors((prev) => ({ ...prev, name: undefined }));
+                }}
                 required
                 autoComplete="name"
+                error={fieldErrors.name}
               />
               <Input
                 label="Téléphone (WhatsApp)"
+                name="delivery_phone"
                 type="tel"
+                inputMode="tel"
                 value={deliveryPhone}
-                onChange={(e) => setDeliveryPhone(e.target.value)}
+                onChange={(e) => {
+                  setDeliveryPhone(e.target.value);
+                  setFieldErrors((prev) => ({ ...prev, phone: undefined }));
+                }}
                 required
                 autoComplete="tel"
+                hint="Exemple : 0612345678"
+                error={fieldErrors.phone}
               />
               <Input
-                label="Adresse"
+                label="Adresse (quartier, rue)"
+                name="delivery_address"
                 value={deliveryAddress}
-                onChange={(e) => setDeliveryAddress(e.target.value)}
-                required
-                placeholder="Quartier, rue, immeuble…"
+                onChange={(e) => {
+                  setDeliveryAddress(e.target.value);
+                  setFieldErrors((prev) => ({ ...prev, address: undefined }));
+                }}
+                placeholder="Hay Riad, rue 12, immeuble B…"
                 autoComplete="street-address"
+                hint="Si vous ne savez pas encore, mettez au moins le quartier."
+                error={fieldErrors.address}
               />
               <Input
                 label="Ville"
+                name="delivery_city"
                 value={deliveryCity}
-                onChange={(e) => setDeliveryCity(e.target.value)}
+                onChange={(e) => {
+                  setDeliveryCity(e.target.value);
+                  setFieldErrors((prev) => ({ ...prev, city: undefined }));
+                }}
                 required
                 autoComplete="address-level2"
-                placeholder="Votre ville"
+                placeholder="Tanger, Rabat, Casablanca…"
+                error={fieldErrors.city}
               />
               <label className="block space-y-1.5">
                 <span className="text-body-sm font-medium text-text-primary">
                   Notes (optionnel)
                 </span>
                 <textarea
+                  name="delivery_notes"
                   value={deliveryNotes}
                   onChange={(e) => setDeliveryNotes(e.target.value)}
                   rows={2}
@@ -456,7 +528,7 @@ export default function CartPage() {
                   className="w-full rounded-lg border border-border bg-background px-3 py-2 text-body-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 />
               </label>
-            </section>
+            </form>
 
             {groups.map((group) => {
               const subtotal = group.items.reduce(
@@ -523,15 +595,17 @@ export default function CartPage() {
             <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-surface/95 p-3 safe-pb backdrop-blur sm:static sm:z-auto sm:border-0 sm:bg-transparent sm:p-0 sm:backdrop-blur-none">
               <div className="mx-auto flex max-w-3xl flex-col gap-3 sm:flex-row">
                 <Button
+                  type="submit"
+                  form="checkout-delivery"
                   variant="primary"
                   size="lg"
                   className="w-full rounded-none uppercase tracking-wide sm:w-auto"
                   loading={checkingOut}
-                  onClick={() => void onCheckout()}
                 >
                   Confirmer et commander
                 </Button>
                 <Button
+                  type="button"
                   variant="outline"
                   size="lg"
                   className="rounded-none"
