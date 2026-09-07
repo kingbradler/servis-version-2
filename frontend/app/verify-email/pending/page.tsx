@@ -63,7 +63,8 @@ export default function VerifyEmailPendingPage() {
           . Ouvrez-le pour activer votre compte.
         </p>
         <p className="mt-2 text-body-sm text-text-muted">
-          En local (dev), le mail s&apos;affiche dans le terminal du backend Django.
+          Rien dans la boîte de réception ? Regardez aussi les spams. Le lien
+          reste valable quelques jours.
         </p>
 
         <div className="mt-8 space-y-4 rounded-none border border-border bg-surface p-5">
