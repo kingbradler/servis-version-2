@@ -31,17 +31,7 @@ class BillingJobsTests(TestCase):
             last_name="J",
             role=UserRole.SELLER,
         )
-        self.plan = Plan.objects.create(
-            code=PlanType.STORE_STANDARD,
-            plan_type=PlanType.STORE_STANDARD,
-            category=PlanCategory.STORE,
-            name="Boutique Standard",
-            price="99.00",
-            duration_days=30,
-            product_limit=20,
-            product_image_limit=3,
-            is_active=True,
-        )
+        self.plan = Plan.objects.get(code=PlanType.STORE_STANDARD)
 
     def _active_sub(self, *, expires_at):
         return Subscription.objects.create(

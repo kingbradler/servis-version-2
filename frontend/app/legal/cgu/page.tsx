@@ -5,7 +5,7 @@ import { LegalDocument } from "@/features/legal/components/LegalDocument";
 import { env } from "@/config/env";
 
 export const metadata: Metadata = {
-  title: "Conditions générales d'utilisation | SERVIS",
+  title: "Conditions générales d'utilisation",
   description: "Conditions d'utilisation de SERVIS.",
 };
 

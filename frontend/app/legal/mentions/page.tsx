@@ -4,7 +4,7 @@ import { LegalDocument } from "@/features/legal/components/LegalDocument";
 import { env } from "@/config/env";
 
 export const metadata: Metadata = {
-  title: "Mentions légales | SERVIS",
+  title: "Mentions légales",
   description: "Mentions légales de SERVIS, marketplace au Maroc.",
 };
 

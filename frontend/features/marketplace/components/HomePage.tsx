@@ -19,6 +19,8 @@ import {
 } from "@/features/marketplace/components/OrderedSection";
 import { ProductGrid } from "@/features/products/components/ProductGrid";
 import { usePublicProducts } from "@/features/products/hooks/usePublicProducts";
+import { ServiceCard } from "@/features/pro-services/components/ServiceCard";
+import { usePublicServices } from "@/features/pro-services/hooks/usePublicServices";
 import { usePublicStores } from "@/features/stores/hooks/usePublicStores";
 import { resolveMediaUrl } from "@/features/products/utils/media";
 import { resolveCategoryIcon } from "@/lib/marketplace/category-icons";
@@ -51,6 +53,15 @@ export function HomePage() {
     error: storesError,
     refresh: refreshStores,
   } = usePublicStores();
+  const {
+    services,
+    loading: servicesLoading,
+    error: servicesError,
+    refresh: refreshServices,
+  } = usePublicServices({
+    ordering: "-created_at",
+    page_size: 6,
+  });
   const popular = products.length > 0 ? products : recentProducts;
   const popularLoading =
     products.length > 0 ? prodLoading : prodLoading || recentLoading;
@@ -227,13 +238,52 @@ export function HomePage() {
           </div>
         )}
       </OrderedSection>
+      <OrderedSection className="bg-surface dark:bg-background">
+        <Reveal>
+          <OrderedSectionHeader
+            index="04 — Services"
+            title="Services près de chez vous"
+            description="Cours, réparations, beauté — des prestataires locaux."
+            href="/services"
+            linkLabel="Tous les services"
+          />
+        </Reveal>
+        {servicesLoading && (
+          <div className="grid gap-[18px] sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <SkeletonCard key={i} />
+            ))}
+          </div>
+        )}
+        {!servicesLoading && servicesError && (
+          <ErrorState
+            message={servicesError}
+            onRetry={() => void refreshServices()}
+          />
+        )}
+        {!servicesLoading && !servicesError && services.length === 0 && (
+          <EmptyState
+            title="Pas encore de services publiés"
+            description="Proposez vos compétences aux étudiants et habitants près de chez vous."
+            actionLabel="Proposer un service"
+            onAction={() => router.push("/register")}
+          />
+        )}
+        {!servicesLoading && !servicesError && services.length > 0 && (
+          <div className="grid gap-[18px] sm:grid-cols-2 lg:grid-cols-3">
+            {services.slice(0, 6).map((service, i) => (
+              <ServiceCard key={service.id} service={service} index={i} />
+            ))}
+          </div>
+        )}
+      </OrderedSection>
       <section className="relative overflow-hidden bg-primary">
         <div className="pointer-events-none absolute -right-20 top-0 h-64 w-64 rounded-full bg-white/10 blur-2xl" />
         <div className="relative mx-auto flex max-w-[1280px] flex-col items-start justify-between gap-8 px-4 py-16 sm:flex-row sm:items-center sm:px-6 sm:py-20 lg:px-12">
           <Reveal>
             <div>
               <p className="font-display text-[11px] font-extrabold uppercase tracking-[0.28em] text-white/70">
-                04 — Rejoindre
+                05 — Rejoindre
               </p>
               <h2 className="font-display mt-2 text-[clamp(1.75rem,3.5vw,2.75rem)] font-extrabold tracking-tight text-white">
                 Vendez sur SERVIS

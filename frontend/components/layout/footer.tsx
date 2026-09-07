@@ -151,6 +151,14 @@ export function Footer({ className }: FooterProps) {
               </li>
               <li>
                 <Link
+                  href="/professionals"
+                  className="text-body-sm text-white/70 transition-colors hover:text-primary"
+                >
+                  Professionnels
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/stores"
                   className="text-body-sm text-white/70 transition-colors hover:text-primary"
                 >

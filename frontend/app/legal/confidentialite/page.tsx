@@ -5,7 +5,7 @@ import { LegalDocument } from "@/features/legal/components/LegalDocument";
 import { env } from "@/config/env";
 
 export const metadata: Metadata = {
-  title: "Politique de confidentialité | SERVIS",
+  title: "Politique de confidentialité",
   description: "Comment SERVIS utilise vos données personnelles.",
 };
 

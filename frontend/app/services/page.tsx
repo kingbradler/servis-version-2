@@ -155,6 +155,12 @@ function ServicesCatalog() {
               <MapPin className="h-4 w-4" />
               Voir sur la carte
             </Link>
+            <Link
+              href="/professionals"
+              className="inline-flex items-center gap-1.5 text-body-sm font-medium text-white/70 transition-colors hover:text-primary"
+            >
+              Voir les professionnels
+            </Link>
           </div>
         </PageHero>
 
