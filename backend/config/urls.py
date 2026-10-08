@@ -6,11 +6,11 @@ from django.contrib import admin
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework.permissions import AllowAny
-from django.http import HttpReponse
+from django.http import HttpResponse
 
 
 def health_check(request):
-    return HttpReponse("OK",status=200)
+    return HttpResponse("OK",status=200)
 
 urlpatterns = [
     path("health/",health_check),
