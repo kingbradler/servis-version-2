@@ -2,6 +2,8 @@
 Base Django settings for SERVIS.
 Shared across all environments.
 """
+from django.http import HttpResponse
+from django.urls import path
 
 import os
 from datetime import timedelta
@@ -272,4 +274,7 @@ EMAIL_TIMEOUT = int(os.getenv("EMAIL_TIMEOUT", "8"))
 
 # Frontend base URL (verification links in emails)
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
+
+def health_check(request):
+    return HttpResponse("OK",status=200)
 
