@@ -8,6 +8,7 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework.permissions import AllowAny
 
 urlpatterns = [
+    path("health/",health_check),
     path("admin/", admin.site.urls),
     path(
         "api/schema/",
