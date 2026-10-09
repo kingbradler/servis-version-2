@@ -7,6 +7,7 @@ import type {
   AdminOrder,
   AdminPayment,
   AdminProduct,
+  AdminProfessional,
   AdminStats,
   AdminStore,
   AdminUser,
