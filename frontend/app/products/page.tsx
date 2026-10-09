@@ -94,7 +94,7 @@ function ProductsCatalog() {
           tone="dark"
           eyebrow="Marketplace"
           title="Catalogue produits"
-          description="Filtrez par catégorie, ville, boutique ou prix — résultats synchronisés avec l'URL."
+          description="Filtrez par catégorie, ville, boutique ou prix "
         >
           <div className="relative mt-6 max-w-xl">
             <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-white/35" />
