@@ -68,6 +68,7 @@ export function InstallAppPrompt() {
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-0 z-[80] p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
       <div className="pointer-events-auto mx-auto flex max-w-lg items-start gap-3 rounded-2xl border border-cr2 bg-surface/95 p-3 shadow-[0_12px_40px_rgba(0,0,0,0.18)] backdrop-blur-xl dark:border-border">
+       {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/icons/icon-192.png"
           alt=""
