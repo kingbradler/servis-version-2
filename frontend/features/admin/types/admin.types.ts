@@ -11,6 +11,21 @@ export interface Paginated<T> {
   results: T[];
 }
 
+export interface AdminProfessional {
+  id: string;
+  display_name: string;
+  slug: string;
+  headline: string;
+  bio: string;
+  city: StoreCity | null;
+  phone: string;
+  whatsapp: string;
+  status: ProfessionalStatus;
+  owner_email: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface AdminStore {
   id: string;
   owner_id: string;
