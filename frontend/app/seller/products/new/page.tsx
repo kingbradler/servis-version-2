@@ -240,6 +240,7 @@ export default function NewSellerProductPage() {
                       key={`${photos[index]?.name}-${index}`}
                       className="relative h-24 w-24 overflow-hidden rounded-xl border border-border"
                     >
+                   
                       <img
                         src={src}
                         alt=""
