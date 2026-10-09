@@ -1,4 +1,5 @@
 import { apiFetch } from "@/lib/api/client";
+import type { ProfessionalStatus } from "@/features/professionals/api/seller-professional.api";
 
 import type {
   AdminCategory,
@@ -53,6 +54,27 @@ export async function activateStore(id: string): Promise<AdminStore> {
     body: JSON.stringify({}),
   });
 }
+
+// ── Professionnels (prestataires de services) ──
+
+export async function getAdminProfessionals(params?: {
+  status?: string;
+  search?: string;
+  page?: number;
+}): Promise<Paginated<AdminProfessional> | AdminProfessional[]> {
+  return apiFetch(`/admin/professionals/${buildQuery(params)}`);
+}
+
+export async function setProfessionalStatus(
+  id: string,
+  status: "ACTIVE" | "SUSPENDED"
+): Promise<AdminProfessional> {
+  return apiFetch(`/admin/professionals/${id}/`, {
+    method: "PATCH",
+    body: JSON.stringify({ status }),
+  });
+}
+
 
 // ── Products ──────────────────────────────────────────────────────────
 
