@@ -115,7 +115,8 @@ export default function CartPage() {
   }>({});
   const deliveryFormRef = useRef<HTMLFormElement>(null);
 
-  const items = cart?.cart?.items ?? [];
+    const cartItems = cart?.cart?.items;
+  const items = useMemo(() => cartItems ?? [], [cartItems]);
   const groups = useMemo(() => groupByStore(items), [items]);
 
   useEffect(() => {
