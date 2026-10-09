@@ -2,6 +2,7 @@ import type { OrderStatus, OrderStoreRef, OrderItem } from "@/features/orders/ty
 import type { Payment } from "@/features/payments/types/payment.types";
 import type { ProductCategoryRef, ProductImage, ProductStatus } from "@/features/products/types/product.types";
 import type { StoreCity, StoreStatus } from "@/features/stores/types/store.types";
+import type { ProfessionalStatus } from "@/features/professionals/api/seller-professional.api";
 
 export interface Paginated<T> {
   count: number;
