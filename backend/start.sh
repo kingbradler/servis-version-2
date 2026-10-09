@@ -16,5 +16,6 @@ python manage.py seed_billing || echo "WARN: seed_billing a échoué" >&2
 
 exec gunicorn config.wsgi:application \
   --bind "0.0.0.0:${PORT:-8000}" \
-  --workers "${WEB_WORKERS:-2}" \
+  --workers "${WEB_WORKERS:-1}" \
+  --threads "${WEB_THREADS:-4}" \
   --timeout 120
