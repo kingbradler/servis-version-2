@@ -81,6 +81,7 @@ export const adminNav: SidebarItem[] = [
   { label: "Photos d'accueil", href: "/admin/hero", icon: ImageIcon },
   { label: "Utilisateurs", href: "/admin/users", icon: Users },
   { label: "Boutiques", href: "/admin/stores", icon: Store },
+  { label: "Professionnels", href: "/admin/professionals", icon: Wrench },
   { label: "Produits", href: "/admin/products", icon: Package },
   { label: "Catégories", href: "/admin/categories", icon: FolderTree },
   { label: "Commandes", href: "/admin/orders", icon: ShoppingBag },
