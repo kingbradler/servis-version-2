@@ -54,12 +54,12 @@ export function Sidebar({
       )}
 
       <aside
-        className={cn(
-          "fixed inset-y-0 left-0 z-50 flex h-dvh max-h-dvh w-[min(280px,88vw)] flex-col bg-dk text-white transition-transform duration-200 safe-pt md:static md:h-auto md:max-h-none md:w-[260px] md:translate-x-0",
-          open ? "translate-x-0" : "-translate-x-full",
-          className
-        )}
-      >
+  className={cn(
+    "fixed inset-y-0 left-0 z-50 flex h-dvh max-h-dvh w-[min(280px,88vw)] flex-col bg-dk text-white transition-transform duration-200 safe-pt md:sticky md:top-0 md:bottom-auto md:h-dvh md:max-h-dvh md:w-[260px] md:shrink-0 md:translate-x-0 md:self-start",
+    open ? "translate-x-0" : "-translate-x-full",
+    className
+  )}
+>
         <div className="flex h-14 items-center justify-between border-b border-white/8 px-4">
           <ServisLogo
             href="/"
