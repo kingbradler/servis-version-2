@@ -117,7 +117,7 @@ function ServicesCatalog() {
           tone="dark"
           eyebrow="Services"
           title="Trouver un service"
-          description="Recherchez par métier, filtrez par ville ou prix — résultats synchronisés avec l'URL."
+          description="Recherchez par métier, filtrez par ville ou prix"
         >
           <div className="relative mt-6 max-w-xl">
             <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-white/35" />
