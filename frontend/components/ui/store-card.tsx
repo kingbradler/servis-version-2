@@ -69,11 +69,11 @@ export function StoreCard({
           <h3 className="truncate font-display text-[17px] font-extrabold text-text-primary transition-colors group-hover:text-primary">
             {name}
           </h3>
-          {description && (
-            <p className="mt-1 line-clamp-2 text-body-sm text-text-secondary">
-              {description}
+          {description?.trim() ? (
+            <p className="mt-1.5 line-clamp-4 text-body-sm leading-relaxed text-text-secondary">
+              {description.trim()}
             </p>
-          )}
+          ) : null}
           <div className="mt-3 flex items-center gap-2">
             {city && <Badge variant="secondary">{city}</Badge>}
             {productCount !== undefined && (

@@ -27,6 +27,7 @@ import type {
 } from "@/features/products/types/product.types";
 import { resolveMediaUrl } from "@/features/products/utils/media";
 import { isApiError } from "@/lib/api/errors";
+import { prepareProductImageFile } from "@/lib/prepare-image-file";
 
 const STATUS_LABELS: Record<ProductStatus, string> = {
   DRAFT: "Brouillon",
@@ -202,13 +203,18 @@ export default function EditSellerProductPage() {
   const handleUpload = async (file: File) => {
     setUploading(true);
     try {
-      const image = await productsService.uploadSellerProductImage(productId, file);
+      const ready = await prepareProductImageFile(file);
+      const image = await productsService.uploadSellerProductImage(productId, ready);
       setImages((prev) => [...prev, image]);
       toast({ title: "Image ajoutée", variant: "success" });
     } catch (err) {
       toast({
-        title: "Erreur",
-        description: isApiError(err) ? err.message : "Échec de l'envoi de l'image",
+        title: "Photo non ajoutée",
+        description: isApiError(err)
+          ? err.message
+          : err instanceof Error
+            ? err.message
+            : "Échec de l'envoi de l'image. JPEG, PNG ou WebP, 5 Mo max.",
         variant: "error",
       });
     } finally {
@@ -377,9 +383,8 @@ export default function EditSellerProductPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-caption text-text-muted">
-            Plan {entitlements?.store.plan_name ?? "Free"} : jusqu&apos;à{" "}
-            {imageLimit} photo{imageLimit > 1 ? "s" : ""} par article. JPEG, PNG
-            ou WebP — max 5 Mo.
+            JPEG, PNG ou WebP — max 5 Mo. Sur iPhone, la photo est convertie
+            si besoin (évitez HEIC).
           </p>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             {images.map((image) => (
@@ -411,7 +416,7 @@ export default function EditSellerProductPage() {
             <input
               ref={fileInputRef}
               type="file"
-              accept="image/jpeg,image/png,image/webp"
+              accept="image/*"
               className="hidden"
               onChange={(e) => {
                 const file = e.target.files?.[0];

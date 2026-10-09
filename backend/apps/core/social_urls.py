@@ -9,7 +9,21 @@ from rest_framework import serializers
 SOCIAL_HOSTS = {
     "instagram": {"instagram.com", "www.instagram.com"},
     "tiktok": {"tiktok.com", "www.tiktok.com", "vm.tiktok.com", "m.tiktok.com"},
-    "facebook": {"facebook.com", "www.facebook.com", "m.facebook.com", "fb.com", "www.fb.com"},
+    "facebook": {
+        "facebook.com",
+        "www.facebook.com",
+        "m.facebook.com",
+        "fb.com",
+        "www.fb.com",
+    },
+    "youtube": {
+        "youtube.com",
+        "www.youtube.com",
+        "m.youtube.com",
+        "youtu.be",
+        "www.youtu.be",
+        "music.youtube.com",
+    },
 }
 
 VIDEO_HOSTS = SOCIAL_HOSTS["instagram"] | SOCIAL_HOSTS["tiktok"]
@@ -27,7 +41,7 @@ def _normalize_url(value: str) -> str:
 def validate_social_url(value: str | None, *, networks: set[str] | None = None) -> str:
     """
     Return cleaned HTTPS URL or empty string.
-    networks: subset of {'instagram','tiktok','facebook'} — default all.
+    networks: subset of {'instagram','tiktok','facebook','youtube'} — default all.
     """
     value = _normalize_url(value or "")
     if not value:
@@ -38,12 +52,19 @@ def validate_social_url(value: str | None, *, networks: set[str] | None = None) 
         raise serializers.ValidationError("URL invalide.")
     host = (parsed.hostname or "").lower()
     allowed: set[str] = set()
-    keys = networks or {"instagram", "tiktok", "facebook"}
+    keys = networks or {"instagram", "tiktok", "facebook", "youtube"}
     for key in keys:
         allowed |= SOCIAL_HOSTS.get(key, set())
     if host not in allowed:
+        labels = {
+            "instagram": "Instagram",
+            "tiktok": "TikTok",
+            "facebook": "Facebook",
+            "youtube": "YouTube",
+        }
+        named = [labels[k] for k in sorted(keys) if k in labels]
         raise serializers.ValidationError(
-            "Lien non autorisé. Utilisez Instagram, TikTok ou Facebook."
+            "Lien non autorisé. Utilisez " + ", ".join(named) + "."
         )
     # Prefer https
     if parsed.scheme == "http":

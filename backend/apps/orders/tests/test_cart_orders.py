@@ -371,6 +371,45 @@ class OrderTests(CartOrderBase):
         self.assertEqual(self.product.stock, 0)
         self.assertEqual(self.product.status, ProductStatus.OUT_OF_STOCK)
 
+    def test_checkout_accepts_city_when_street_is_blank(self):
+        self._fill_cart(self.client_a, self.product, qty=1)
+        payload = {
+            **DELIVERY,
+            "delivery_address": "",
+            "delivery_city": "Fes",
+        }
+        response = self.client.post(self.orders_url, payload, format="json")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        order = Order.objects.get(user=self.client_a)
+        self.assertEqual(order.delivery_city, "Fes")
+        self.assertEqual(order.delivery_address, "Fes")
+
+    def test_checkout_succeeds_when_seller_notification_fails(self):
+        from unittest.mock import patch
+
+        self._fill_cart(self.client_a, self.product, qty=1)
+        with patch(
+            "apps.notifications.services.notify_order_created",
+            side_effect=RuntimeError("mail down"),
+        ):
+            with self.captureOnCommitCallbacks(execute=True):
+                response = self.client.post(self.orders_url, DELIVERY, format="json")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Order.objects.filter(user=self.client_a).count(), 1)
+
+    def test_checkout_creates_seller_notification(self):
+        from apps.notifications.models import Notification, NotificationType
+
+        self._fill_cart(self.client_a, self.product, qty=1)
+        with self.captureOnCommitCallbacks(execute=True):
+            response = self.client.post(self.orders_url, DELIVERY, format="json")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(
+            Notification.objects.filter(
+                user=self.seller, type=NotificationType.ORDER_NEW
+            ).exists()
+        )
+
 
 class ConcurrentCheckoutTests(APITestCase):
     """Sequential double-submit: second checkout must fail after cart cleared / stock gone."""

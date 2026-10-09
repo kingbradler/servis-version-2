@@ -5,11 +5,15 @@ from __future__ import annotations
 from django.db.models import Avg, Count
 from rest_framework import serializers
 
-from apps.orders.models import OrderItem, OrderStatus
+from apps.orders.models import OrderItem
 from apps.professionals.models import ProfessionalProfile
 from apps.products.models import Product
+from apps.reviews.eligibility import (
+    PRODUCT_REVIEW_ORDER_STATUSES,
+    SERVICE_REVIEW_REQUEST_STATUSES,
+)
 from apps.reviews.models import ProductReview, Review
-from apps.services.models import ServiceRequest, ServiceRequestStatus
+from apps.services.models import ServiceRequest
 from apps.stores.validators import sanitize_text
 
 
@@ -69,21 +73,18 @@ class ReviewCreateSerializer(serializers.Serializer):
             raise serializers.ValidationError(
                 {"service_request_id": "Cette demande ne vous appartient pas."}
             )
-        if service_request.status != ServiceRequestStatus.COMPLETED:
+        if service_request.status not in SERVICE_REVIEW_REQUEST_STATUSES:
             raise serializers.ValidationError(
                 {
                     "service_request_id": (
-                        "Vous ne pouvez noter qu'après une prestation terminée."
+                        "Vous pouvez noter dès que le professionnel a accepté "
+                        "ou terminé la prestation."
                     )
                 }
             )
-        if hasattr(service_request, "review"):
+        if Review.objects.filter(service_request=service_request).exists():
             raise serializers.ValidationError(
                 {"service_request_id": "Un avis existe déjà pour cette demande."}
-            )
-        if service_request.professional.owner_id == user.id:
-            raise serializers.ValidationError(
-                {"service_request_id": "Vous ne pouvez pas noter votre propre profil."}
             )
 
         attrs["service_request"] = service_request
@@ -184,11 +185,12 @@ class ProductReviewCreateSerializer(serializers.Serializer):
             raise serializers.ValidationError(
                 {"order_item_id": "Cette commande ne vous appartient pas."}
             )
-        if item.order.status != OrderStatus.COMPLETED:
+        if item.order.status not in PRODUCT_REVIEW_ORDER_STATUSES:
             raise serializers.ValidationError(
                 {
                     "order_item_id": (
-                        "Vous ne pouvez noter qu'après une commande terminée."
+                        "Vous pouvez noter dès que le vendeur a confirmé "
+                        "le paiement (commande en cours ou terminée)."
                     )
                 }
             )
@@ -196,13 +198,9 @@ class ProductReviewCreateSerializer(serializers.Serializer):
             raise serializers.ValidationError(
                 {"order_item_id": "Ce produit n'est plus disponible pour un avis."}
             )
-        if hasattr(item, "product_review"):
+        if ProductReview.objects.filter(order_item=item).exists():
             raise serializers.ValidationError(
                 {"order_item_id": "Un avis existe déjà pour cet article."}
-            )
-        if item.order.store.owner_id == user.id:
-            raise serializers.ValidationError(
-                {"order_item_id": "Vous ne pouvez pas noter votre propre produit."}
             )
 
         attrs["order_item"] = item

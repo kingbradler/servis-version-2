@@ -1,5 +1,5 @@
 """
-Seed initial SERVIS catalog: Tanger + student-marketplace categories.
+Seed initial SERVIS catalog: Moroccan cities + marketplace categories.
 
 Usage:
     python manage.py seed_catalog
@@ -13,8 +13,8 @@ from apps.categories.models import Category, CategoryScope
 from apps.core.slug import slugify_text, unique_slug
 from apps.stores.models import City
 
-# Future cities (inactive) — ready to activate later
-FUTURE_CITIES = [
+CITIES = [
+    ("Tanger", "tanger", "Tanger-Tétouan-Al Hoceïma"),
     ("Tétouan", "tetouan", "Tanger-Tétouan-Al Hoceïma"),
     ("Rabat", "rabat", "Rabat-Salé-Kénitra"),
     ("Casablanca", "casablanca", "Casablanca-Settat"),
@@ -133,40 +133,31 @@ CATEGORY_TREE = [
 
 
 class Command(BaseCommand):
-    help = "Charge Tanger et les catégories initiales SERVIS (marketplace étudiante)."
+    help = "Charge les villes marocaines et les catégories initiales SERVIS."
 
     def add_arguments(self, parser):
         parser.add_argument(
             "--with-future-cities",
             action="store_true",
-            help="Crée aussi les autres villes marocaines en is_active=False.",
+            help="Ancien drapeau : toutes les villes sont désormais actives.",
         )
 
     @transaction.atomic
     def handle(self, *args, **options):
-        tanger, created = City.objects.update_or_create(
-            slug="tanger",
-            defaults={
-                "name": "Tanger",
-                "region": "Tanger-Tétouan-Al Hoceïma",
-                "is_active": True,
-            },
-        )
-        self.stdout.write(
-            self.style.SUCCESS(
-                f"{'Créé' if created else 'Mis à jour'}: City {tanger.name}"
+        for name, slug, region in CITIES:
+            city, created = City.objects.update_or_create(
+                slug=slug,
+                defaults={
+                    "name": name,
+                    "region": region,
+                    "is_active": True,
+                },
             )
-        )
-
-        if options["with_future_cities"]:
-            for name, slug, region in FUTURE_CITIES:
-                city, c = City.objects.update_or_create(
-                    slug=slug,
-                    defaults={"name": name, "region": region, "is_active": False},
+            self.stdout.write(
+                self.style.SUCCESS(
+                    f"{'Créé' if created else 'Mis à jour'}: City {city.name}"
                 )
-                self.stdout.write(
-                    f"  {'+' if c else '~'} {city.name} (inactive)"
-                )
+            )
 
         order = 0
         for name, icon, scope, children in CATEGORY_TREE:

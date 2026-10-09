@@ -182,7 +182,7 @@ export default function AdminCategoriesPage() {
             Gérez l&apos;arborescence des catégories du catalogue.
           </p>
         </div>
-        <Button variant="primary" onClick={openCreate}>
+        <Button variant="primary" className="w-full sm:w-auto" onClick={openCreate}>
           <Plus className="h-4 w-4" />
           Nouvelle catégorie
         </Button>
@@ -214,9 +214,9 @@ export default function AdminCategoriesPage() {
           {categories.map((category) => (
             <Card key={category.id}>
               <CardContent className="flex flex-col gap-3 py-3 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <p className="font-medium">{category.name}</p>
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <p className="min-w-0 break-words font-medium">{category.name}</p>
                     <Badge variant={category.is_active ? "success" : "error"}>
                       {category.is_active ? "Active" : "Inactive"}
                     </Badge>

@@ -194,18 +194,7 @@ class StatsAPITests(APITestCase):
         self.assertEqual(response.data["error_code"], "advanced_stats_required")
 
     def test_advanced_stats_with_store_pro(self):
-        plan = Plan.objects.create(
-            code=PlanType.STORE_PRO,
-            plan_type=PlanType.STORE_PRO,
-            category=PlanCategory.STORE,
-            name="Boutique Pro",
-            price=Decimal("199.00"),
-            duration_days=30,
-            product_limit=None,
-            product_image_limit=8,
-            advanced_stats=True,
-            is_active=True,
-        )
+        plan = Plan.objects.get(code=PlanType.STORE_PRO)
         Subscription.objects.create(
             owner=self.seller,
             plan=plan,

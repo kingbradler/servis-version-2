@@ -10,9 +10,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.core.pagination import StandardPagination
-from apps.orders.models import OrderItem, OrderStatus
+from apps.orders.models import OrderItem
 from apps.professionals.models import ProfessionalProfile, ProfessionalStatus
 from apps.products.models import Product
+from apps.reviews.eligibility import (
+    PRODUCT_REVIEW_ORDER_STATUSES,
+    SERVICE_REVIEW_REQUEST_STATUSES,
+)
 from apps.reviews.models import ProductReview, Review
 from apps.reviews.serializers import (
     EligibleOrderItemSerializer,
@@ -26,7 +30,7 @@ from apps.reviews.serializers import (
     product_review_summary,
     professional_review_summary,
 )
-from apps.services.models import ServiceRequest, ServiceRequestStatus
+from apps.services.models import ServiceRequest
 from apps.users.permissions import CanShop, IsAdminRole
 
 
@@ -131,7 +135,7 @@ class EligibleReviewRequestsView(generics.ListAPIView):
         return (
             ServiceRequest.objects.filter(
                 client=self.request.user,
-                status=ServiceRequestStatus.COMPLETED,
+                status__in=SERVICE_REVIEW_REQUEST_STATUSES,
                 review__isnull=True,
             )
             .select_related("professional", "service")
@@ -280,7 +284,7 @@ class EligibleProductReviewItemsView(generics.ListAPIView):
         return (
             OrderItem.objects.filter(
                 order__user=self.request.user,
-                order__status=OrderStatus.COMPLETED,
+                order__status__in=PRODUCT_REVIEW_ORDER_STATUSES,
                 product__isnull=False,
                 product_review__isnull=True,
             )

@@ -1,0 +1,14 @@
+{
+  "name": "servis",
+  "private": true,
+  "description": "SERVIS — marketplace multi-vendeurs pour étudiants entrepreneurs (Maroc)",
+  "scripts": {
+    "dev": "npm run dev --prefix frontend -- --port 43123 --hostname 0.0.0.0",
+    "build": "npm run build --prefix frontend",
+    "start": "npm run start --prefix frontend -- --port 43123 --hostname 0.0.0.0",
+    "lint": "npm run lint --prefix frontend"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

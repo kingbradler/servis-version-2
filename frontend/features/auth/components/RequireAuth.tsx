@@ -23,7 +23,9 @@ export function RequireAuth({
   roles,
   forbiddenHref = "/403",
 }: RequireAuthProps) {
-  const { user, loading, isAuthenticated } = useCurrentUser();
+  const { user, loading, isAuthenticated } = useCurrentUser({
+    probeSession: true,
+  });
   const router = useRouter();
   const pathname = usePathname();
 

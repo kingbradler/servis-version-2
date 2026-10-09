@@ -79,6 +79,18 @@ export interface Paginated<T> {
   results: T[];
 }
 
+function asList<T>(data: Paginated<T> | T[] | unknown): T[] {
+  if (Array.isArray(data)) return data;
+  if (
+    data &&
+    typeof data === "object" &&
+    Array.isArray((data as Paginated<T>).results)
+  ) {
+    return (data as Paginated<T>).results;
+  }
+  return [];
+}
+
 export interface CreateReviewPayload {
   service_request_id: string;
   rating: number;
@@ -109,7 +121,14 @@ export async function listProfessionalReviews(
 export async function listEligibleReviewRequests(): Promise<
   Paginated<EligibleReviewRequest>
 > {
-  return apiFetch<Paginated<EligibleReviewRequest>>(`/reviews/eligible/`);
+  const data = await apiFetch<Paginated<EligibleReviewRequest> | EligibleReviewRequest[]>(
+    `/reviews/eligible/`
+  );
+  if (data && typeof data === "object" && "results" in data) {
+    return data;
+  }
+  const results = asList<EligibleReviewRequest>(data);
+  return { count: results.length, next: null, previous: null, results };
 }
 
 export async function createReview(
@@ -122,7 +141,12 @@ export async function createReview(
 }
 
 export async function listMyReviews(): Promise<Paginated<Review>> {
-  return apiFetch<Paginated<Review>>("/reviews/me/");
+  const data = await apiFetch<Paginated<Review> | Review[]>(`/reviews/me/`);
+  if (data && typeof data === "object" && "results" in data) {
+    return data;
+  }
+  const results = asList<Review>(data);
+  return { count: results.length, next: null, previous: null, results };
 }
 
 export async function getProductReviewSummary(
@@ -147,9 +171,14 @@ export async function listProductReviews(
 export async function listEligibleProductReviewItems(): Promise<
   Paginated<EligibleProductReviewItem>
 > {
-  return apiFetch<Paginated<EligibleProductReviewItem>>(
-    `/reviews/products/eligible/`
-  );
+  const data = await apiFetch<
+    Paginated<EligibleProductReviewItem> | EligibleProductReviewItem[]
+  >(`/reviews/products/eligible/`);
+  if (data && typeof data === "object" && "results" in data) {
+    return data;
+  }
+  const results = asList<EligibleProductReviewItem>(data);
+  return { count: results.length, next: null, previous: null, results };
 }
 
 export async function createProductReview(
@@ -162,5 +191,12 @@ export async function createProductReview(
 }
 
 export async function listMyProductReviews(): Promise<Paginated<ProductReview>> {
-  return apiFetch<Paginated<ProductReview>>("/reviews/products/me/");
+  const data = await apiFetch<Paginated<ProductReview> | ProductReview[]>(
+    "/reviews/products/me/"
+  );
+  if (data && typeof data === "object" && "results" in data) {
+    return data;
+  }
+  const results = asList<ProductReview>(data);
+  return { count: results.length, next: null, previous: null, results };
 }

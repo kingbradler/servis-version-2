@@ -4,6 +4,7 @@ from rest_framework import serializers
 
 from apps.core.geo import location_payload, validate_coordinate_pair
 from apps.core.slug import slugify_text, unique_slug
+from apps.core.social_urls import validate_social_url
 from apps.core.storage import (
     build_store_banner_path,
     build_store_logo_path,
@@ -15,10 +16,22 @@ from apps.stores.serializers import CityPublicSerializer
 from apps.stores.validators import sanitize_text, validate_phone
 
 
+def _validate_tiktok(value):
+    return validate_social_url(value, networks={"tiktok"})
+
+
+def _validate_youtube(value):
+    return validate_social_url(value, networks={"youtube"})
+
+
+def _validate_facebook(value):
+    return validate_social_url(value, networks={"facebook"})
+
+
 class StoreMediaUploadSerializer(serializers.Serializer):
     """Multipart upload for store logo or banner."""
 
-    image = serializers.ImageField()
+    image = serializers.FileField()
     kind = serializers.ChoiceField(choices=("logo", "banner"))
 
     def validate_image(self, value):
@@ -73,6 +86,9 @@ class StorePublicSerializer(serializers.ModelSerializer):
             "city",
             "phone",
             "whatsapp",
+            "tiktok_url",
+            "youtube_url",
+            "facebook_url",
             "address",
             "neighborhood",
             "postal_code",
@@ -108,6 +124,9 @@ class StoreCreateSerializer(serializers.ModelSerializer):
             "city",
             "phone",
             "whatsapp",
+            "tiktok_url",
+            "youtube_url",
+            "facebook_url",
             "logo",
             "banner",
             "address",
@@ -142,6 +161,15 @@ class StoreCreateSerializer(serializers.ModelSerializer):
 
     def validate_whatsapp(self, value):
         return validate_phone(value)
+
+    def validate_tiktok_url(self, value):
+        return _validate_tiktok(value)
+
+    def validate_youtube_url(self, value):
+        return _validate_youtube(value)
+
+    def validate_facebook_url(self, value):
+        return _validate_facebook(value)
 
     def validate_city(self, city_id):
         try:
@@ -208,6 +236,9 @@ class StoreSellerSerializer(serializers.ModelSerializer):
             "status",
             "phone",
             "whatsapp",
+            "tiktok_url",
+            "youtube_url",
+            "facebook_url",
             "address",
             "neighborhood",
             "postal_code",
@@ -255,6 +286,15 @@ class StoreSellerSerializer(serializers.ModelSerializer):
 
     def validate_whatsapp(self, value):
         return validate_phone(value)
+
+    def validate_tiktok_url(self, value):
+        return _validate_tiktok(value)
+
+    def validate_youtube_url(self, value):
+        return _validate_youtube(value)
+
+    def validate_facebook_url(self, value):
+        return _validate_facebook(value)
 
     def validate(self, attrs):
         forbidden = {"owner", "status", "slug", "role"}
@@ -312,6 +352,9 @@ class StoreAdminSerializer(serializers.ModelSerializer):
             "status",
             "phone",
             "whatsapp",
+            "tiktok_url",
+            "youtube_url",
+            "facebook_url",
             "address",
             "neighborhood",
             "postal_code",
@@ -346,6 +389,15 @@ class StoreAdminSerializer(serializers.ModelSerializer):
 
     def validate_whatsapp(self, value):
         return validate_phone(value)
+
+    def validate_tiktok_url(self, value):
+        return _validate_tiktok(value)
+
+    def validate_youtube_url(self, value):
+        return _validate_youtube(value)
+
+    def validate_facebook_url(self, value):
+        return _validate_facebook(value)
 
     def validate_status(self, value):
         if value not in StoreStatus.values:

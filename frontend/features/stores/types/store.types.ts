@@ -19,6 +19,9 @@ export interface StorePublic {
   city: StoreCity;
   phone: string;
   whatsapp: string;
+  tiktok_url?: string;
+  youtube_url?: string;
+  facebook_url?: string;
   address?: string;
   neighborhood?: string;
   postal_code?: string;
@@ -41,6 +44,9 @@ export interface StoreCreatePayload {
   city: string;
   phone?: string;
   whatsapp?: string;
+  tiktok_url?: string;
+  youtube_url?: string;
+  facebook_url?: string;
   logo?: string;
   banner?: string;
   address?: string;
@@ -56,6 +62,9 @@ export interface StoreUpdatePayload {
   city_id?: string;
   phone?: string;
   whatsapp?: string;
+  tiktok_url?: string;
+  youtube_url?: string;
+  facebook_url?: string;
   logo?: string;
   banner?: string;
   address?: string;

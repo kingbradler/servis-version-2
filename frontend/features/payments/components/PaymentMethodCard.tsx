@@ -3,6 +3,13 @@
 import { Badge } from "@/components/ui/badge";
 import type { PaymentMethod } from "../types/payment.types";
 
+const TYPE_LABELS: Record<string, string> = {
+  MOBILE_MONEY: "Mobile Money",
+  BANK_TRANSFER: "Virement",
+  CASH: "Espèces",
+  OTHER: "Autre",
+};
+
 export function PaymentMethodCard({
   method,
   selected,
@@ -26,7 +33,7 @@ export function PaymentMethodCard({
         <span className="text-body font-semibold text-text-primary">
           {method.label}
         </span>
-        <Badge variant="secondary">{method.type}</Badge>
+        <Badge variant="secondary">{TYPE_LABELS[method.type] ?? method.type}</Badge>
       </div>
       <p className="mt-2 text-body-sm text-text-secondary">
         {method.account_name}

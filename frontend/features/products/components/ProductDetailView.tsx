@@ -137,9 +137,18 @@ export function ProductDetailView({
                     )}
                 </div>
 
-                {product.description && (
-                  <p className="whitespace-pre-wrap text-body leading-relaxed text-text-secondary">
-                    {product.description}
+                {product.description?.trim() ? (
+                  <div>
+                    <h2 className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-primary">
+                      Description du produit
+                    </h2>
+                    <p className="mt-2 whitespace-pre-wrap text-body leading-relaxed text-text-primary">
+                      {product.description.trim()}
+                    </p>
+                  </div>
+                ) : (
+                  <p className="text-body-sm text-text-muted">
+                    Pas de description pour ce produit.
                   </p>
                 )}
 

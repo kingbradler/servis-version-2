@@ -1,3 +1,7 @@
+# Cloud agent scratch
+agent-tools/
+.cursor/
+
 # Dependencies
 node_modules/
 frontend/node_modules/

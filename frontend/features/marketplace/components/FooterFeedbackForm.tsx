@@ -46,7 +46,7 @@ export function FooterFeedbackForm({ className }: { className?: string }) {
   if (done) {
     return (
       <p className={cn("text-body-sm text-primary", className)}>
-        Merci — votre message a bien été reçu.
+        Merci, votre message a bien été reçu.
       </p>
     );
   }

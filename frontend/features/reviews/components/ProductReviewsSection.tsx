@@ -45,7 +45,7 @@ export function ProductReviewsSection({
         ]);
         if (cancelled) return;
         setSummary(sum);
-        setReviews(list.results);
+        setReviews(Array.isArray(list) ? list : list.results ?? []);
       } catch (err) {
         if (!cancelled) {
           setError(
@@ -97,7 +97,7 @@ export function ProductReviewsSection({
       {count === 0 ? (
         <EmptyState
           title="Pas encore d'avis"
-          description="Les clients pourront noter ce produit après une commande terminée."
+          description="Les clients peuvent noter après un paiement confirmé."
         />
       ) : (
         <ul className="space-y-3">

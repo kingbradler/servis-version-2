@@ -88,6 +88,20 @@ class ProductReviewAPITests(APITestCase):
         )
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
+    def test_can_review_confirmed_order(self):
+        self.pending_order.status = OrderStatus.CONFIRMED
+        self.pending_order.save(update_fields=["status"])
+        self.client.force_authenticate(self.client_user)
+        eligible = self.client.get(reverse("product-review-eligible"))
+        ids = [row["id"] for row in eligible.data["results"]]
+        self.assertIn(str(self.pending_item.id), ids)
+        res = self.client.post(
+            reverse("product-review-create"),
+            {"order_item_id": str(self.pending_item.id), "rating": 4},
+            format="json",
+        )
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+
     def test_create_product_review_flow(self):
         self.client.force_authenticate(self.client_user)
         eligible = self.client.get(reverse("product-review-eligible"))
@@ -127,6 +141,17 @@ class ProductReviewAPITests(APITestCase):
             format="json",
         )
         self.assertEqual(dup.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_seller_can_mark_order_completed(self):
+        self.pending_order.status = OrderStatus.CONFIRMED
+        self.pending_order.save(update_fields=["status"])
+        self.client.force_authenticate(self.seller)
+        res = self.client.post(
+            reverse("seller_orders:complete", kwargs={"order_id": self.pending_order.id})
+        )
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.pending_order.refresh_from_db()
+        self.assertEqual(self.pending_order.status, OrderStatus.COMPLETED)
 
     def test_other_client_cannot_review(self):
         self.client.force_authenticate(self.other)

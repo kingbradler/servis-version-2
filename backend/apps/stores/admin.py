@@ -55,6 +55,9 @@ class StoreAdmin(admin.ModelAdmin):
                     "status",
                     "phone",
                     "whatsapp",
+                    "tiktok_url",
+                    "youtube_url",
+                    "facebook_url",
                 )
             },
         ),

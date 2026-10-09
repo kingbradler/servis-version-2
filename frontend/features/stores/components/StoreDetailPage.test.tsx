@@ -65,6 +65,8 @@ describe("StoreDetailPage", () => {
       screen.getByRole("heading", { name: "Campus Tech" })
     ).toBeInTheDocument();
     expect(screen.getByText("Tanger · Nord")).toBeInTheDocument();
+    expect(screen.getByText("Boutique test")).toBeInTheDocument();
+    expect(screen.getByText("À propos de la boutique")).toBeInTheDocument();
     expect(
       screen.getByText(
         "Cette boutique ne propose actuellement aucun produit"

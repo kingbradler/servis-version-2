@@ -5,6 +5,8 @@ import { ThemeProvider } from "@/providers/theme-provider";
 import { CartProvider } from "@/providers/cart-provider";
 import { ToastProvider } from "@/components/ui/toast";
 import { env } from "@/config/env";
+import { ServiceWorkerRegister } from "@/features/pwa/ServiceWorkerRegister";
+import { InstallAppPrompt } from "@/features/pwa/InstallAppPrompt";
 
 import "./globals.css";
 
@@ -39,7 +41,7 @@ export const metadata: Metadata = {
     template: "%s | SERVIS",
   },
   description:
-    "La plateforme e-commerce multi-vendeurs pour les étudiants entrepreneurs de Tanger, Maroc.",
+    "Marketplace multi-vendeurs pour acheter et vendre des produits et services près de chez vous, au Maroc.",
   applicationName: "SERVIS",
   openGraph: {
     type: "website",
@@ -47,17 +49,31 @@ export const metadata: Metadata = {
     siteName: "SERVIS",
     title: "SERVIS — Marketplace étudiants entrepreneurs",
     description:
-      "Achetez et vendez auprès des étudiants entrepreneurs de Tanger.",
+      "Achetez et vendez des produits et services près de chez vous.",
   },
   twitter: {
     card: "summary_large_image",
     title: "SERVIS",
     description:
-      "Marketplace multi-vendeurs pour étudiants entrepreneurs — Tanger, Maroc.",
+      "Marketplace multi-vendeurs pour étudiants entrepreneurs, au Maroc.",
   },
   robots: {
     index: true,
     follow: true,
+  },
+  appleWebApp: {
+    capable: true,
+    title: "SERVIS",
+    statusBarStyle: "black-translucent",
+  },
+  icons: {
+    icon: [
+      { url: "/icons/icon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon.ico", sizes: "48x48" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
   },
 };
 
@@ -72,10 +88,14 @@ export default function RootLayout({
       className={`${dmSans.variable} ${syne.variable} h-full`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col font-sans antialiased">
+      <body className="flex min-h-full max-w-full flex-col overflow-x-clip font-sans antialiased">
         <ThemeProvider>
           <ToastProvider>
-            <CartProvider>{children}</CartProvider>
+            <CartProvider>
+              <ServiceWorkerRegister />
+              {children}
+              <InstallAppPrompt />
+            </CartProvider>
           </ToastProvider>
         </ThemeProvider>
       </body>

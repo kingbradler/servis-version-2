@@ -41,7 +41,7 @@ export function LegalDocument({
           {title}
         </h1>
         <p className="mt-2 text-body-sm text-text-muted">
-          Dernière mise à jour : {updatedAt} · {env.appName} — Tanger, Maroc
+          Dernière mise à jour : {updatedAt} · {env.appName} — Maroc
         </p>
 
         <div className="legal-prose mt-8 space-y-6 text-body leading-relaxed text-text-secondary [&_h2]:font-display [&_h2]:text-xl [&_h2]:font-extrabold [&_h2]:tracking-tight [&_h2]:text-text-primary [&_h3]:mt-2 [&_h3]:text-heading-s [&_h3]:font-semibold [&_h3]:text-text-primary [&_ul]:list-disc [&_ul]:space-y-1 [&_ul]:pl-5 [&_a]:text-primary [&_a]:hover:underline">

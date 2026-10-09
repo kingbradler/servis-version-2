@@ -184,7 +184,7 @@ export function MapView({
     const popup = new mapboxgl.Popup({
       closeButton: true,
       closeOnClick: true,
-      maxWidth: "280px",
+      maxWidth: "min(280px, calc(100vw - 2.5rem))",
       offset: 16,
       className: "servis-mapbox-popup",
     });

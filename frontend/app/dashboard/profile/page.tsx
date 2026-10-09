@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { Upload } from "lucide-react";
 
 import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -20,7 +21,9 @@ import {
 import * as authService from "@/features/auth/services/auth.service";
 import type { AuthUser } from "@/features/auth/types/auth.types";
 import { clientNav } from "@/features/dashboard/nav";
+import { resolveMediaUrl } from "@/features/products/utils/media";
 import { isApiError } from "@/lib/api/errors";
+import { prepareProductImageFile } from "@/lib/prepare-image-file";
 
 function ProfileForm({
   user,
@@ -30,13 +33,15 @@ function ProfileForm({
   onSaved: () => Promise<AuthUser | null>;
 }) {
   const { toast } = useToast();
+  const avatarInputRef = useRef<HTMLInputElement>(null);
   const [saving, setSaving] = useState(false);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [form, setForm] = useState({
     first_name: user.first_name ?? "",
     last_name: user.last_name ?? "",
     phone: user.phone ?? "",
-    avatar: user.avatar ?? "",
   });
+  const [avatarUrl, setAvatarUrl] = useState(user.avatar ?? "");
 
   const initials =
     `${user.first_name?.[0] ?? ""}${user.last_name?.[0] ?? ""}`.toUpperCase() ||
@@ -55,14 +60,13 @@ function ProfileForm({
         first_name: form.first_name.trim(),
         last_name: form.last_name.trim(),
         phone: form.phone.trim(),
-        avatar: form.avatar.trim(),
       });
       setForm({
         first_name: updated.first_name ?? "",
         last_name: updated.last_name ?? "",
         phone: updated.phone ?? "",
-        avatar: updated.avatar ?? "",
       });
+      setAvatarUrl(updated.avatar ?? "");
       await onSaved();
       toast({ title: "Profil mis à jour", variant: "success" });
     } catch (err) {
@@ -76,11 +80,55 @@ function ProfileForm({
     }
   };
 
+  const onPickAvatar = async (file: File) => {
+    setUploadingAvatar(true);
+    try {
+      const ready = await prepareProductImageFile(file);
+      const updated = await authService.uploadMyAvatar(ready);
+      setAvatarUrl(updated.avatar ?? "");
+      await onSaved();
+      toast({ title: "Photo mise à jour", variant: "success" });
+    } catch (err) {
+      toast({
+        title: "Photo impossible",
+        description: isApiError(err)
+          ? err.message
+          : err instanceof Error
+            ? err.message
+            : "Choisissez une image JPEG, PNG ou WebP.",
+        variant: "error",
+      });
+    } finally {
+      setUploadingAvatar(false);
+      if (avatarInputRef.current) avatarInputRef.current.value = "";
+    }
+  };
+
+  const onRemoveAvatar = async () => {
+    setUploadingAvatar(true);
+    try {
+      const updated = await authService.deleteMyAvatar();
+      setAvatarUrl(updated.avatar ?? "");
+      await onSaved();
+      toast({ title: "Photo retirée", variant: "success" });
+    } catch (err) {
+      toast({
+        title: "Erreur",
+        description: isApiError(err) ? err.message : "Impossible de retirer la photo",
+        variant: "error",
+      });
+    } finally {
+      setUploadingAvatar(false);
+    }
+  };
+
+  const previewSrc = resolveMediaUrl(avatarUrl) || avatarUrl || undefined;
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-center gap-4">
         <Avatar size="lg">
-          {form.avatar ? <AvatarImage src={form.avatar} alt="" /> : null}
+          {previewSrc ? <AvatarImage src={previewSrc} alt="" /> : null}
           <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
         <div>
@@ -92,6 +140,47 @@ function ProfileForm({
       </CardHeader>
       <CardContent>
         <form className="space-y-4" onSubmit={(e) => void onSubmit(e)}>
+          <div className="space-y-2 rounded-[18px] border border-cr2 p-4 dark:border-border">
+            <p className="text-body-sm font-medium">Photo de profil</p>
+            <p className="text-caption text-text-muted">
+              Choisissez une photo dans votre galerie — pas besoin d’une URL.
+            </p>
+            <input
+              ref={avatarInputRef}
+              type="file"
+              accept="image/*,image/heic,image/heif"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) void onPickAvatar(file);
+              }}
+            />
+            <div className="flex flex-wrap gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="rounded-xl"
+                loading={uploadingAvatar}
+                onClick={() => avatarInputRef.current?.click()}
+              >
+                <Upload className="h-4 w-4" />
+                Choisir depuis la galerie
+              </Button>
+              {avatarUrl ? (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="rounded-xl"
+                  disabled={uploadingAvatar}
+                  onClick={() => void onRemoveAvatar()}
+                >
+                  Retirer
+                </Button>
+              ) : null}
+            </div>
+          </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <Input
               label="Prénom"
@@ -113,12 +202,6 @@ function ProfileForm({
             onChange={onChange("phone")}
             placeholder="+212 6 XX XX XX XX"
             hint="Utilisé pour les confirmations de commande (ex. +212612345678)"
-          />
-          <Input
-            label="Avatar (URL)"
-            value={form.avatar}
-            onChange={onChange("avatar")}
-            placeholder="https://…"
           />
           <div className="flex items-center justify-between gap-4 border-t border-border pt-3">
             <span className="text-body-sm text-text-secondary">

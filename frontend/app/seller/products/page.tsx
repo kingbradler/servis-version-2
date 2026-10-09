@@ -88,7 +88,7 @@ export default function SellerProductsPage() {
             Gérez votre catalogue de produits.
           </p>
         </div>
-        <Button asChild variant="primary">
+        <Button asChild variant="primary" className="w-full sm:w-auto">
           <Link href="/seller/products/new">
             <Plus className="h-4 w-4" />
             Nouveau produit
@@ -121,7 +121,7 @@ export default function SellerProductsPage() {
       {!loading && !error && products.length > 0 && (
         <>
           {/* Desktop table */}
-          <Card className="hidden overflow-hidden sm:block">
+          <Card className="hidden overflow-x-auto sm:block">
             <table className="w-full text-left">
               <thead className="border-b border-border bg-surface-secondary">
                 <tr>
@@ -198,10 +198,10 @@ export default function SellerProductsPage() {
             {products.map((product) => (
               <Card key={product.id}>
                 <CardContent className="space-y-3 py-4">
-                  <div className="flex items-start justify-between gap-2">
+                  <div className="flex min-w-0 items-start justify-between gap-2">
                     <Link
                       href={`/seller/products/${product.id}`}
-                      className="font-medium text-text-primary hover:text-primary"
+                      className="min-w-0 break-words font-medium text-text-primary hover:text-primary"
                     >
                       {product.name}
                     </Link>

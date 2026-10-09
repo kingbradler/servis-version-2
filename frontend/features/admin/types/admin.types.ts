@@ -2,12 +2,28 @@ import type { OrderStatus, OrderStoreRef, OrderItem } from "@/features/orders/ty
 import type { Payment } from "@/features/payments/types/payment.types";
 import type { ProductCategoryRef, ProductImage, ProductStatus } from "@/features/products/types/product.types";
 import type { StoreCity, StoreStatus } from "@/features/stores/types/store.types";
+import type { ProfessionalStatus } from "@/features/professionals/api/seller-professional.api";
 
 export interface Paginated<T> {
   count: number;
   next: string | null;
   previous: string | null;
   results: T[];
+}
+
+export interface AdminProfessional {
+  id: string;
+  display_name: string;
+  slug: string;
+  headline: string;
+  bio: string;
+  city: StoreCity | null;
+  phone: string;
+  whatsapp: string;
+  status: ProfessionalStatus;
+  owner_email: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface AdminStore {

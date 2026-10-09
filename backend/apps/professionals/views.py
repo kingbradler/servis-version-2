@@ -65,7 +65,7 @@ class PublicProfessionalListView(generics.ListAPIView):
         parameters=[
             OpenApiParameter(
                 name="city",
-                description="Slug ville (ex: tanger)",
+                description="Slug ville (ex: casablanca)",
                 required=False,
                 type=str,
             ),

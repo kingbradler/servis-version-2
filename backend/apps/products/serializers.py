@@ -320,7 +320,7 @@ class ProductCreateSerializer(serializers.Serializer):
 
 
 class ProductImageUploadSerializer(serializers.Serializer):
-    image = serializers.ImageField()
+    image = serializers.FileField()
     alt_text = serializers.CharField(required=False, allow_blank=True, default="")
     order = serializers.IntegerField(required=False, min_value=0, allow_null=True)
 

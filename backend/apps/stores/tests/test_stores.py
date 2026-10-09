@@ -199,6 +199,37 @@ class StoreIsolationTests(StoreAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.store_a.refresh_from_db()
         self.assertEqual(self.store_a.name, "Boutique A Renommée")
+
+    def test_seller_can_set_social_urls(self):
+        self.client.force_authenticate(user=self.seller_a)
+        response = self.client.patch(
+            self.seller_url,
+            {
+                "tiktok_url": "https://www.tiktok.com/@boutique",
+                "youtube_url": "https://www.youtube.com/@boutique",
+                "facebook_url": "https://www.facebook.com/boutique",
+            },
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(
+            response.data["tiktok_url"], "https://www.tiktok.com/@boutique"
+        )
+        self.assertEqual(
+            response.data["youtube_url"], "https://www.youtube.com/@boutique"
+        )
+        self.assertEqual(
+            response.data["facebook_url"], "https://www.facebook.com/boutique"
+        )
+
+    def test_seller_social_url_rejects_unknown_host(self):
+        self.client.force_authenticate(user=self.seller_a)
+        response = self.client.patch(
+            self.seller_url,
+            {"tiktok_url": "https://example.com/not-tiktok"},
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.store_b.refresh_from_db()
         self.assertEqual(self.store_b.name, "Boutique B")
 

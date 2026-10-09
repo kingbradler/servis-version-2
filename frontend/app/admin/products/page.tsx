@@ -119,9 +119,9 @@ export default function AdminProductsPage() {
           {products.map((product) => (
             <Card key={product.id}>
               <CardContent className="flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <p className="font-medium">{product.name}</p>
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <p className="min-w-0 break-words font-medium">{product.name}</p>
                     <Badge variant={STATUS_VARIANTS[product.status]}>
                       {STATUS_LABELS[product.status]}
                     </Badge>

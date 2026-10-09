@@ -29,7 +29,7 @@ export function CategoryCard({
         <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary text-white shadow-[0_8px_20px_rgba(232,66,8,0.25)] transition-transform duration-300 group-hover:scale-105">
           <Icon className="h-5 w-5" />
         </div>
-        <h3 className="text-body-sm font-medium text-text-primary transition-colors group-hover:text-primary">
+        <h3 className="line-clamp-2 text-body-sm font-medium text-text-primary transition-colors group-hover:text-primary">
           {name}
         </h3>
         {productCount !== undefined && (

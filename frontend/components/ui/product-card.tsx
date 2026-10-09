@@ -10,6 +10,7 @@ export interface ProductCardProps {
   price: number;
   imageUrl?: string;
   storeName?: string;
+  description?: string;
   rating?: number;
   comparePrice?: number;
   href?: string;
@@ -22,12 +23,15 @@ export function ProductCard({
   price,
   imageUrl,
   storeName,
+  description,
   rating,
   comparePrice,
   href = "#",
   badge,
   className,
 }: ProductCardProps) {
+  const summary = description?.replace(/\s+/g, " ").trim();
+
   return (
     <Link href={href} className={cn("block group", className)}>
       <article className="h-full overflow-hidden rounded-[18px] border border-cr2 bg-white transition-all duration-300 group-hover:-translate-y-1 group-hover:border-primary/20 group-hover:shadow-[0_8px_36px_rgba(0,0,0,0.15)] dark:border-border dark:bg-surface">
@@ -56,6 +60,11 @@ export function ProductCard({
           <h3 className="line-clamp-2 text-body-sm font-medium text-text-primary transition-colors group-hover:text-primary">
             {name}
           </h3>
+          {summary ? (
+            <p className="line-clamp-3 text-[13px] leading-snug text-text-secondary">
+              {summary}
+            </p>
+          ) : null}
           {rating !== undefined && <Rating value={rating} size="sm" />}
           <div className="flex items-baseline gap-2 pt-0.5">
             <span className="text-body font-semibold text-text-primary">

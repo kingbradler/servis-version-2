@@ -8,7 +8,7 @@ from django.conf import settings
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.core.mail import send_mail
 
-from apps.users.email_verification import decode_uid, make_uid
+from apps.users.email_verification import decode_uid, make_uid, _greeting
 
 logger = logging.getLogger(__name__)
 
@@ -30,22 +30,22 @@ def send_password_reset_email(user) -> bool:
     reset_url = build_password_reset_url(user)
     subject = "Réinitialisation du mot de passe — SERVIS"
     message = (
-        f"Bonjour {user.first_name or ''},\n\n"
-        "Vous avez demandé à réinitialiser votre mot de passe SERVIS.\n"
+        f"{_greeting(user)}\n\n"
+        "Vous avez demandé à changer votre mot de passe SERVIS.\n"
         "Ouvrez ce lien pour en choisir un nouveau :\n\n"
         f"{reset_url}\n\n"
-        "Ce lien expire après quelques heures. Si vous n'avez pas fait cette "
-        "demande, ignorez ce message — votre mot de passe reste inchangé.\n\n"
-        "— L'équipe SERVIS\n"
+        "Le lien expire après quelques heures. Si vous n'avez rien demandé, "
+        "ignorez ce message : votre mot de passe ne change pas.\n\n"
+        "L'équipe SERVIS\n"
     )
     html = (
-        f"<p>Bonjour {user.first_name or ''},</p>"
-        "<p>Vous avez demandé à réinitialiser votre mot de passe "
+        f"<p>{_greeting(user)}</p>"
+        "<p>Vous avez demandé à changer votre mot de passe "
         "<strong>SERVIS</strong>.</p>"
         f'<p><a href="{reset_url}">Choisir un nouveau mot de passe</a></p>'
         f"<p style='color:#888;font-size:12px'>Ou copiez ce lien :<br>{reset_url}</p>"
         "<p>Si vous n'êtes pas à l'origine de cette demande, ignorez cet e-mail.</p>"
-        "<p>— L'équipe SERVIS</p>"
+        "<p>L'équipe SERVIS</p>"
     )
     try:
         send_mail(

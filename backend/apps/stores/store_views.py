@@ -68,7 +68,7 @@ class PublicStoreListView(generics.ListAPIView):
         tags=["Stores"],
         summary="Liste des boutiques actives",
         parameters=[
-            OpenApiParameter(name="city", description="Slug ville (ex: tanger)", required=False, type=str),
+            OpenApiParameter(name="city", description="Slug ville (ex: casablanca)", required=False, type=str),
             OpenApiParameter(name="search", required=False, type=str),
             OpenApiParameter(
                 name="latitude",

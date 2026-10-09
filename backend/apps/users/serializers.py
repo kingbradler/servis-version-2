@@ -70,7 +70,14 @@ class UserMeUpdateSerializer(serializers.ModelSerializer):
         return validate_phone(value or "")
 
     def validate_avatar(self, value: str) -> str:
-        return (value or "").strip()
+        # Avatar is set via POST /auth/me/avatar/ (gallery upload).
+        # PATCH may only clear it.
+        value = (value or "").strip()
+        if value:
+            raise serializers.ValidationError(
+                "Choisissez une photo depuis votre galerie, pas une URL."
+            )
+        return ""
 
     def validate(self, attrs):
         forbidden = {
@@ -88,6 +95,42 @@ class UserMeUpdateSerializer(serializers.ModelSerializer):
                     {key: "Ce champ ne peut pas être modifié via cet endpoint."}
                 )
         return attrs
+
+
+class MeAvatarUploadSerializer(serializers.Serializer):
+    """Multipart gallery upload for the connected user's profile photo."""
+
+    image = serializers.FileField()
+
+    def validate_image(self, value):
+        from apps.products.validators import validate_product_image_file
+
+        return validate_product_image_file(value)
+
+    def save(self, **kwargs):
+        from apps.core.storage import (
+            StorageError,
+            build_avatar_path,
+            get_storage_backend,
+        )
+
+        user = self.context["user"]
+        uploaded = self.validated_data["image"]
+        path = build_avatar_path(user.id, getattr(uploaded, "name", "avatar.jpg"))
+        content_type = uploaded.content_type or "image/jpeg"
+        try:
+            url = get_storage_backend().upload(
+                path, uploaded, content_type, private=False
+            )
+        except StorageError as exc:
+            raise serializers.ValidationError({"image": str(exc)}) from exc
+        except Exception as exc:
+            raise serializers.ValidationError(
+                {"image": "Impossible d'envoyer la photo. Réessayez."}
+            ) from exc
+        user.avatar = url
+        user.save(update_fields=["avatar", "updated_at"])
+        return user
 
 
 class AdminUserSerializer(serializers.ModelSerializer):

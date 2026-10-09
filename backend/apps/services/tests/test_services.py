@@ -1,13 +1,22 @@
 """Phase 6.2 — Service API tests."""
 
+from datetime import timedelta
 from io import BytesIO
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
+from django.utils import timezone
 from PIL import Image
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from apps.billing.models import (
+    Plan,
+    PlanCategory,
+    PlanType,
+    Subscription,
+    SubscriptionStatus,
+)
 from apps.categories.models import Category
 from apps.professionals.models import ProfessionalProfile, ProfessionalStatus
 from apps.services.models import Service, ServicePriceType, ServiceStatus
@@ -30,6 +39,20 @@ def make_jpeg(name="pic.jpg") -> SimpleUploadedFile:
     buf = BytesIO()
     Image.new("RGB", (32, 32), color=(200, 80, 40)).save(buf, format="JPEG")
     return SimpleUploadedFile(name, buf.getvalue(), content_type="image/jpeg")
+
+
+def grant_service_plan(user) -> Subscription:
+    plan = Plan.objects.get(code=PlanType.SERVICE_STANDARD)
+    now = timezone.now()
+    return Subscription.objects.create(
+        owner=user,
+        plan=plan,
+        category=PlanCategory.SERVICE,
+        status=SubscriptionStatus.ACTIVE,
+        starts_at=now - timedelta(days=1),
+        activated_at=now - timedelta(days=1),
+        expires_at=now + timedelta(days=29),
+    )
 
 
 class ServiceAPITests(APITestCase):
@@ -155,6 +178,7 @@ class ServiceAPITests(APITestCase):
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_publish_and_public_visibility(self):
+        grant_service_plan(self.seller_a)
         service = Service.objects.create(
             professional_profile=self.profile_a,
             name="Visible",

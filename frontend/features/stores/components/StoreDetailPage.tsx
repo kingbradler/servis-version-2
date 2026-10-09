@@ -104,9 +104,18 @@ export function StoreDetailPage({ storeSlug }: { storeSlug: string }) {
                   </div>
                 </div>
 
-                {store.description && (
-                  <p className="max-w-3xl whitespace-pre-wrap text-body leading-relaxed text-text-secondary">
-                    {store.description}
+                {store.description?.trim() ? (
+                  <div className="max-w-3xl rounded-2xl bg-surface-secondary/70 px-4 py-4 dark:bg-white/5">
+                    <p className="text-[11px] font-extrabold uppercase tracking-[0.18em] text-primary">
+                      À propos de la boutique
+                    </p>
+                    <p className="mt-2 whitespace-pre-wrap text-body leading-relaxed text-text-primary">
+                      {store.description.trim()}
+                    </p>
+                  </div>
+                ) : (
+                  <p className="text-body-sm text-text-muted">
+                    Cette boutique n’a pas encore ajouté de description.
                   </p>
                 )}
 
@@ -137,6 +146,43 @@ export function StoreDetailPage({ storeSlug }: { storeSlug: string }) {
                     </Button>
                   )}
                 </div>
+                {(store.tiktok_url || store.youtube_url || store.facebook_url) && (
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {store.tiktok_url ? (
+                      <Button asChild variant="outline" size="sm" className="rounded-xl">
+                        <a
+                          href={store.tiktok_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          TikTok
+                        </a>
+                      </Button>
+                    ) : null}
+                    {store.youtube_url ? (
+                      <Button asChild variant="outline" size="sm" className="rounded-xl">
+                        <a
+                          href={store.youtube_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          YouTube
+                        </a>
+                      </Button>
+                    ) : null}
+                    {store.facebook_url ? (
+                      <Button asChild variant="outline" size="sm" className="rounded-xl">
+                        <a
+                          href={store.facebook_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Facebook
+                        </a>
+                      </Button>
+                    ) : null}
+                  </div>
+                )}
               </div>
             </section>
 

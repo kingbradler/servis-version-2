@@ -484,6 +484,17 @@ class ProductImageTests(ProductAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data["order"], 0)
 
+    def test_jpeg_without_mime_or_extension_is_accepted(self):
+        self.client.force_authenticate(user=self.seller_a)
+        jpeg = make_jpeg("IMG_1234")
+        jpeg.content_type = "application/octet-stream"
+        response = self.client.post(
+            self.images_url,
+            {"image": jpeg},
+            format="multipart",
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
     def test_invalid_type_rejected(self):
         self.client.force_authenticate(user=self.seller_a)
         fake = SimpleUploadedFile("x.exe", b"MZ\x90\x00notanimage", content_type="application/octet-stream")

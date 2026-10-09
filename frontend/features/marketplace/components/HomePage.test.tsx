@@ -57,6 +57,16 @@ vi.mock("@/features/products/hooks/usePublicProducts", () => ({
   }),
 }));
 
+vi.mock("@/features/pro-services/hooks/usePublicServices", () => ({
+  usePublicServices: () => ({
+    services: [],
+    count: 0,
+    loading: false,
+    error: null,
+    refresh: vi.fn(),
+  }),
+}));
+
 vi.mock("@/features/stores/hooks/usePublicStores", () => ({
   usePublicStores: () => ({
     stores: [
@@ -136,6 +146,8 @@ describe("HomePage", () => {
       expect(screen.getByText("Informatique")).toBeInTheDocument();
       expect(screen.getByText("Laptop Pro")).toBeInTheDocument();
       expect(screen.getAllByText("Campus Tech").length).toBeGreaterThan(0);
+      expect(screen.getByText("Services près de chez vous")).toBeInTheDocument();
+      expect(screen.getByText("Pas encore de services publiés")).toBeInTheDocument();
     },
     15000
   );

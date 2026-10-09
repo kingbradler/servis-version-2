@@ -145,7 +145,7 @@ function Content() {
               Réservé aux abonnements Pro
             </h3>
             <p className="mt-2 max-w-lg text-body-sm text-text-secondary">
-              Passez à Boutique Pro ou Services Pro pour débloquer le chiffre
+              Passez à Boutique Premium ou Services Premium pour débloquer le chiffre
               d&apos;affaires confirmé, le panier moyen et le détail d&apos;activité.
               Les compteurs simples restent gratuits sur votre tableau de bord.
             </p>

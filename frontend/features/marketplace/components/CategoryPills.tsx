@@ -18,7 +18,8 @@ export function CategoryPills({
   allLabel?: string;
 }) {
   return (
-    <div className="flex gap-2.5 overflow-x-auto pb-1 scrollbar-hide">
+    <div className="max-w-full min-w-0 overflow-x-auto overscroll-x-contain pb-1 scrollbar-hide">
+      <div className="flex w-max gap-2.5">
       <button
         type="button"
         onClick={() => onSelect(undefined)}
@@ -52,6 +53,7 @@ export function CategoryPills({
           </button>
         );
       })}
+      </div>
     </div>
   );
 }

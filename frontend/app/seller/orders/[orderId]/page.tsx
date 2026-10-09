@@ -53,6 +53,7 @@ export default function SellerOrderDetailPage() {
   const [rejectReason, setRejectReason] = useState("");
   const [justConfirmed, setJustConfirmed] = useState(false);
   const [etaHint, setEtaHint] = useState("");
+  const [completing, setCompleting] = useState(false);
 
   const loadOrder = useCallback(async () => {
     setLoading(true);
@@ -103,6 +104,25 @@ export default function SellerOrderDetailPage() {
     }
   };
 
+  const handleComplete = async () => {
+    setCompleting(true);
+    try {
+      const updated = await ordersService.completeSellerOrder(orderId);
+      setOrder(updated);
+      toast({ title: "Commande marquée comme livrée", variant: "success" });
+    } catch (err) {
+      toast({
+        title: "Impossible de terminer",
+        description: isApiError(err)
+          ? err.message
+          : "Confirmez d’abord le paiement.",
+        variant: "error",
+      });
+    } finally {
+      setCompleting(false);
+    }
+  };
+
   const handleReject = async () => {
     if (!rejectReason.trim()) return;
     setRejecting(true);
@@ -150,6 +170,26 @@ export default function SellerOrderDetailPage() {
         </div>
         <Badge variant="secondary">{STATUS_LABELS[order.status]}</Badge>
       </div>
+
+      {(order.status === "CONFIRMED" ||
+        order.status === "PROCESSING" ||
+        order.status === "READY") && (
+        <Card>
+          <CardContent className="flex flex-col gap-3 pt-6 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-body-sm text-text-secondary">
+              Quand le client a reçu le produit, marquez la commande comme
+              livrée. Il pourra aussi laisser un avis dès le paiement confirmé.
+            </p>
+            <Button
+              variant="primary"
+              loading={completing}
+              onClick={() => void handleComplete()}
+            >
+              Marquer comme livrée
+            </Button>
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardHeader>

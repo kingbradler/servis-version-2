@@ -5,6 +5,7 @@ import { MapPin } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import type { GeoCoordinates } from "@/features/map/types";
+import { cn } from "@/lib/utils";
 import {
   DEFAULT_NEARBY_RADIUS_KM,
   GeolocationRequestError,
@@ -43,11 +44,11 @@ export function AroundMeButton({
   };
 
   return (
-    <div className={className}>
+    <div className={cn("min-w-0 w-full sm:w-auto", className)}>
       <Button
         type="button"
         variant="outline"
-        className="rounded-xl"
+        className="w-full max-w-full rounded-xl sm:w-auto"
         loading={loading}
         onClick={() => void handleClick()}
       >
@@ -55,7 +56,7 @@ export function AroundMeButton({
         Trouver autour de moi
       </Button>
       {error && (
-        <p className="mt-2 text-caption text-error" role="alert">
+        <p className="mt-2 max-w-full break-words text-caption text-error" role="alert">
           {error}
         </p>
       )}

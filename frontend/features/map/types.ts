@@ -38,10 +38,10 @@ export interface MapProvider {
   getAccessToken(): string | null;
 }
 
-/** Default map center — Tanger (public city focus, not a private GPS). */
+/** Default map view — Morocco (not a single city). */
 export const DEFAULT_MAP_CENTER: GeoCoordinates = {
-  latitude: 35.7595,
-  longitude: -5.8339,
+  latitude: 31.8,
+  longitude: -7.1,
 };
 
-export const DEFAULT_MAP_ZOOM = 12;
+export const DEFAULT_MAP_ZOOM = 6;

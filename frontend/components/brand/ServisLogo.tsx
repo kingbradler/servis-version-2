@@ -31,11 +31,11 @@ function Mark({
       <Image
         src={BRAND.mark.dark}
         alt=""
-        width={160}
-        height={140}
+        width={512}
+        height={512}
         priority={priority}
         unoptimized
-        className={cn("h-8 w-auto", markClassName)}
+        className={cn("h-8 w-auto object-contain", markClassName)}
       />
     );
   }
@@ -45,11 +45,11 @@ function Mark({
       <Image
         src={BRAND.mark.light}
         alt=""
-        width={160}
-        height={140}
+        width={512}
+        height={512}
         priority={priority}
         unoptimized
-        className={cn("h-8 w-auto", markClassName)}
+        className={cn("h-8 w-auto object-contain", markClassName)}
       />
     );
   }
@@ -59,20 +59,20 @@ function Mark({
       <Image
         src={BRAND.mark.light}
         alt=""
-        width={160}
-        height={140}
+        width={512}
+        height={512}
         priority={priority}
         unoptimized
-        className={cn("h-8 w-auto dark:hidden", markClassName)}
+        className={cn("h-8 w-auto object-contain dark:hidden", markClassName)}
       />
       <Image
         src={BRAND.mark.dark}
         alt=""
-        width={160}
-        height={140}
+        width={512}
+        height={512}
         priority={priority}
         unoptimized
-        className={cn("hidden h-8 w-auto dark:block", markClassName)}
+        className={cn("hidden h-8 w-auto object-contain dark:block", markClassName)}
       />
     </>
   );

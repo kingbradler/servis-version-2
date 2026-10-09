@@ -105,7 +105,7 @@ export default function AdminSubscriptionsPage() {
           Abonnements — paiements
         </h2>
         <p className="mt-1 text-body-sm text-text-secondary">
-          Validation manuelle des preuves (montants issus du plan backend).
+          Validation manuelle des preuves de paiement.
         </p>
       </div>
 
@@ -183,7 +183,7 @@ export default function AdminSubscriptionsPage() {
               <CardContent className="space-y-3 pt-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div>
-                    <p className="font-medium">
+                    <p className="break-words font-medium">
                       {p.owner_email ?? "Professionnel"} —{" "}
                       {p.plan_name ?? p.plan_code}
                     </p>
@@ -214,7 +214,7 @@ export default function AdminSubscriptionsPage() {
                       Approuver
                     </Button>
                     <input
-                      className="min-w-[200px] flex-1 rounded-md border border-border bg-background px-2 py-1.5 text-body-sm"
+                      className="min-w-0 w-full flex-1 rounded-md border border-border bg-background px-2 py-1.5 text-body-sm sm:min-w-[200px]"
                       placeholder="Motif de refus"
                       value={rejectReason[p.id] ?? ""}
                       onChange={(e) =>

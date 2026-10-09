@@ -11,6 +11,8 @@ export interface EmptyStateProps {
   actionLabel?: string;
   onAction?: () => void;
   className?: string;
+  /** Use on a dark background (homepage product strip). */
+  tone?: "default" | "onDark";
 }
 
 export function EmptyState({
@@ -20,7 +22,9 @@ export function EmptyState({
   actionLabel,
   onAction,
   className,
+  tone = "default",
 }: EmptyStateProps) {
+  const onDark = tone === "onDark";
   return (
     <div
       className={cn(
@@ -28,12 +32,31 @@ export function EmptyState({
         className
       )}
     >
-      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-surface-secondary mb-4">
-        <Icon className="h-7 w-7 text-text-muted" />
+      <div
+        className={cn(
+          "mb-4 flex h-16 w-16 items-center justify-center rounded-full",
+          onDark ? "bg-white/10" : "bg-surface-secondary"
+        )}
+      >
+        <Icon
+          className={cn("h-7 w-7", onDark ? "text-white/55" : "text-text-muted")}
+        />
       </div>
-      <h3 className="text-heading-s text-text-primary mb-1">{title}</h3>
+      <h3
+        className={cn(
+          "mb-1 text-heading-s",
+          onDark ? "text-white" : "text-text-primary"
+        )}
+      >
+        {title}
+      </h3>
       {description && (
-        <p className="text-body-sm text-text-secondary max-w-sm mb-4">
+        <p
+          className={cn(
+            "mb-4 max-w-sm text-body-sm",
+            onDark ? "text-white/70" : "text-text-secondary"
+          )}
+        >
           {description}
         </p>
       )}

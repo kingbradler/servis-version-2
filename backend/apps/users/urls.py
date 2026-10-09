@@ -32,6 +32,7 @@ urlpatterns = [
     # Auth (authenticated)
     path("logout/", views.LogoutView.as_view(), name="logout"),
     path("me/", views.MeView.as_view(), name="me"),
+    path("me/avatar/", views.MeAvatarView.as_view(), name="me-avatar"),
     # Access probes (role gates — no business logic)
     path(
         "access/authenticated/",

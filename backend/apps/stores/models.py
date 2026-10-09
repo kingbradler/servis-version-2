@@ -13,9 +13,7 @@ from apps.users.choices import UserRole
 
 class City(models.Model):
     """
-    Moroccan city supported by SERVIS.
-
-    v1 launch focuses on Tanger; architecture supports more cities later.
+    Moroccan city available on SERVIS.
     """
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -105,6 +103,9 @@ class Store(models.Model):
     )
     phone = models.CharField("téléphone", max_length=30, blank=True)
     whatsapp = models.CharField("WhatsApp", max_length=30, blank=True)
+    tiktok_url = models.URLField("TikTok", blank=True, max_length=500)
+    youtube_url = models.URLField("YouTube", blank=True, max_length=500)
+    facebook_url = models.URLField("Facebook", blank=True, max_length=500)
     created_at = models.DateTimeField("créé le", default=timezone.now, editable=False)
     updated_at = models.DateTimeField("modifié le", auto_now=True)
 

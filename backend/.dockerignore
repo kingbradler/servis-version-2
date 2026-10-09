@@ -1,0 +1,15 @@
+venv
+.venv
+__pycache__
+**/__pycache__
+*.py[cod]
+.env
+.env.*
+db.sqlite3
+db.sqlite3-journal
+media
+private_media
+staticfiles
+*.log
+.git
+.pytest_cache
